@@ -35,6 +35,7 @@ export const set1Fixed = [
     quantity: 8,
   },
 ];
+
 export const set1Maids = [
   {
     name: 'AniseGreenaway',

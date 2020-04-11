@@ -17,7 +17,7 @@ export default class Field extends React.Component {
     const route = set ? `set${set}/${name}` : name;
     return (
       <span className="card-block">
-        <img alt="noseve" src={require(`./cards/${route}.jpg`)} />
+        <img alt="noseve" src={require(`../cards/${route}.jpg`)} />
         {quantity ? (
           <h3>{quantity}</h3>
         ) : (
