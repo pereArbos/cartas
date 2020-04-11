@@ -1,0 +1,25 @@
+.Field {
+  background-image: url('./grass.jpg');
+  background-repeat: repeat;
+  width: 55%;
+  height: 56vh;
+  padding-top: 10px;
+}
+
+.card-block {
+  margin-left: 25px;
+  margin-right: 25px;
+  display: inline-block;
+}
+
+.card-block img {
+  height: 13vh;
+}
+
+.card-block h3 {
+  margin-top: -8px;
+  margin-bottom: 6px;
+  text-align: center;
+  color: #ff9999;
+  font-weight: 750;
+}
