@@ -1,18 +1,20 @@
 import React from 'react';
 
-export default function ImageArea() {
+export default function ImageArea(props) {
   return (
     <div style={{ display: 'block', width: '100%' }}>
-      <img
-        alt="noseve"
-        src={require(`../cards/1Love.jpg`)}
-        style={{
-          maxHeight: '49vh',
-          float: 'center',
-          display: 'block',
-          margin: 'auto',
-        }}
-      />
+      {props.name && props.name !== 'cardback' && (
+        <img
+          alt="noseve"
+          src={require(`../cards/${props.name}.jpg`)}
+          style={{
+            maxHeight: '65vh',
+            float: 'center',
+            display: 'block',
+            margin: 'auto',
+          }}
+        />
+      )}
     </div>
   );
 }

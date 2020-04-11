@@ -17,6 +17,10 @@
   width: 6vw;
 }
 
+.card-block img:hover {
+  cursor: pointer;
+}
+
 .card-block h3 {
   margin-top: -8px;
   margin-bottom: 6px;
