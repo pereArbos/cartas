@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export default function CardBlock(props, context) {
-  const { name, set, quantity, selected } = props.card;
+  const { name, set, quantity, selected, type } = props.card;
   const route = set ? `set${set}/${name}` : name;
   return (
     <span className={selected > 0 ? 'card-block selected' : 'card-block'}>
@@ -23,7 +23,7 @@ export default function CardBlock(props, context) {
             });
           }}
           onClick={() => {
-            props.selectCard(name);
+            props.selectCard(props.card);
           }}
         />
 
@@ -35,7 +35,7 @@ export default function CardBlock(props, context) {
                 borderRight: '1px solid black',
               }}
               onClick={() => {
-                props.selectCard(name, 'minus');
+                props.selectCard(props.card, 'minus');
               }}
             >
               -
@@ -43,12 +43,12 @@ export default function CardBlock(props, context) {
             <span>{selected}</span>
             <button
               type="button"
-              disabled={!quantity || quantity === selected}
+              disabled={type === 'privateMaid' || quantity === selected}
               style={{
                 borderLeft: '1px solid black',
               }}
               onClick={() => {
-                props.selectCard(name, 'plus');
+                props.selectCard(props.card, 'plus');
               }}
             >
               +
@@ -57,9 +57,7 @@ export default function CardBlock(props, context) {
         )}
       </div>
 
-      {quantity || quantity === 0 ? (
-        <h3>{quantity}</h3>
-      ) : (
+      {type === 'privateMaid' ? (
         <h3
           style={{
             color: 'rgba(255, 0, 0, 0)',
@@ -67,6 +65,8 @@ export default function CardBlock(props, context) {
         >
           1
         </h3>
+      ) : (
+        <h3>{quantity}</h3>
       )}
     </span>
   );

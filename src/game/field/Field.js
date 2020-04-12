@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './Field.css';
 
 import CardBlock from './CardBlock';
-import { getCity } from './CityGenerator';
+import { initiateCity } from './CityGenerator';
 
 export default class Field extends React.Component {
   static contextTypes = {
@@ -16,12 +16,8 @@ export default class Field extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({ city: getCity() });
+    this.setState(initiateCity());
   }
-
-  getCardByName = (name) => {
-    return this.state.city.find((card) => card.name === name);
-  };
 
   updateCard = (name, newCard) => {
     this.setState((prevState) => {
@@ -32,9 +28,8 @@ export default class Field extends React.Component {
     });
   };
 
-  selectCard = (name, mode = 'new') => {
-    const card = this.getCardByName(name);
-    if (!card || name === 'cardback') return;
+  selectCard = (card, mode = 'new') => {
+    if (!card || card.name === 'cardback') return;
     switch (mode) {
       case 'plus':
         card.selected += 1;
@@ -43,21 +38,32 @@ export default class Field extends React.Component {
         card.selected -= 1;
         break;
       default:
-        if (!card.selected || card.selected < 1) {
-          if (card.quantity !== 0) card.selected = 1;
+        if (card.quantity !== 0 && !this.privateSelectedTwice(card)) {
+          if (!card.selected || card.selected < 1) card.selected = 1;
         }
     }
-    this.updateCard(name, card);
+    this.updateCard(card.name, card);
+  };
+
+  privateSelectedTwice = (card) => {
+    const index = this.state.city.findIndex((item) => {
+      return item.selected >= 1 && item.type === 'privateMaid';
+    });
+    return index >= 0 && card.type === 'privateMaid';
   };
 
   buyCards = () => {
     const boughtCards = [];
     this.state.city.forEach((card) => {
-      const { selected, name } = card;
+      const { selected, name, type } = card;
       if (selected && selected > 0) {
-        card.selected = 0;
-        card.quantity -= selected;
-        this.updateCard(name, card);
+        if (type === 'privateMaid') {
+          this.buyPrivateMaid(name);
+        } else {
+          card.selected = 0;
+          card.quantity -= selected;
+          this.updateCard(name, card);
+        }
         for (let i = 0; i < selected; i++) {
           boughtCards.push(card);
         }
@@ -65,6 +71,22 @@ export default class Field extends React.Component {
     });
     // send boughtCards
     console.log(boughtCards.map((card) => card.name));
+  };
+
+  buyPrivateMaid = (name) => {
+    this.setState((prevState) => {
+      const { city, privateMaids } = prevState;
+      const cardBack = city.find((card) => card.name === 'cardback') || {};
+      const newCity = city.filter((card) => card.name !== name);
+      let newPrivateMaids = privateMaids;
+      if (privateMaids[0]) {
+        const backIndex = newCity.findIndex((card) => card.name === 'cardback');
+        newCity[backIndex] = { ...cardBack, quantity: cardBack.quantity - 1 };
+        newCity.push(privateMaids[0]);
+        newPrivateMaids = privateMaids.filter((card, idx) => idx > 0);
+      }
+      return { city: newCity, privateMaids: newPrivateMaids };
+    });
   };
 
   render() {
