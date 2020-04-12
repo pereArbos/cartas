@@ -12,6 +12,7 @@ export default function ImageArea(props) {
             float: 'center',
             display: 'block',
             margin: 'auto',
+            userSelect: 'none',
           }}
         />
       )}
