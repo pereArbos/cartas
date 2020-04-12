@@ -18,8 +18,49 @@
   width: 6vw;
 }
 
+.card-block img.soldOut {
+  -webkit-filter: grayscale(1);
+  filter: gray;
+  filter: grayscale(1);
+}
+
+.card-block.selected {
+  margin-left: calc(1vw - 3px);
+  margin-right: calc(1vw - 3px);
+}
+
+.card-block.selected img {
+  border: 3px solid blue;
+}
+
 .card-block img:hover {
   cursor: pointer;
+}
+
+.cardSelector {
+  color: black;
+  position: absolute;
+  font-size: 10px;
+  top: 7.25vw;
+  left: 1vw;
+  background-color: #cccccc;
+}
+
+.cardSelector button {
+  padding: 0;
+  border: none;
+  width: 1.1vw;
+  height: 1.6vw;
+  background-color: aqua;
+  font-size: 20px;
+}
+
+.cardSelector span {
+  padding-left: 0.75vw;
+  padding-right: 0.75vw;
+  font-size: 14px;
+  font-weight: 700;
+  color: blue;
 }
 
 .card-block h3 {
@@ -28,4 +69,8 @@
   text-align: center;
   color: #ff9999;
   font-weight: 750;
+}
+
+.card-block.selected h3 {
+  margin-bottom: 2px;
 }

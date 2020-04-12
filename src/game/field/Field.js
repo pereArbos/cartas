@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Field.css';
 
+import CardBlock from './CardBlock';
 import { getCity } from './CityGenerator';
 
 export default class Field extends React.Component {
@@ -18,30 +19,52 @@ export default class Field extends React.Component {
     this.setState({ city: getCity() });
   }
 
-  getCardBlock = (card) => {
-    const { name, set, quantity } = card;
-    const route = set ? `set${set}/${name}` : name;
-    return (
-      <span className="card-block">
-        <img
-          alt="noseve"
-          name={route}
-          src={require(`../cards/${route}.jpg`)}
-          style={name === 'cardback' ? { cursor: 'auto' } : {}}
-          onMouseOver={(e) => {
-            this.context.updateParent({ imageName: e.target.name });
-          }}
-          onMouseOut={() => {
-            this.context.updateParent({ imageName: null });
-          }}
-        />
-        {quantity ? (
-          <h3>{quantity}</h3>
-        ) : (
-          <h3 style={{ color: 'rgba(255, 0, 0, 0)' }}>1</h3>
-        )}
-      </span>
-    );
+  getCardByName = (name) => {
+    return this.state.city.find((card) => card.name === name);
+  };
+
+  updateCard = (name, newCard) => {
+    this.setState((prevState) => {
+      const { city } = prevState;
+      const index = city.findIndex((card) => card.name === name);
+      city[index] = newCard;
+      return { city };
+    });
+  };
+
+  selectCard = (name, mode = 'new') => {
+    const card = this.getCardByName(name);
+    if (!card || name === 'cardback') return;
+    switch (mode) {
+      case 'plus':
+        card.selected += 1;
+        break;
+      case 'minus':
+        card.selected -= 1;
+        break;
+      default:
+        if (!card.selected || card.selected < 1) {
+          if (card.quantity !== 0) card.selected = 1;
+        }
+    }
+    this.updateCard(name, card);
+  };
+
+  buyCards = () => {
+    const boughtCards = [];
+    this.state.city.forEach((card) => {
+      const { selected, name } = card;
+      if (selected && selected > 0) {
+        card.selected = 0;
+        card.quantity -= selected;
+        this.updateCard(name, card);
+        for (let i = 0; i < selected; i++) {
+          boughtCards.push(card);
+        }
+      }
+    });
+    // send boughtCards
+    console.log(boughtCards.map((card) => card.name));
   };
 
   render() {
@@ -49,7 +72,17 @@ export default class Field extends React.Component {
     return (
       <div className="Field">
         <div style={{ float: 'left' }}>
-          {city && city.map((item) => this.getCardBlock(item))}
+          {city &&
+            city.map((item) => (
+              <CardBlock card={item} selectCard={this.selectCard} />
+            ))}
+          <button
+            type="button"
+            style={{ marginLeft: '2vw' }}
+            onClick={this.buyCards}
+          >
+            Hecho
+          </button>
         </div>
       </div>
     );

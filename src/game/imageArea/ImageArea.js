@@ -8,7 +8,7 @@ export default function ImageArea(props) {
           alt="noseve"
           src={require(`../cards/${props.name}.jpg`)}
           style={{
-            maxHeight: '65vh',
+            maxWidth: '22vw',
             float: 'center',
             display: 'block',
             margin: 'auto',

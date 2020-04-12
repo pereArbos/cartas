@@ -10,3 +10,11 @@
   display: inline-block;
   vertical-align: top;
 }
+
+button:hover {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
