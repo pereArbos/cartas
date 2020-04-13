@@ -88,10 +88,10 @@ export default class Field extends React.Component {
     webrtc.shout('cityUpdate', { city, privateMaids });
   };
 
-  // Esperar webrtc + 2s para enseñar el botón de join y recibir la ciudad
+  // Esperar webrtc + 2s para enseñar el botón de join, el cual hace shout('cityQuery', '')
 
   render() {
-    const { city, webrtc } = this.context.parentState;
+    const { city } = this.context.parentState;
     return (
       <div className="Field">
         <div style={{ float: 'left' }}>
@@ -106,17 +106,6 @@ export default class Field extends React.Component {
           >
             Hecho
           </button>
-          {webrtc && (
-            <button
-              type="button"
-              style={{ marginLeft: '2vw' }}
-              onClick={() => {
-                this.context.parentState.webrtc.shout('cityQuery', '');
-              }}
-            >
-              Join
-            </button>
-          )}
         </div>
       </div>
     );
