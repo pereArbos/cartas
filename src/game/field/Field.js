@@ -14,7 +14,7 @@ export default class Field extends React.Component {
   componentWillReceiveProps(nextProps, nextContext) {
     const { getDeck } = this.context.parentState;
     if (!getDeck && nextContext.parentState.getDeck) {
-      this.buyCards(true);
+      this.buyCards(null, true);
     }
   }
 
@@ -51,7 +51,7 @@ export default class Field extends React.Component {
     return index >= 0 && card.type === 'privateMaid';
   };
 
-  buyCards = (initial) => {
+  buyCards = (event, initial) => {
     const boughtCards = [];
     this.context.parentState.city.forEach((card) => {
       const { selected, name, type } = card;
@@ -75,7 +75,12 @@ export default class Field extends React.Component {
   sendToDeck = (cards) => getNewDeck(cards, this.context.updateParent);
 
   sendToDiscard = (cards) => {
-    console.log(cards);
+    this.context.updateParent((prevState) => {
+      const newDiscard = [...prevState.discard];
+      newDiscard.push(...cards);
+      console.log(newDiscard);
+      return { discard: newDiscard };
+    });
   };
 
   buyPrivateMaid = (name) => {

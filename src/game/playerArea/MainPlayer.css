@@ -14,9 +14,9 @@
   left: 47.5vw;
   width: 5vw;
   height: 5vw;
-  -webkit-border-radius: 2.5vw;
-  -moz-border-radius: 2.5vw;
-  border-radius: 2.5vw;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
   background: red;
 }
 
@@ -27,4 +27,20 @@
   position: absolute;
   top: 1.5vw;
   left: 1.12vw;
+}
+
+.IconFooter {
+  width: 3vw;
+  height: calc(4vh + 1px);
+  position: absolute;
+  top: 94vh;
+  background-color: aqua;
+  color: #660000;
+  font-weight: 700;
+  text-align: center;
+}
+
+.IconFooter img {
+  display: block;
+  margin: auto;
 }
