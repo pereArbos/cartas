@@ -1,9 +1,10 @@
 import React from 'react';
+import './App.css';
 
-import Main from './Main';
+import ConnexionGame from './game/ConnexionGame';
 
 function App() {
-  return <Main />;
+  return <ConnexionGame />;
 }
 
 export default App;

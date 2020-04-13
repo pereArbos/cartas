@@ -3,29 +3,20 @@ import PropTypes from 'prop-types';
 import './Field.css';
 
 import CardBlock from './CardBlock';
-import { initiateCity } from './CityGenerator';
 
 export default class Field extends React.Component {
   static contextTypes = {
+    parentState: PropTypes.object,
     updateParent: PropTypes.func,
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  componentDidMount() {
-    this.setState(initiateCity());
-  }
-
-  updateCard = (name, newCard) => {
-    this.setState((prevState) => {
+  updateCard = (name, newCard, cb) => {
+    this.context.updateParent((prevState) => {
       const { city } = prevState;
       const index = city.findIndex((card) => card.name === name);
       city[index] = newCard;
       return { city };
-    });
+    }, cb);
   };
 
   selectCard = (card, mode = 'new') => {
@@ -46,7 +37,7 @@ export default class Field extends React.Component {
   };
 
   privateSelectedTwice = (card) => {
-    const index = this.state.city.findIndex((item) => {
+    const index = this.context.parentState.city.findIndex((item) => {
       return item.selected >= 1 && item.type === 'privateMaid';
     });
     return index >= 0 && card.type === 'privateMaid';
@@ -54,7 +45,7 @@ export default class Field extends React.Component {
 
   buyCards = () => {
     const boughtCards = [];
-    this.state.city.forEach((card) => {
+    this.context.parentState.city.forEach((card) => {
       const { selected, name, type } = card;
       if (selected && selected > 0) {
         if (type === 'privateMaid') {
@@ -62,7 +53,7 @@ export default class Field extends React.Component {
         } else {
           card.selected = 0;
           card.quantity -= selected;
-          this.updateCard(name, card);
+          this.updateCard(name, card, this.updatePeers);
         }
         for (let i = 0; i < selected; i++) {
           boughtCards.push(card);
@@ -74,23 +65,33 @@ export default class Field extends React.Component {
   };
 
   buyPrivateMaid = (name) => {
-    this.setState((prevState) => {
+    this.context.updateParent((prevState) => {
       const { city, privateMaids } = prevState;
       const cardBack = city.find((card) => card.name === 'cardback') || {};
       const newCity = city.filter((card) => card.name !== name);
       let newPrivateMaids = privateMaids;
       if (privateMaids[0]) {
         const backIndex = newCity.findIndex((card) => card.name === 'cardback');
-        newCity[backIndex] = { ...cardBack, quantity: cardBack.quantity - 1 };
+        newCity[backIndex] = {
+          ...cardBack,
+          quantity: cardBack.quantity - 1,
+        };
         newCity.push(privateMaids[0]);
         newPrivateMaids = privateMaids.filter((card, idx) => idx > 0);
       }
       return { city: newCity, privateMaids: newPrivateMaids };
-    });
+    }, this.updatePeers);
   };
 
+  updatePeers = () => {
+    const { city, privateMaids, webrtc } = this.context.parentState;
+    webrtc.shout('cityUpdate', { city, privateMaids });
+  };
+
+  // Esperar webrtc + 2s para enseñar el botón de join y recibir la ciudad
+
   render() {
-    const { city } = this.state;
+    const { city, webrtc } = this.context.parentState;
     return (
       <div className="Field">
         <div style={{ float: 'left' }}>
@@ -105,6 +106,17 @@ export default class Field extends React.Component {
           >
             Hecho
           </button>
+          {webrtc && (
+            <button
+              type="button"
+              style={{ marginLeft: '2vw' }}
+              onClick={() => {
+                this.context.parentState.webrtc.shout('cityQuery', '');
+              }}
+            >
+              Join
+            </button>
+          )}
         </div>
       </div>
     );

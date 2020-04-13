@@ -13,14 +13,10 @@ export default function CardBlock(props, context) {
           className={quantity === 0 ? 'soldOut' : ''}
           style={name === 'cardback' ? { cursor: 'auto' } : {}}
           onMouseOver={() => {
-            context.updateParent({
-              imageName: route,
-            });
+            context.updateImage(route);
           }}
           onMouseOut={() => {
-            context.updateParent({
-              imageName: null,
-            });
+            context.updateImage(null);
           }}
           onClick={() => {
             props.selectCard(props.card);
@@ -73,5 +69,5 @@ export default function CardBlock(props, context) {
 }
 
 CardBlock.contextTypes = {
-  updateParent: PropTypes.func,
+  updateImage: PropTypes.func,
 };
