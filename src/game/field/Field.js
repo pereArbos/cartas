@@ -3,12 +3,20 @@ import PropTypes from 'prop-types';
 import './Field.css';
 
 import CardBlock from './CardBlock';
+import { getNewDeck } from '../helpers/actions';
 
 export default class Field extends React.Component {
   static contextTypes = {
     parentState: PropTypes.object,
     updateParent: PropTypes.func,
   };
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    const { getDeck } = this.context.parentState;
+    if (!getDeck && nextContext.parentState.getDeck) {
+      this.buyCards(true);
+    }
+  }
 
   updateCard = (name, newCard, cb) => {
     this.context.updateParent((prevState) => {
@@ -43,7 +51,7 @@ export default class Field extends React.Component {
     return index >= 0 && card.type === 'privateMaid';
   };
 
-  buyCards = () => {
+  buyCards = (initial) => {
     const boughtCards = [];
     this.context.parentState.city.forEach((card) => {
       const { selected, name, type } = card;
@@ -53,15 +61,21 @@ export default class Field extends React.Component {
         } else {
           card.selected = 0;
           card.quantity -= selected;
-          this.updateCard(name, card, this.updatePeers);
+          this.updateCard(name, card, !initial && this.updatePeers);
         }
         for (let i = 0; i < selected; i++) {
           boughtCards.push(card);
         }
       }
     });
-    // send boughtCards
-    console.log(boughtCards.map((card) => card.name));
+    const sendFunc = initial ? this.sendToDeck : this.sendToDiscard;
+    sendFunc(boughtCards);
+  };
+
+  sendToDeck = (cards) => getNewDeck(cards, this.context.updateParent);
+
+  sendToDiscard = (cards) => {
+    console.log(cards);
   };
 
   buyPrivateMaid = (name) => {

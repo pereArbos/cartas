@@ -1,0 +1,34 @@
+.PlayZone,
+.HandZone,
+.ChamberZone,
+.DeckZone {
+  float: left; /* VAMOOOSSSSS */
+  min-height: 16vh;
+  padding-top: 1vh;
+}
+
+.PlayZone {
+  background-color: rgba(255, 255, 0, 0.1);
+  width: 33.3%;
+}
+
+.HandZone {
+  background-color: rgba(0, 255, 255, 0.1);
+  width: 33.3%;
+}
+
+.ChamberZone {
+  background-color: rgba(0, 255, 0, 0.1);
+  width: 22.2%;
+}
+
+.DeckZone {
+  background-color: rgba(255, 153, 153, 0.3);
+  width: 11.1%;
+}
+
+.DeckZone img {
+  width: 2.2vw;
+  display: block;
+  margin: auto;
+}

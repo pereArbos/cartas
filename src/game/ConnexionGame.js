@@ -4,6 +4,7 @@ import { LioWebRTC } from 'react-liowebrtc';
 
 import MainGame from './MainGame';
 import { initiateCity } from './field/CityGenerator';
+import { initialDeck } from './initialDeck.js';
 
 export default class ConnexionGame extends React.Component {
   static childContextTypes = {
@@ -13,7 +14,10 @@ export default class ConnexionGame extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      deck: [],
+      discard: [],
+    };
   }
 
   getChildContext() {
@@ -28,8 +32,22 @@ export default class ConnexionGame extends React.Component {
   }
 
   componentDidMount() {
-    this.setState(initiateCity());
+    this.setState(initiateCity(), this.getInitialDeck);
   }
+
+  getInitialDeck = () => {
+    this.setState(
+      (prevState) => {
+        const newCity = prevState.city.map((card) => {
+          return { ...card, selected: initialDeck[card.name] };
+        });
+        return { city: newCity };
+      },
+      () => {
+        this.setState({ getDeck: 1 });
+      }
+    );
+  };
 
   join = (webrtc) => {
     webrtc.joinRoom('cartasPereTantoCuore_v1');

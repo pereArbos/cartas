@@ -54,13 +54,7 @@ export default function CardBlock(props, context) {
       </div>
 
       {type === 'privateMaid' ? (
-        <h3
-          style={{
-            color: 'rgba(255, 0, 0, 0)',
-          }}
-        >
-          1
-        </h3>
+        <h3 style={{ visibility: 'hidden' }}>1</h3>
       ) : (
         <h3>{quantity}</h3>
       )}
