@@ -4,6 +4,7 @@
   flex-direction: column;
   font-size: calc(10px + 2vmin);
   color: white;
+  overflow: hidden;
 }
 
 .App-base .mainBlock {

@@ -1,0 +1,29 @@
+.PlayerTable {
+  background-image: url('./table.jpg');
+  background-repeat: repeat;
+  min-height: 17vh;
+  width: 100%;
+  -webkit-filter: hue-rotate(0deg);
+  filter: hue-rotate(0deg);
+}
+
+.PlayerCircle {
+  position: absolute;
+  top: 86vh;
+  left: 47.5vw;
+  width: 5vw;
+  height: 5vw;
+  -webkit-border-radius: 2.5vw;
+  -moz-border-radius: 2.5vw;
+  border-radius: 2.5vw;
+  background: red;
+}
+
+.PlayerName {
+  font-size: 1.25vw;
+  font-weight: 700;
+  color: black;
+  position: absolute;
+  top: 1.5vw;
+  left: 1.12vw;
+}
