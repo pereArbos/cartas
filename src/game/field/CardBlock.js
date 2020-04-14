@@ -12,6 +12,7 @@ export default function CardBlock(props, context) {
           src={require(`../cards/${route}.jpg`)}
           className={quantity === 0 ? 'soldOut' : ''}
           style={name === 'cardback' ? { cursor: 'auto' } : {}}
+          title={name === 'cardback' && 'Maids Particulares'}
           onMouseOver={() => {
             context.updateImage(route);
           }}
