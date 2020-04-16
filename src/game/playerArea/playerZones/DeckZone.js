@@ -10,11 +10,11 @@ export default class DeckZone extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { showModal: false };
+    this.state = { show: false };
   }
 
-  hideModal = () => this.setState({ showModal: false });
-  showModal = () => this.setState({ showModal: true });
+  hideModal = () => this.setState({ show: false });
+  showModal = () => this.setState({ show: true });
 
   render() {
     const { deck, discard } = this.context.parentState;
@@ -43,9 +43,10 @@ export default class DeckZone extends React.Component {
       </div>,
       <CardDisplayModal
         background="rgba(255, 153, 153, 0.9)"
-        showModal={this.state.showModal}
+        showModal={this.state.show}
         hideModal={this.hideModal}
-        cards={discard}
+        cards={[...discard].reverse()}
+        title="Tu Pila de Descartes"
       />,
     ];
   }

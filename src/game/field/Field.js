@@ -78,7 +78,6 @@ export default class Field extends React.Component {
     this.context.updateParent((prevState) => {
       const newDiscard = [...prevState.discard];
       newDiscard.push(...cards);
-      console.log(newDiscard);
       return { discard: newDiscard };
     });
   };

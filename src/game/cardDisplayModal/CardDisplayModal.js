@@ -6,7 +6,7 @@ import './CardDisplayModal.css';
 import { defaultStyle } from './defaultStyle';
 
 export default function CardDisplayModal(props, context) {
-  const { showModal, hideModal, background, cards } = props;
+  const { showModal, hideModal, background, cards, title } = props;
   const modalStyle = defaultStyle;
   modalStyle.content.background = background;
 
@@ -17,7 +17,7 @@ export default function CardDisplayModal(props, context) {
       onRequestClose={hideModal}
     >
       <div className="CardDisplayModal">
-        <h1>Tu Pila de Descartes</h1>
+        <h1>{title}</h1>
         <div className="cards">
           {cards.map((card) => {
             const { name, set } = card;
