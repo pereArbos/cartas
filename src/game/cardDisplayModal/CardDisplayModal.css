@@ -14,6 +14,10 @@
   min-height: 45vh;
 }
 
+.CardDisplayModal.privateModal .cards {
+  min-height: 30vh;
+}
+
 .CardDisplayModal button {
   float: right;
   width: 40px;
@@ -26,11 +30,30 @@
   margin-right: 0.5vw;
 }
 
-.CardDisplayModal img {
+.CardDisplayModal .cardBlock {
   width: 6.5vw;
   float: left;
   margin-left: 0.5vw;
   margin-right: 0.5vw;
   padding-top: 0.5vh;
   margin-bottom: 1.5vh;
+}
+
+.CardDisplayModal.chamberModal .cardBlock {
+  margin-left: 1.15vw;
+  margin-right: 1.15vw;
+}
+
+.CardDisplayModal img {
+  width: 6.5vw;
+  margin-bottom: 0.5vh;
+}
+
+.chamberModal h3 {
+  margin-top: -8px;
+  margin-bottom: 0px;
+  text-align: center;
+  color: #ff9999;
+  font-weight: 750;
+  font-size: 2vw;
 }

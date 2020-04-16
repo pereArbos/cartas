@@ -58,13 +58,14 @@ export default class Field extends React.Component {
       if (selected && selected > 0) {
         if (type === 'privateMaid') {
           this.buyPrivateMaid(name);
+          this.context.parentState.getPrivateMaid(card);
         } else {
           card.selected = 0;
           card.quantity -= selected;
           this.updateCard(name, card, !initial && this.updatePeers);
-        }
-        for (let i = 0; i < selected; i++) {
-          boughtCards.push(card);
+          for (let i = 0; i < selected; i++) {
+            boughtCards.push(card);
+          }
         }
       }
     });
@@ -80,6 +81,8 @@ export default class Field extends React.Component {
       newDiscard.push(...cards);
       return { discard: newDiscard };
     });
+    // chamberMaids test:
+    if (cards[0]) this.context.parentState.getChamberMaid(cards[0]);
   };
 
   buyPrivateMaid = (name) => {
@@ -103,7 +106,7 @@ export default class Field extends React.Component {
 
   updatePeers = () => {
     const { city, privateMaids, webrtc } = this.context.parentState;
-    webrtc.shout('cityUpdate', { city, privateMaids });
+    if (webrtc) webrtc.shout('cityUpdate', { city, privateMaids });
   };
 
   // Esperar webrtc + 2s para enseñar el botón de join, el cual hace shout('cityQuery', '')

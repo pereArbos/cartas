@@ -62,7 +62,10 @@ export default class ConnexionGame extends React.Component {
     const { webrtc, city, privateMaids } = this.state;
     switch (type) {
       case 'cityQuery':
-        webrtc.whisper(peer, 'cityUpdate', { city, privateMaids });
+        (webrtc || webrtcBad).whisper(peer, 'cityUpdate', {
+          city,
+          privateMaids,
+        });
         break;
       case 'cityUpdate':
         this.setState(payload);

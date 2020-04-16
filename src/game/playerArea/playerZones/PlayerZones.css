@@ -33,9 +33,10 @@
   margin: auto;
 }
 
-.PlayZone img {
+.PlayZone img,
+.ChamberZone img {
   width: 2.2vw;
   float: left;
   margin-left: 0.75vw;
-  margin-bottom: 1.5vh;
+  margin-bottom: 1vh;
 }
