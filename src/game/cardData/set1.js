@@ -4,8 +4,8 @@ export const set1Fixed = [
     set: 1,
     type: 'event',
     cost: 4,
-    onBuy: () => {},
     quantity: 10,
+    attachTo: 'maid',
   },
   {
     name: 'BadHabit',
@@ -13,7 +13,6 @@ export const set1Fixed = [
     type: 'event',
     cost: 2,
     vp: () => {},
-    onBuy: () => {},
     quantity: 16,
   },
   {

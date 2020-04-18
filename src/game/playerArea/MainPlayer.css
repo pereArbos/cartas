@@ -18,6 +18,16 @@
   -moz-border-radius: 50%;
   border-radius: 50%;
   background: red;
+  user-select: none;
+}
+
+.PlayerCircle.selectable {
+  border: 4px solid purple;
+}
+
+.PlayerCircle.selectable:hover {
+  cursor: pointer;
+  border: 4px solid #0099cc;
 }
 
 .PlayerName {

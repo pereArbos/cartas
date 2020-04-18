@@ -46,6 +46,11 @@ export default class MainPlayer extends React.Component {
   };
 
   render() {
+    const { gameState, playerClick } = this.context.parentState;
+    const circleOn = gameState === 'targetPlayer' && playerClick;
+    const playerClass = circleOn ? 'selectable' : '';
+    const circleClick = circleOn ? playerClick : () => {};
+
     return (
       <div className="PlayerArea">
         <div className="PlayerTable">
@@ -54,7 +59,7 @@ export default class MainPlayer extends React.Component {
           <ChamberZone />
           <DeckZone />
         </div>
-        <span className="PlayerCircle">
+        <span className={`PlayerCircle ${playerClass}`} onClick={circleClick}>
           <span className="PlayerName">PERE</span>
         </span>
         <IconFooter {...this.getRightFooter()} />

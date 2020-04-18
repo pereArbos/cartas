@@ -10,6 +10,7 @@ export default class ConnexionGame extends React.Component {
   static childContextTypes = {
     parentState: PropTypes.object,
     updateParent: PropTypes.func,
+    attachEvent: PropTypes.func,
   };
 
   constructor(props) {
@@ -17,6 +18,7 @@ export default class ConnexionGame extends React.Component {
     this.state = {
       deck: [],
       discard: [],
+      attachmentsLeft: [],
     };
   }
 
@@ -28,6 +30,7 @@ export default class ConnexionGame extends React.Component {
           if (typeof cb === 'function') cb();
         });
       },
+      attachEvent: this.attachEvent,
     };
   }
 
@@ -47,6 +50,53 @@ export default class ConnexionGame extends React.Component {
         this.setState({ getDeck: 1 });
       }
     );
+  };
+
+  attachEvent = (card, selected) => {
+    this.setState((prevState) => {
+      let data = {
+        attachmentsLeft: [...prevState.attachmentsLeft],
+      };
+      if (data.attachmentsLeft.length === 0) {
+        data = { ...data, ...this.getAttachInfo(card) };
+      }
+      for (let i = 0; i < selected; i++) {
+        data.attachmentsLeft.push(card);
+      }
+      return data;
+    });
+  };
+
+  getAttachInfo = (card) => {
+    switch (card.attachTo) {
+      case 'maid':
+        return {
+          gameState: 'targetChamberMaid',
+          maidClick: (maidIdx, isPrivate) => {
+            this.removePendingAttach();
+            this.state.getAttachment(maidIdx, card, isPrivate);
+          },
+        };
+      default:
+        return {
+          gameState: 'targetPlayer',
+          playerClick: () => {
+            this.removePendingAttach();
+            this.state.getChamberMaid(card); // Aquí iría esto o mandársela a otro
+          },
+        };
+    }
+  };
+
+  removePendingAttach = () => {
+    this.setState((prevState) => {
+      const left = [...prevState.attachmentsLeft].filter((foo, idx) => idx > 0);
+      let data = { attachmentsLeft: left };
+      if (left[0]) {
+        data = { ...data, ...this.getAttachInfo(left[0]) };
+      } else data.gameState = null;
+      return data;
+    });
   };
 
   join = (webrtc) => {

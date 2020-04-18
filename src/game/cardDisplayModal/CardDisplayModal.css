@@ -31,22 +31,32 @@
 }
 
 .CardDisplayModal .cardBlock {
-  width: 6.5vw;
   float: left;
-  margin-left: 0.5vw;
-  margin-right: 0.5vw;
+  margin-left: 0.6vw;
+  margin-right: 0.6vw;
   padding-top: 0.5vh;
   margin-bottom: 1.5vh;
 }
 
 .CardDisplayModal.chamberModal .cardBlock {
-  margin-left: 1.15vw;
-  margin-right: 1.15vw;
+  margin-left: 1.1vw;
+  margin-right: 1.1vw;
 }
 
 .CardDisplayModal img {
   width: 6.5vw;
   margin-bottom: 0.5vh;
+}
+
+.CardDisplayModal img.selectable {
+  border: 3px solid purple;
+  margin-left: -3px;
+  margin-right: -3px;
+}
+
+.CardDisplayModal img.selectable:hover {
+  border: 3px solid #0099cc;
+  cursor: pointer;
 }
 
 .chamberModal h3 {

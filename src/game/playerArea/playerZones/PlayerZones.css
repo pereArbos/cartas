@@ -22,6 +22,14 @@
   width: 22.2%;
 }
 
+.ChamberZone.selectable {
+  outline: 5px solid purple;
+}
+
+.ChamberZone.selectable:hover {
+  outline: 5px solid #0099cc;
+}
+
 .DeckZone {
   background-color: rgba(255, 153, 153, 0.3);
   width: 11.1%;

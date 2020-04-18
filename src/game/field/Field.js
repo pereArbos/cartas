@@ -9,6 +9,7 @@ export default class Field extends React.Component {
   static contextTypes = {
     parentState: PropTypes.object,
     updateParent: PropTypes.func,
+    attachEvent: PropTypes.func,
   };
 
   componentWillReceiveProps(nextProps, nextContext) {
@@ -51,6 +52,9 @@ export default class Field extends React.Component {
     return index >= 0 && card.type === 'privateMaid';
   };
 
+  // AL COMPRAR UNA ENFERMEDAD PASA ONCLICK A LAS CARTAS DE LA CHAMBER DE LOS RIVALES
+  // A LA CARTA SELECCIONADA SE LE PASA COMO ATTACHMENT
+
   buyCards = (event, initial) => {
     const boughtCards = [];
     this.context.parentState.city.forEach((card) => {
@@ -63,8 +67,12 @@ export default class Field extends React.Component {
           card.selected = 0;
           card.quantity -= selected;
           this.updateCard(name, card, !initial && this.updatePeers);
-          for (let i = 0; i < selected; i++) {
-            boughtCards.push(card);
+          if (type === 'event') {
+            this.context.attachEvent(card, selected);
+          } else {
+            for (let i = 0; i < selected; i++) {
+              boughtCards.push(card);
+            }
           }
         }
       }
