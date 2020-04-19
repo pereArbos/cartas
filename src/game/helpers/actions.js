@@ -17,7 +17,3 @@ export function shuffle(array) {
 
   return array;
 }
-
-export function getNewDeck(cards, updateFunc) {
-  updateFunc({ deck: shuffle(cards) });
-}

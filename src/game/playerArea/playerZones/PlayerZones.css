@@ -26,6 +26,7 @@
   margin-bottom: 0.7vh;
   margin-top: -0.7vh;
   font-weight: normal;
+  min-height: 21px;
 }
 
 .HandZone button {
@@ -36,6 +37,7 @@
   max-width: 6vw;
   font-weight: 550;
   border: 2px solid #444444;
+  font-size: 12px;
 }
 
 .handCards {

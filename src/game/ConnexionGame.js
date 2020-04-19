@@ -94,7 +94,7 @@ export default class ConnexionGame extends React.Component {
       let data = { attachmentsLeft: left };
       if (left[0]) {
         data = { ...data, ...this.getAttachInfo(left[0]) };
-      } else data.gameState = null;
+      } else data.gameState = 'discardPhase';
       return data;
     });
   };

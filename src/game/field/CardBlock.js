@@ -4,6 +4,13 @@ import PropTypes from 'prop-types';
 export default function CardBlock(props, context) {
   const { name, set, quantity, selected, type } = props.card;
   const route = set ? `set${set}/${name}` : name;
+  const buyable = props.selectable;
+  const cardClick = buyable
+    ? () => {
+        props.selectCard(props.card);
+      }
+    : () => {};
+
   return (
     <span className={selected > 0 ? 'card-block selected' : 'card-block'}>
       <div style={{ position: 'relative' }}>
@@ -11,7 +18,7 @@ export default function CardBlock(props, context) {
           alt="noseve"
           src={require(`../cards/${route}.jpg`)}
           className={quantity === 0 ? 'soldOut' : ''}
-          style={name === 'cardback' ? { cursor: 'auto' } : {}}
+          style={buyable && !(selected > 0) ? {} : { cursor: 'auto' }}
           title={name === 'cardback' ? 'Maids Particulares' : undefined}
           onMouseOver={() => {
             context.updateImage(route);
@@ -19,9 +26,7 @@ export default function CardBlock(props, context) {
           onMouseOut={() => {
             context.updateImage(null);
           }}
-          onClick={() => {
-            props.selectCard(props.card);
-          }}
+          onClick={cardClick}
         />
 
         {selected > 0 && (
@@ -40,7 +45,9 @@ export default function CardBlock(props, context) {
             <span>{selected}</span>
             <button
               type="button"
-              disabled={type === 'privateMaid' || quantity === selected}
+              disabled={
+                type === 'privateMaid' || quantity === selected || !buyable
+              }
               style={{
                 borderLeft: '1px solid black',
               }}
