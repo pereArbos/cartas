@@ -52,9 +52,6 @@ export default class Field extends React.Component {
     return index >= 0 && card.type === 'privateMaid';
   };
 
-  // AL COMPRAR UNA ENFERMEDAD PASA ONCLICK A LAS CARTAS DE LA CHAMBER DE LOS RIVALES
-  // A LA CARTA SELECCIONADA SE LE PASA COMO ATTACHMENT
-
   buyCards = (event, initial) => {
     const boughtCards = [];
     this.context.parentState.city.forEach((card) => {
@@ -89,8 +86,6 @@ export default class Field extends React.Component {
       newDiscard.push(...cards);
       return { discard: newDiscard };
     });
-    // chamberMaids test:
-    if (cards[0]) this.context.parentState.getChamberMaid(cards[0]);
   };
 
   buyPrivateMaid = (name) => {

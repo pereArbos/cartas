@@ -11,13 +11,21 @@ import './playerZones/PlayerZones.css';
 import IconFooter from './iconFooter/IconFooter';
 
 export default class MainPlayer extends React.Component {
+  static childContextTypes = {
+    playerState: PropTypes.object,
+  };
+
   static contextTypes = {
     parentState: PropTypes.object,
   };
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { hand: [], playedCards: [] };
+  }
+
+  getChildContext() {
+    return { playerState: this.state };
   }
 
   getRightFooter = () => {

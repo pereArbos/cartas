@@ -10,10 +10,10 @@
 
 .PlayerCircle {
   position: absolute;
-  top: 86vh;
-  left: 47.5vw;
-  width: 5vw;
-  height: 5vw;
+  top: 88vh;
+  left: 48vw;
+  width: 9vh;
+  height: 9vh;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
@@ -35,8 +35,8 @@
   font-weight: 700;
   color: black;
   position: absolute;
-  top: 1.5vw;
-  left: 1.12vw;
+  top: 1.25vw;
+  left: 0.75vw;
 }
 
 .IconFooter {

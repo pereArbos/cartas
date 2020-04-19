@@ -5,7 +5,7 @@ import CardDisplayModal from '../../cardDisplayModal/CardDisplayModal';
 
 export default class PlayZone extends React.Component {
   static contextTypes = {
-    parentState: PropTypes.object,
+    playerState: PropTypes.object,
   };
 
   constructor(props) {
@@ -17,14 +17,14 @@ export default class PlayZone extends React.Component {
   showModal = () => this.setState({ show: true });
 
   render() {
-    const { discard } = this.context.parentState;
+    const { playedCards } = this.context.playerState;
     return [
       <div
         className="PlayZone showesModal"
         title="Tus Cartas Jugadas"
         onClick={this.showModal}
       >
-        {discard.map((card, idx) => {
+        {playedCards.map((card, idx) => {
           const { name, set } = card;
           const route = set ? `set${set}/${name}` : name;
           return (
@@ -38,7 +38,7 @@ export default class PlayZone extends React.Component {
         background="rgba(179, 179, 0, 0.85)"
         showModal={this.state.show}
         hideModal={this.hideModal}
-        cards={discard}
+        cards={playedCards}
         title="Tus Cartas Jugadas"
       />,
     ];

@@ -120,7 +120,8 @@ export default class ChamberZone extends React.Component {
     const { chamberMaids, boughtPrivateMaids } = this.state;
     const currentMaid = boughtPrivateMaids[0];
     const displayLimit = currentMaid ? 7 : 8;
-    const hasMaids = currentMaid || chamberMaids[0];
+    const hasMaids =
+      currentMaid || chamberMaids.find((maid) => maid.type.includes('maid'));
     const hasBorder =
       this.context.parentState.gameState === 'targetChamberMaid' && hasMaids;
 

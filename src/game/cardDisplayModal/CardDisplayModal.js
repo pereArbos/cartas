@@ -4,7 +4,6 @@ import ReactModal from 'react-modal';
 import './CardDisplayModal.css';
 
 import { defaultStyle, privateMaidsStyle } from './defaultStyle';
-import { privateMaids } from '../cardData/privateMaids';
 
 export default function CardDisplayModal(props, context) {
   const {

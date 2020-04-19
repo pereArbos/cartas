@@ -3,7 +3,7 @@
 .ChamberZone,
 .DeckZone {
   float: left; /* VAMOOOSSSSS */
-  min-height: 16vh;
+  min-height: 17vh;
   padding-top: 1vh;
 }
 
@@ -15,6 +15,37 @@
 .HandZone {
   background-color: rgba(0, 255, 255, 0.1);
   width: 33.3%;
+  text-align: center;
+  position: relative;
+}
+
+.HandZone h6 {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 0.7vh;
+  margin-top: -0.7vh;
+  font-weight: normal;
+}
+
+.HandZone button {
+  position: absolute;
+  padding: 1px;
+  bottom: 3px;
+  white-space: normal;
+  max-width: 6vw;
+  font-weight: 550;
+  border: 2px solid #444444;
+}
+
+.handCards {
+  position: relative;
+}
+
+.handCards img {
+  width: 2.75vw;
+  position: absolute;
+  top: 0;
 }
 
 .ChamberZone {
