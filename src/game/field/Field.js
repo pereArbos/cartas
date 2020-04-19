@@ -155,7 +155,6 @@ export default class Field extends React.Component {
   render() {
     const { city, gameState } = this.context.parentState;
     const buying = gameState === 'contractPhase';
-    console.log(this.state);
 
     return (
       <div className="Field">
