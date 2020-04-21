@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Field from './field/Field';
 import ImageArea from './imageArea/ImageArea';
 import MainPlayer from './playerArea/MainPlayer';
+import OppZones from './playerArea/OppZones';
 
 export default class MainGame extends React.Component {
   static childContextTypes = {
@@ -35,6 +36,11 @@ export default class MainGame extends React.Component {
         <span style={{ width: '56vw' }} className="mainBlock">
           <Field />
           <MainPlayer />
+        </span>
+        <span style={{ width: '22vw' }} className="mainBlock">
+          <OppZones oppIdx="p1" />
+          <OppZones oppIdx="p2" />
+          <OppZones oppIdx="p3" />
         </span>
       </div>
     );

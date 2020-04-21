@@ -50,6 +50,15 @@
   top: 0;
 }
 
+.handCards img:hover {
+  z-index: 50 !important;
+}
+
+.handCards img.playable:hover {
+  outline: 2px solid aqua;
+  cursor: pointer;
+}
+
 .ChamberZone {
   background-color: rgba(0, 255, 0, 0.1);
   width: 22.2%;

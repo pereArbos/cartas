@@ -6,6 +6,7 @@ import CardDisplayModal from '../../cardDisplayModal/CardDisplayModal';
 export default class PlayZone extends React.Component {
   static contextTypes = {
     playerState: PropTypes.object,
+    parentState: PropTypes.object,
   };
 
   constructor(props) {
@@ -17,18 +18,22 @@ export default class PlayZone extends React.Component {
   showModal = () => this.setState({ show: true });
 
   render() {
-    const { playedCards } = this.context.playerState;
+    const { playedCards } = this.context.playerState || {};
+    const { opp } = this.props;
+    const cards = opp ? this.context.parentState.discard : playedCards;
+    const limit = opp ? 4 : 12;
+
     return [
       <div
-        className="PlayZone showesModal"
-        title="Tus Cartas Jugadas"
+        className={`${opp ? 'OppPlay' : 'PlayZone'} showesModal`}
+        title={opp ? `Cartas Jugadas por ${opp}` : 'Tus Cartas Jugadas'}
         onClick={this.showModal}
       >
-        {playedCards.map((card, idx) => {
+        {cards.map((card, idx) => {
           const { name, set } = card;
           const route = set ? `set${set}/${name}` : name;
           return (
-            idx < 12 && (
+            idx < limit && (
               <img alt="noseve" src={require(`../../cards/${route}.jpg`)} />
             )
           );
@@ -38,8 +43,8 @@ export default class PlayZone extends React.Component {
         background="rgba(179, 179, 0, 0.85)"
         showModal={this.state.show}
         hideModal={this.hideModal}
-        cards={playedCards}
-        title="Tus Cartas Jugadas"
+        cards={cards}
+        title={opp ? `Cartas Jugadas por ${opp}` : 'Tus Cartas Jugadas'}
       />,
     ];
   }

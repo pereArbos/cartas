@@ -18,24 +18,25 @@ export default class DeckZone extends React.Component {
 
   render() {
     const { deck, discard } = this.context.parentState;
+    const { opp } = this.props;
     const deckVisible = deck.length > 0 ? 'visible' : 'hidden';
     const discardTop = discard.length > 0 && discard[discard.length - 1];
     const { name, set } = discardTop || {};
     const route = set ? `set${set}/${name}` : name;
 
     return [
-      <div className="DeckZone">
+      <div className={opp ? 'OppDeck' : 'DeckZone'}>
         <img
           alt="noseve"
           src={require('../../cards/cardback.jpg')}
-          title="Tu Mazo"
+          title={opp ? `Mazo de ${opp}` : 'Tu Mazo'}
           style={{ marginBottom: '1.5vh', visibility: deckVisible }}
         />
         {discardTop && (
           <img
             alt="noseve"
             className="showesModal"
-            title="Tus Descartes"
+            title={opp ? `Descartes de ${opp}` : 'Tus Descartes'}
             onClick={this.showModal}
             src={require(`../../cards/${route}.jpg`)}
           />
@@ -46,7 +47,7 @@ export default class DeckZone extends React.Component {
         showModal={this.state.show}
         hideModal={this.hideModal}
         cards={[...discard].reverse()}
-        title="Tu Pila de Descartes"
+        title={opp ? `Descartes de ${opp}` : 'Tus Descartes'}
       />,
     ];
   }

@@ -15,6 +15,7 @@ export default class MainPlayer extends React.Component {
   static childContextTypes = {
     playerState: PropTypes.object,
     updatePlayer: PropTypes.func,
+    draw: PropTypes.func,
   };
 
   static contextTypes = {
@@ -35,6 +36,7 @@ export default class MainPlayer extends React.Component {
           if (typeof cb === 'function') cb();
         });
       },
+      draw: this.drawAndReload,
     };
   }
 
@@ -60,14 +62,11 @@ export default class MainPlayer extends React.Component {
           playedCards = prevState.playedCards;
           return { contract: 0, love: 0, playedCards: [] };
         });
-        this.context.updateParent(
-          (prevState) => {
-            const discard = [...prevState.discard];
-            discard.push(...playedCards);
-            return { discard, gameState: 'servingPhase' }; // pasar turno
-          },
-          () => this.drawAndReload(5)
-        );
+        this.context.updateParent((prevState) => {
+          const discard = [...prevState.discard];
+          discard.push(...playedCards);
+          return { discard }; // pasar turno
+        });
       }
     }
   }

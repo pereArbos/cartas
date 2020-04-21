@@ -33,5 +33,11 @@ export const config = {
     },
   },
   contractPhase: { message: 'Fase de Contratación' },
-  discardPhase: {},
+  discardPhase: {
+    button2Text: 'Fin de Turno',
+    button2Click: (context) => {
+      context.draw(5);
+      context.updateParent({ gameState: 'servingPhase' }); // Pasar turno
+    },
+  },
 };
