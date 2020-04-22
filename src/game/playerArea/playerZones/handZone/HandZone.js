@@ -35,6 +35,9 @@ export default class HandZone extends React.Component {
   button2 = () => this.state.button2Click(this.context);
 
   getCardPlay = (card, idx) => {
+    const { cardOnClick } = this.state;
+    if (cardOnClick) return () => cardOnClick(idx);
+
     const { servings } = this.context.playerState;
     const { type, chamberCost } = card;
     if (chamberCost && servings >= chamberCost) {
@@ -93,7 +96,7 @@ export default class HandZone extends React.Component {
 
   render() {
     const { hand } = this.context.playerState;
-    const { message, button1Text, button1Click } = this.state;
+    const { message, handSelection, button1Text, button1Click } = this.state;
     const { button2Text, button2Click } = this.state;
     const space = 0.9;
 
@@ -104,12 +107,15 @@ export default class HandZone extends React.Component {
           {hand.map((card, idx, list) => {
             const { name, set } = card;
             const play = this.getCardPlay(card, idx);
+            const selected = handSelection && handSelection.includes(idx);
             const route = set ? `set${set}/${name}` : name;
             return (
               <img
                 alt="noseve"
                 src={require(`../../../cards/${route}.jpg`)}
-                className={play ? 'playable' : ''}
+                className={`${play ? 'playable' : ''} ${
+                  selected ? 'selected' : ''
+                }`}
                 onMouseOver={() => {
                   this.context.updateImage(route);
                 }}

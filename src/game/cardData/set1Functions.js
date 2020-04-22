@@ -29,7 +29,49 @@ function sendToHand(inst, cards, loveIdx) {
     const idx = city.findIndex((item) => item.name === '1Love');
     city[idx].quantity += 1;
     return { gameState: 'servingPhase', city };
-  }); //meter 1Love a la ciudad y evitar reset de servings etc
+  });
 }
 
-export const playFuncs = { Sainsbury };
+function Esquine(inst) {
+  let prevMessages = {};
+  inst.setState((prevState) => {
+    prevMessages = prevState;
+    return {
+      message: 'Selecciona cartas para descartar',
+      button2Text: 'Hecho',
+      button2Click: () => getServings(inst, prevMessages),
+      handSelection: [],
+      cardOnClick: (idx) => selectCard(inst, idx),
+    };
+  });
+}
+
+function selectCard(inst, idx) {
+  inst.setState((prevState) => {
+    let selection = [...prevState.handSelection];
+    if (selection.find((item) => item === idx)) {
+      selection = selection.filter((item) => item !== idx);
+    } else if (selection.length < 2) selection.push(idx);
+    return { handSelection: selection };
+  });
+}
+
+function getServings(inst, prevMessages) {
+  const { handSelection } = inst.state;
+  const { hand } = inst.context.playerState;
+  inst.context.updateParent((prevState) => {
+    const discard = [...prevState.discard];
+    handSelection.forEach((idx) => discard.push(hand[idx]));
+    return { discard };
+  });
+  inst.context.updatePlayer((prevState) => {
+    const newHand = [...prevState.hand];
+    return {
+      servings: prevState.servings + handSelection.length,
+      hand: newHand.filter((foo, idx) => !handSelection.includes(idx)),
+    };
+  });
+  inst.setState({ ...prevMessages, handSelection: null, cardOnClick: null });
+}
+
+export const playFuncs = { Sainsbury, Esquine };

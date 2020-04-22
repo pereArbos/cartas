@@ -102,7 +102,7 @@ export const set1Maids = [
     type: 'maid',
     cost: 4,
     draw: 2,
-    onPlay: () => {},
+    onPlay: playFuncs.Esquine,
     quantity: 10,
   },
   {

@@ -59,6 +59,11 @@
   cursor: pointer;
 }
 
+.handCards img.selected {
+  outline: 2px solid purple !important;
+  z-index: 50 !important;
+}
+
 .ChamberZone {
   background-color: rgba(0, 255, 0, 0.1);
   width: 22.2%;
