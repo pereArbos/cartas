@@ -1,3 +1,5 @@
+import { playFuncs } from './set1Functions';
+
 export const set1Fixed = [
   {
     name: 'Illness',
@@ -62,7 +64,7 @@ export const set1Maids = [
     set: 1,
     type: 'maid',
     cost: 5,
-    onPlay: () => {},
+    onPlay: playFuncs.Sainsbury,
     quantity: 10,
   },
   {

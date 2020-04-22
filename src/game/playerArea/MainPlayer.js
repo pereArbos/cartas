@@ -48,7 +48,7 @@ export default class MainPlayer extends React.Component {
     const oldState = this.context.parentState.gameState;
     const newState = nextContext.parentState.gameState;
     if (oldState !== newState) {
-      if (newState === 'servingPhase') {
+      if (newState === 'servingPhase' && oldState !== 'cityPick') {
         this.setState((prevState) => {
           const { servings, contract } = prevState;
           return {

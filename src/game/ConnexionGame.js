@@ -5,6 +5,7 @@ import { LioWebRTC } from 'react-liowebrtc';
 import MainGame from './MainGame';
 import { initiateCity } from './field/CityGenerator';
 import { initialDeck } from './initialDeck.js';
+import { shuffle } from './helpers/actions';
 
 export default class ConnexionGame extends React.Component {
   static childContextTypes = {
@@ -47,8 +48,15 @@ export default class ConnexionGame extends React.Component {
         return { city: newCity };
       },
       () => {
-        this.setState({ getDeck: 1 });
+        this.setState({ getDeck: 1, sendTo: this.sendToDeck });
       }
+    );
+  };
+
+  sendToDeck = (cards) => {
+    this.setState(
+      { deck: shuffle(cards), gameState: 'servingPhase' }, // En realidad se pasaría a la espera de empezar el juego
+      this.state.getInitialHand
     );
   };
 
