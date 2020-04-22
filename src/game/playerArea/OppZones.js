@@ -46,6 +46,7 @@ export default class MainPlayer extends React.Component {
           <DeckZone opp={oppIdx} />
           <div style={{ position: 'absolute' }}>
             <PlayZone opp={oppIdx} />
+            <ChamberZone opp={oppIdx} />
           </div>
         </div>
         <span

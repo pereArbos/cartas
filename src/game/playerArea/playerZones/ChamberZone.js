@@ -17,11 +17,13 @@ export default class ChamberZone extends React.Component {
   }
 
   componentDidMount() {
-    this.context.updateParent({
-      getChamberMaid: this.getChamberMaid,
-      getPrivateMaid: this.getPrivateMaid,
-      getAttachment: this.getAttachment,
-    });
+    if (!this.props.opp) {
+      this.context.updateParent({
+        getChamberMaid: this.getChamberMaid,
+        getPrivateMaid: this.getPrivateMaid,
+        getAttachment: this.getAttachment,
+      });
+    }
   }
 
   getChamberMaid = (card) => {
@@ -118,8 +120,14 @@ export default class ChamberZone extends React.Component {
 
   render() {
     const { chamberMaids, boughtPrivateMaids } = this.state;
+    const { discard } = this.context.parentState;
+    const { opp } = this.props;
+
     const currentMaid = boughtPrivateMaids[0];
-    const displayLimit = currentMaid ? 7 : 8;
+    let displayLimit = currentMaid ? 7 : 8;
+    if (opp) displayLimit = currentMaid ? 3 : 4;
+
+    const chamberCards = opp ? discard : chamberMaids;
     const hasMaids =
       currentMaid || chamberMaids.find((maid) => maid.type.includes('maid'));
     const hasBorder =
@@ -127,12 +135,14 @@ export default class ChamberZone extends React.Component {
 
     return [
       <div
-        className={`ChamberZone showesModal ${hasBorder ? 'selectable' : ''}`}
-        title="Tu Habitación Privada"
+        className={`${opp ? 'OppChamber' : 'ChamberZone'} showesModal ${
+          hasBorder ? 'selectable' : ''
+        }`}
+        title={opp ? `Habitación Privada de ${opp}` : ' Tu Habitación Privada'}
         onClick={this.showModal}
       >
         {currentMaid && this.renderCard(currentMaid)}
-        {chamberMaids.map((card, idx) => {
+        {chamberCards.map((card, idx) => {
           return idx < displayLimit ? this.renderCard(card) : null;
         })}
       </div>,
@@ -143,8 +153,8 @@ export default class ChamberZone extends React.Component {
         background="rgba(0, 190, 0, 0.8)"
         showModal={this.state.show}
         hideModal={this.hideModal}
-        cards={chamberMaids}
-        title="Tu Habitación Privada"
+        cards={chamberCards}
+        title={opp ? `Habitación Privada de ${opp}` : ' Tu Habitación Privada'}
         mode="chamber"
       />,
     ];

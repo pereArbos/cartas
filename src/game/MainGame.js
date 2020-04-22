@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Field from './field/Field';
+import MessageArea from './messageArea/MessageArea';
 import ImageArea from './imageArea/ImageArea';
 import MainPlayer from './playerArea/MainPlayer';
 import OppZones from './playerArea/OppZones';
@@ -28,9 +29,7 @@ export default class MainGame extends React.Component {
     return (
       <div className="App-base">
         <span style={{ width: '22vw' }} className="mainBlock">
-          <div style={{ display: 'block', height: '34vh' }}>
-            {this.props.payload || 'hola'}
-          </div>
+          <MessageArea />
           <ImageArea name={this.state.imageName} />
         </span>
         <span style={{ width: '56vw' }} className="mainBlock">

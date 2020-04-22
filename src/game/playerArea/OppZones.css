@@ -92,7 +92,17 @@
   background-color: rgba(255, 255, 0, 0.1);
 }
 
-.OppPlay img {
+.OppPlay img,
+.OppChamber img {
   margin-bottom: -1.25vh !important;
   margin-top: -0.45vh !important;
+}
+
+.OppChamber {
+  position: absolute;
+  top: 0;
+  left: 5.5vw;
+  width: 5.5vw;
+  height: 23.5vh;
+  background-color: rgba(0, 255, 0, 0.1);
 }
