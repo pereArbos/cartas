@@ -1,3 +1,7 @@
+import { love } from '../cardData/love';
+import { set1Fixed, set1Maids } from '../cardData/set1';
+import { privateMaids } from '../cardData/privateMaids';
+
 export function shuffle(array) {
   var currentIndex = array.length,
     temporaryValue,
@@ -16,4 +20,17 @@ export function shuffle(array) {
   }
 
   return array;
+}
+
+export function getTrueData(card) {
+  switch (card.type) {
+    case 'love':
+      return love.find((item) => item.name === card.name);
+    case 'privateMaid':
+      return privateMaids.find((item) => item.name === card.name);
+    case 'maid':
+      return set1Maids.find((item) => item.name === card.name);
+    default:
+      return set1Fixed.find((item) => item.name === card.name);
+  }
 }

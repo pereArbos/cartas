@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import './Field.css';
 
 import CardBlock from './CardBlock';
+import { getTrueData } from '../helpers/actions';
 
 export default class Field extends React.Component {
   static contextTypes = {
@@ -79,17 +80,17 @@ export default class Field extends React.Component {
       if (selected && selected > 0) {
         if (type === 'privateMaid') {
           this.buyPrivateMaid(name);
-          this.context.parentState.getPrivateMaid(card);
+          this.context.parentState.getPrivateMaid(getTrueData(card));
         } else {
           card.selected = 0;
           card.quantity -= selected;
-          this.updateCard(name, card, !sendToFunc && this.updatePeers);
+          this.updateCard(name, card, this.updatePeers);
           if (type === 'event') {
             hasEvents = true;
-            this.context.attachEvent(card, selected);
+            this.context.attachEvent(getTrueData(card), selected);
           } else {
             for (let i = 0; i < selected; i++) {
-              boughtCards.push(card);
+              boughtCards.push(getTrueData(card));
             }
           }
         }
@@ -150,8 +151,6 @@ export default class Field extends React.Component {
     const { city, privateMaids, webrtc } = this.context.parentState;
     if (webrtc) webrtc.shout('cityUpdate', { city, privateMaids });
   };
-
-  // Esperar webrtc + 2s para enseñar el botón de join, el cual hace shout('cityQuery', '')
 
   render() {
     const { city, gameState, sendTo } = this.context.parentState;

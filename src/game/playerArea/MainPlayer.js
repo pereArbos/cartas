@@ -117,7 +117,7 @@ export default class MainPlayer extends React.Component {
   };
 
   render() {
-    const { gameState, playerClick } = this.context.parentState;
+    const { gameState, playerClick, playerName } = this.context.parentState;
     const circleOn = gameState === 'targetPlayer' && playerClick;
     const playerClass = circleOn ? 'selectable' : '';
     const circleClick = circleOn ? playerClick : () => {};
@@ -131,7 +131,7 @@ export default class MainPlayer extends React.Component {
           <DeckZone />
         </div>
         <span className={`PlayerCircle ${playerClass}`} onClick={circleClick}>
-          <span className="PlayerName">PERE</span>
+          {playerName}
         </span>
         <IconFooter {...this.getRightFooter()} />
         <IconFooter {...this.getLeftFooter()} />

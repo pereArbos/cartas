@@ -19,7 +19,7 @@ export default class DeckZone extends React.Component {
   render() {
     const { deck, discard } = this.context.parentState;
     const { opp } = this.props;
-    const deckVisible = deck.length > 0 ? 'visible' : 'hidden';
+    const deckVisible = deck && deck.length > 0 ? 'visible' : 'hidden';
     const discardTop = discard.length > 0 && discard[discard.length - 1];
     const { name, set } = discardTop || {};
     const route = set ? `set${set}/${name}` : name;

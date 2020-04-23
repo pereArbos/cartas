@@ -19,3 +19,57 @@ button:hover {
 button:disabled {
   cursor: not-allowed;
 }
+
+.App-base .menuButton button {
+  position: absolute;
+  left: 40vw;
+  width: 20vw;
+  height: 20vh;
+  font-size: 40px;
+  font-weight: bold;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  background-color: yellow;
+  border: 5px solid palevioletred;
+  color: #282c34;
+}
+
+.App-base .nameMenu {
+  color: #282c34;
+  font-size: 40px;
+  font-weight: bold;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
+.App-base .nameMenu input {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  position: absolute;
+  top: 42.5vh;
+  height: 15vh;
+  left: 27.5vw;
+  width: 22.5vw;
+  font-size: 40px;
+  padding-left: 20px;
+  background-color: pink;
+  color: blue;
+  border: none;
+}
+
+.App-base .nameMenu button {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  position: absolute;
+  top: 42.5vh;
+  height: 15vh;
+  left: 55vw;
+  width: 17.5vw;
+  font-size: 40px;
+  background-color: yellow;
+  border: 5px solid palevioletred;
+}
+
+.App-base .nameMenu .title {
+  position: absolute;
+  top: 15vh;
+  left: 40vw;
+  font-size: 30px;
+  color: pink;
+}

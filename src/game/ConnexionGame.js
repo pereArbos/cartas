@@ -17,9 +17,10 @@ export default class ConnexionGame extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      deck: [],
       discard: [],
       attachmentsLeft: [],
+      mainPlayer: props.mainPlayer,
+      playerName: props.playerName,
     };
   }
 
@@ -36,7 +37,9 @@ export default class ConnexionGame extends React.Component {
   }
 
   componentDidMount() {
-    this.setState(initiateCity(), this.getInitialDeck);
+    if (this.state.mainPlayer) {
+      this.setState(initiateCity(), this.getInitialDeck);
+    }
   }
 
   getInitialDeck = () => {
@@ -109,24 +112,35 @@ export default class ConnexionGame extends React.Component {
 
   join = (webrtc) => {
     webrtc.joinRoom('cartasPereTantoCuore_v1');
-    this.setState({ webrtc });
+    this.setState({ webrtc }, () => {
+      if (!this.state.mainPlayer) {
+        this.state.webrtc.shout('hola', this.state.playerName);
+      }
+    });
   };
 
-  onCreatedPeer = (webrtc, peer) => {
-    this.setState({ webrtc });
+  onJoin = () => {
+    if (!this.state.mainPlayer) {
+      console.log('saludando');
+      setTimeout(() => this.state.webrtc.shout('hola', 'soypere'), 3000);
+    }
   };
 
   getPeerData = (webrtcBad, type, payload, peer) => {
-    const { webrtc, city, privateMaids } = this.state;
+    const { webrtc, city, privateMaids, deck, mainPlayer } = this.state;
     switch (type) {
-      case 'cityQuery':
-        (webrtc || webrtcBad).whisper(peer, 'cityUpdate', {
-          city,
-          privateMaids,
-        });
+      case 'hola':
+        if (mainPlayer) {
+          (webrtc || webrtcBad).whisper(peer, 'cityUpdate', {
+            city,
+            privateMaids,
+          });
+        }
         break;
       case 'cityUpdate':
-        this.setState(payload);
+        this.setState(payload, () => {
+          if (!deck) this.getInitialDeck();
+        });
         break;
       default:
         break;
@@ -136,10 +150,10 @@ export default class ConnexionGame extends React.Component {
   render() {
     return (
       <LioWebRTC
-        options={{ debug: true, dataOnly: true }}
+        options={{ debug: false, dataOnly: true }}
         onReady={this.join}
-        onCreatedPeer={this.handleCreatedPeer}
         onReceivedPeerData={this.getPeerData}
+        onJoinedRoom={this.onJoin}
       >
         <MainGame />
       </LioWebRTC>

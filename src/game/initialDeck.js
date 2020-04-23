@@ -1,1 +1,1 @@
-export const initialDeck = { '1Love': 7, EsquineForet: 3 };
+export const initialDeck = { '1Love': 3, SainsburyLockwood: 2 };
