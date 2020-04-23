@@ -8,6 +8,10 @@ import MainPlayer from './playerArea/MainPlayer';
 import OppZones from './playerArea/OppZones';
 
 export default class MainGame extends React.Component {
+  static contextTypes = {
+    parentState: PropTypes.object,
+  };
+
   static childContextTypes = {
     updateImage: PropTypes.func,
   };
@@ -26,6 +30,8 @@ export default class MainGame extends React.Component {
   }
 
   render() {
+    const { opponents = [] } = this.context.parentState;
+
     return (
       <div className="App-base">
         <span style={{ width: '22vw' }} className="mainBlock">
@@ -37,9 +43,10 @@ export default class MainGame extends React.Component {
           <MainPlayer />
         </span>
         <span style={{ width: '22vw' }} className="mainBlock">
-          <OppZones oppIdx="p1" />
-          <OppZones oppIdx="p2" />
-          <OppZones oppIdx="p3" />
+          {opponents.map((foo, idx) => {
+            if (idx >= 3) return null;
+            return <OppZones oppIdx={idx} />;
+          })}
         </span>
       </div>
     );

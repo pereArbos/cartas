@@ -4,7 +4,7 @@ import { LioWebRTC } from 'react-liowebrtc';
 
 import MainGame from './MainGame';
 import { initiateCity } from './field/CityGenerator';
-import { initialDeck } from './initialDeck.js';
+import { initialDeck, initialOppData } from './initialData.js';
 import { shuffle } from './helpers/actions';
 
 export default class ConnexionGame extends React.Component {
@@ -21,6 +21,7 @@ export default class ConnexionGame extends React.Component {
       attachmentsLeft: [],
       mainPlayer: props.mainPlayer,
       playerName: props.playerName,
+      opponents: [],
     };
   }
 
@@ -120,22 +121,28 @@ export default class ConnexionGame extends React.Component {
   };
 
   onJoin = () => {
-    if (!this.state.mainPlayer) {
+    const { mainPlayer, playerName, webrtc } = this.state;
+    if (!mainPlayer) {
       console.log('saludando');
-      setTimeout(() => this.state.webrtc.shout('hola', 'soypere'), 3000);
+      setTimeout(() => webrtc.shout('hola', playerName), 3000);
     }
   };
 
   getPeerData = (webrtcBad, type, payload, peer) => {
-    const { webrtc, city, privateMaids, deck, mainPlayer } = this.state;
+    const { webrtc, city, privateMaids, deck, playerName } = this.state;
     switch (type) {
       case 'hola':
-        if (mainPlayer) {
+        if (this.state.mainPlayer) {
           (webrtc || webrtcBad).whisper(peer, 'cityUpdate', {
             city,
             privateMaids,
           });
         }
+        this.getOpp(peer, payload);
+        (webrtc || webrtcBad).whisper(peer, 'queTal', playerName);
+        break;
+      case 'queTal':
+        this.getOpp(peer, payload);
         break;
       case 'cityUpdate':
         this.setState(payload, () => {
@@ -145,6 +152,14 @@ export default class ConnexionGame extends React.Component {
       default:
         break;
     }
+  };
+
+  getOpp = (peer, name) => {
+    this.setState((prevState) => {
+      const opponents = [...prevState.opponents];
+      opponents.push({ peer, name, data: initialOppData });
+      return { opponents };
+    });
   };
 
   render() {

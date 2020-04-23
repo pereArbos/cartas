@@ -19,14 +19,16 @@ export default class PlayZone extends React.Component {
 
   render() {
     const { playedCards } = this.context.playerState || {};
-    const { opp } = this.props;
-    const cards = opp ? this.context.parentState.discard : playedCards;
-    const limit = opp ? 4 : 12;
+    const { oppCards, oppName } = this.props;
+    const cards = oppCards || playedCards;
+    const limit = oppCards ? 4 : 12;
 
     return [
       <div
-        className={`${opp ? 'OppPlay' : 'PlayZone'} showesModal`}
-        title={opp ? `Cartas Jugadas por ${opp}` : 'Tus Cartas Jugadas'}
+        className={`${oppCards ? 'OppPlay' : 'PlayZone'} showesModal`}
+        title={
+          oppCards ? `Cartas Jugadas por ${oppName}` : 'Tus Cartas Jugadas'
+        }
         onClick={this.showModal}
       >
         {cards.map((card, idx) => {
@@ -44,7 +46,9 @@ export default class PlayZone extends React.Component {
         showModal={this.state.show}
         hideModal={this.hideModal}
         cards={cards}
-        title={opp ? `Cartas Jugadas por ${opp}` : 'Tus Cartas Jugadas'}
+        title={
+          oppCards ? `Cartas Jugadas por ${oppName}` : 'Tus Cartas Jugadas'
+        }
       />,
     ];
   }

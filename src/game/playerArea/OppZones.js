@@ -19,12 +19,13 @@ export default class MainPlayer extends React.Component {
   }
 
   getIconStructure = () => {
-    const { deck, discard } = this.context.parentState;
-    const hand = []; // resibir de los peers y guardarlo en oppStates
+    const { opponents } = this.context.parentState;
+    const { oppIdx } = this.props;
+    const { discard, handLen, deckLen } = opponents[oppIdx].data;
     return {
       iconData: [
-        ['deck.png', deck && deck.length],
-        ['hand.png', hand && hand.length],
+        ['deck.png', deckLen],
+        ['hand.png', handLen],
         ['trash.png', discard && discard.length],
       ],
       firstTop: 3.5,
@@ -33,27 +34,29 @@ export default class MainPlayer extends React.Component {
 
   render() {
     const { oppIdx } = this.props;
-    const { gameState, playerClick } = this.context.parentState;
+    const { gameState, playerClick, opponents } = this.context.parentState;
     const circleOn = gameState === 'targetPlayer' && playerClick;
     const playerClass = circleOn ? 'selectable' : '';
     const circleClick = circleOn ? playerClick : () => {};
 
     const { iconData, firstTop } = this.getIconStructure();
+    const playedCards = opponents[oppIdx].data.playedCards;
+    const oppName = opponents[oppIdx].name;
 
     return (
       <div style={{ position: 'relative' }}>
-        <div className={`OppTable ${oppIdx}`}>
-          <DeckZone opp={oppIdx} />
+        <div className={`OppTable p${oppIdx + 1}`}>
+          <DeckZone oppName={oppName} />
           <div style={{ position: 'absolute' }}>
-            <PlayZone opp={oppIdx} />
-            <ChamberZone opp={oppIdx} />
+            <PlayZone oppCards={playedCards} oppName={oppName} />
+            <ChamberZone oppName={oppName} />
           </div>
         </div>
         <span
-          className={`OppCircle ${oppIdx} ${playerClass}`}
+          className={`OppCircle p${oppIdx + 1} ${playerClass}`}
           onClick={circleClick}
         >
-          <span className="OppName">CARLOS</span>
+          <span className="OppName">{oppName}</span>
         </span>
         {iconData.map((item, idx) => {
           return [

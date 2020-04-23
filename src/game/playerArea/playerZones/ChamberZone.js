@@ -17,7 +17,7 @@ export default class ChamberZone extends React.Component {
   }
 
   componentDidMount() {
-    if (!this.props.opp) {
+    if (!this.props.oppName) {
       this.context.updateParent({
         getChamberMaid: this.getChamberMaid,
         getPrivateMaid: this.getPrivateMaid,
@@ -121,13 +121,13 @@ export default class ChamberZone extends React.Component {
   render() {
     const { chamberMaids, boughtPrivateMaids } = this.state;
     const { discard } = this.context.parentState;
-    const { opp } = this.props;
+    const { oppName } = this.props;
 
     const currentMaid = boughtPrivateMaids[0];
     let displayLimit = currentMaid ? 7 : 8;
-    if (opp) displayLimit = currentMaid ? 3 : 4;
+    if (oppName) displayLimit = currentMaid ? 3 : 4;
 
-    const chamberCards = opp ? discard : chamberMaids;
+    const chamberCards = oppName ? discard : chamberMaids;
     const hasMaids =
       currentMaid || chamberMaids.find((maid) => maid.type.includes('maid'));
     const hasBorder =
@@ -135,10 +135,14 @@ export default class ChamberZone extends React.Component {
 
     return [
       <div
-        className={`${opp ? 'OppChamber' : 'ChamberZone'} showesModal ${
+        className={`${oppName ? 'OppChamber' : 'ChamberZone'} showesModal ${
           hasBorder ? 'selectable' : ''
         }`}
-        title={opp ? `Habitación Privada de ${opp}` : ' Tu Habitación Privada'}
+        title={
+          oppName
+            ? `Habitación Privada de ${oppName}`
+            : ' Tu Habitación Privada'
+        }
         onClick={this.showModal}
       >
         {currentMaid && this.renderCard(currentMaid)}
@@ -154,7 +158,11 @@ export default class ChamberZone extends React.Component {
         showModal={this.state.show}
         hideModal={this.hideModal}
         cards={chamberCards}
-        title={opp ? `Habitación Privada de ${opp}` : ' Tu Habitación Privada'}
+        title={
+          oppName
+            ? `Habitación Privada de ${oppName}`
+            : ' Tu Habitación Privada'
+        }
         mode="chamber"
       />,
     ];
