@@ -1,4 +1,4 @@
-export const initialDeck = { '1Love': 7, ColetteFramboise: 3 };
+export const initialDeck = { '2Love': 7, ColetteFramboise: 3 };
 
 export const initialOppData = {
   deckLen: 5,
@@ -6,5 +6,5 @@ export const initialOppData = {
   discard: [],
   playedCards: [],
   chamberMaids: [],
-  privateMaids: [],
+  boughtPrivateMaids: [],
 };

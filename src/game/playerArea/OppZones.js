@@ -46,10 +46,10 @@ export default class MainPlayer extends React.Component {
     return (
       <div style={{ position: 'relative' }}>
         <div className={`OppTable p${oppIdx + 1}`}>
-          <DeckZone oppName={oppName} />
+          <DeckZone oppName={oppName} oppIdx={oppIdx} />
           <div style={{ position: 'absolute' }}>
             <PlayZone oppCards={playedCards} oppName={oppName} />
-            <ChamberZone oppName={oppName} />
+            <ChamberZone oppName={oppName} oppIdx={oppIdx} />
           </div>
         </div>
         <span

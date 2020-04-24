@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import './MainPlayer.css';
 
 import PlayZone from './playerZones/PlayZone';
@@ -44,6 +45,21 @@ export default class MainPlayer extends React.Component {
     this.context.updateParent({ getInitialHand: () => this.drawCards(5) });
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { hand, playedCards } = this.state;
+    const { webrtc, playerName } = this.context.parentState;
+
+    if (webrtc && hand.length !== prevState.hand.length) {
+      webrtc.shout('oppUpdate', {
+        name: playerName,
+        data: { handLen: hand.length },
+      });
+    }
+    if (webrtc && !_.isEqual(playedCards, prevState.playedCards)) {
+      webrtc.shout('oppUpdate', { name: playerName, data: { playedCards } });
+    }
+  }
+
   componentWillReceiveProps(nextProps, nextContext) {
     const oldState = this.context.parentState.gameState;
     const newState = nextContext.parentState.gameState;
@@ -85,10 +101,16 @@ export default class MainPlayer extends React.Component {
   };
 
   drawCards = (amount) => {
-    const { deck } = this.context.parentState;
+    const { deck, webrtc, playerName } = this.context.parentState;
     const { hand } = this.state;
     this.setState({ hand: [...deck.splice(0, amount), ...hand] });
-    this.context.updateParent({ deck });
+    this.context.updateParent({ deck }, () => {
+      if (webrtc)
+        webrtc.shout('oppUpdate', {
+          name: playerName,
+          data: { deckLen: deck.length },
+        });
+    });
   };
 
   getRightFooter = () => {

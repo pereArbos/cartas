@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import { LioWebRTC } from 'react-liowebrtc';
 
 import MainGame from './MainGame';
@@ -40,6 +41,22 @@ export default class ConnexionGame extends React.Component {
   componentDidMount() {
     if (this.state.mainPlayer) {
       this.setState(initiateCity(), this.getInitialDeck);
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { deck, discard, webrtc, playerName } = this.state;
+    if (webrtc && prevState.deck && deck.length !== prevState.deck.length) {
+      webrtc.shout('oppUpdate', {
+        name: playerName,
+        data: { deckLen: deck.length },
+      });
+    }
+    if (webrtc && !_.isEqual(discard, prevState.discard)) {
+      webrtc.shout('oppUpdate', {
+        name: playerName,
+        data: { discard },
+      });
     }
   }
 
@@ -147,6 +164,17 @@ export default class ConnexionGame extends React.Component {
       case 'cityUpdate':
         this.setState(payload, () => {
           if (!deck) this.getInitialDeck();
+        });
+        break;
+      case 'oppUpdate':
+        this.setState((prevState) => {
+          const opponents = _.cloneDeep(prevState.opponents);
+          const idx = opponents.findIndex((opp) => opp.name === payload.name);
+          opponents[idx].data = {
+            ...opponents[idx].data,
+            ...payload.data,
+          };
+          return { opponents };
         });
         break;
       default:

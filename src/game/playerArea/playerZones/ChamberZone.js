@@ -13,7 +13,11 @@ export default class ChamberZone extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { show: false, chamberMaids: [], boughtPrivateMaids: [] };
+    this.state = {
+      show: false,
+      chamberMaids: [],
+      boughtPrivateMaids: [],
+    };
   }
 
   componentDidMount() {
@@ -22,6 +26,27 @@ export default class ChamberZone extends React.Component {
         getChamberMaid: this.getChamberMaid,
         getPrivateMaid: this.getPrivateMaid,
         getAttachment: this.getAttachment,
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { chamberMaids, boughtPrivateMaids } = this.state;
+    const { webrtc, playerName } = this.context.parentState;
+
+    if (
+      webrtc &&
+      !_.isEqual(boughtPrivateMaids, prevState.boughtPrivateMaids)
+    ) {
+      webrtc.shout('oppUpdate', {
+        name: playerName,
+        data: { boughtPrivateMaids },
+      });
+    }
+    if (webrtc && !_.isEqual(chamberMaids, prevState.chamberMaids)) {
+      webrtc.shout('oppUpdate', {
+        name: playerName,
+        data: { chamberMaids },
       });
     }
   }
@@ -84,7 +109,9 @@ export default class ChamberZone extends React.Component {
 
   getPrivateMaid = (card) => {
     this.setState((prevState) => {
-      return { boughtPrivateMaids: [card, ...prevState.boughtPrivateMaids] };
+      return {
+        boughtPrivateMaids: [card, ...prevState.boughtPrivateMaids],
+      };
     });
   };
 
@@ -111,7 +138,11 @@ export default class ChamberZone extends React.Component {
           <img
             alt="noseve"
             src={require(`../../cards/${this.getRoute(topAttachment)}.jpg`)}
-            style={{ position: 'absolute', top: '0.4vw', left: 0 }}
+            style={{
+              position: 'absolute',
+              top: '0.4vw',
+              left: 0,
+            }}
           />
         )}
       </div>
@@ -119,15 +150,15 @@ export default class ChamberZone extends React.Component {
   };
 
   render() {
-    const { chamberMaids, boughtPrivateMaids } = this.state;
-    const { discard } = this.context.parentState;
-    const { oppName } = this.props;
+    const { oppName, oppIdx } = this.props;
+    const { opponents } = this.context.parentState;
+    const data = oppName ? opponents[oppIdx].data : this.state;
+    const { chamberMaids, boughtPrivateMaids } = data;
 
     const currentMaid = boughtPrivateMaids[0];
     let displayLimit = currentMaid ? 7 : 8;
     if (oppName) displayLimit = currentMaid ? 3 : 4;
 
-    const chamberCards = oppName ? discard : chamberMaids;
     const hasMaids =
       currentMaid || chamberMaids.find((maid) => maid.type.includes('maid'));
     const hasBorder =
@@ -146,18 +177,21 @@ export default class ChamberZone extends React.Component {
         onClick={this.showModal}
       >
         {currentMaid && this.renderCard(currentMaid)}
-        {chamberCards.map((card, idx) => {
+        {chamberMaids.map((card, idx) => {
           return idx < displayLimit ? this.renderCard(card) : null;
         })}
       </div>,
       <CardDisplayModal
         extraCmp={() => (
-          <PrivateMaidsDisplay privateMaids={boughtPrivateMaids} />
+          <PrivateMaidsDisplay
+            privateMaids={boughtPrivateMaids}
+            oppName={oppName}
+          />
         )}
         background="rgba(0, 190, 0, 0.8)"
         showModal={this.state.show}
         hideModal={this.hideModal}
-        cards={chamberCards}
+        cards={chamberMaids}
         title={
           oppName
             ? `Habitación Privada de ${oppName}`
