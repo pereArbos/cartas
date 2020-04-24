@@ -70,7 +70,7 @@
 }
 
 .ChamberZone.selectable {
-  outline: 5px solid purple;
+  outline: 4px solid purple;
 }
 
 .ChamberZone.selectable:hover {

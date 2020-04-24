@@ -29,14 +29,23 @@ export default class HandZone extends React.Component {
         ...config[newState],
       });
     }
+    if (oldState !== newState && newState === 'targetPlayer') {
+      const { name } = nextContext.parentState.attachmentsLeft[0];
+      this.setState({ message: `Asigna ${name} a un Jugador` });
+    }
+    if (oldState !== newState && newState === 'targetChamberMaid') {
+      const { name } = nextContext.parentState.attachmentsLeft[0];
+      this.setState({ message: `Asigna ${name} a una Doncella` });
+    }
   }
 
   button1 = () => this.state.button1Click(this.context);
   button2 = () => this.state.button2Click(this.context);
 
   getCardPlay = (card, idx) => {
-    const { cardOnClick } = this.state;
+    const { cardOnClick, button1Text } = this.state;
     if (cardOnClick) return () => cardOnClick(idx);
+    if (button1Text) return null;
 
     const { servings } = this.context.playerState;
     const { type, chamberCost } = card;

@@ -1,4 +1,4 @@
-export const initialDeck = { '2Love': 7, ColetteFramboise: 3 };
+export const initialDeck = { '2Love': 7, ViolaCrescent: 3 };
 
 export const initialOppData = {
   deckLen: 5,

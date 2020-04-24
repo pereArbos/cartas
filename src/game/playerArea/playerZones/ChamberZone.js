@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 import CardDisplayModal from '../../cardDisplayModal/CardDisplayModal';
 import PrivateMaidsDisplay from '../../cardDisplayModal/PrivateMaidsDisplay';
+import { checkChamberMaids } from '../../helpers/actions';
 
 export default class ChamberZone extends React.Component {
   static contextTypes = {
@@ -26,6 +27,7 @@ export default class ChamberZone extends React.Component {
         getChamberMaid: this.getChamberMaid,
         getPrivateMaid: this.getPrivateMaid,
         getAttachment: this.getAttachment,
+        hasChamberMaids: () => checkChamberMaids(this.state),
       });
     }
   }
@@ -67,7 +69,8 @@ export default class ChamberZone extends React.Component {
     });
   };
 
-  getAttachment = (maidIdx, card, isPrivate) => {
+  getAttachment = (data) => {
+    const { maidIdx, card, isPrivate } = data;
     if (isPrivate) {
       this.setState((prevState) => {
         const privateMaids = _.cloneDeep(prevState.boughtPrivateMaids);
@@ -116,7 +119,12 @@ export default class ChamberZone extends React.Component {
   };
 
   hideModal = () => this.setState({ show: false });
-  showModal = () => this.setState({ show: true });
+
+  showModal = () => {
+    const { oppName } = this.props;
+    this.context.updateParent({ targetChamber: oppName });
+    this.setState({ show: true });
+  };
 
   getRoute = (card) => {
     const { name, set } = card;
@@ -151,7 +159,7 @@ export default class ChamberZone extends React.Component {
 
   render() {
     const { oppName, oppIdx } = this.props;
-    const { opponents } = this.context.parentState;
+    const { opponents, gameState } = this.context.parentState;
     const data = oppName ? opponents[oppIdx].data : this.state;
     const { chamberMaids, boughtPrivateMaids } = data;
 
@@ -161,8 +169,7 @@ export default class ChamberZone extends React.Component {
 
     const hasMaids =
       currentMaid || chamberMaids.find((maid) => maid.type.includes('maid'));
-    const hasBorder =
-      this.context.parentState.gameState === 'targetChamberMaid' && hasMaids;
+    const hasBorder = gameState === 'targetChamberMaid' && hasMaids;
 
     return [
       <div

@@ -29,6 +29,7 @@ export default function CardDisplayModal(props, context) {
       isOpen={showModal}
       style={{ overlay, content: { ...content, background } }}
       onRequestClose={hideModal}
+      ariaHideApp={false}
     >
       <div className={`CardDisplayModal ${extraClass}`}>
         <h1>{title}</h1>

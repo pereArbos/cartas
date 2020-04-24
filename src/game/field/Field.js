@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './Field.css';
 
 import CardBlock from './CardBlock';
-import { getTrueData } from '../helpers/actions';
+import { getTrueData, hasTargets } from '../helpers/actions';
 
 export default class Field extends React.Component {
   static contextTypes = {
@@ -136,6 +136,7 @@ export default class Field extends React.Component {
   isSelectable = (card) => {
     const { cost, name, type } = card;
     if (name === 'cardback') return false;
+    if (type === 'event' && !hasTargets(this.context)) return false;
 
     const { gameState, restrType, restrName, money } = this.context.parentState;
     const picking = gameState === 'cityPick';

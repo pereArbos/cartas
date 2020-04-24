@@ -103,15 +103,24 @@ export default class ConnexionGame extends React.Component {
           gameState: 'targetChamberMaid',
           maidClick: (maidIdx, isPrivate) => {
             this.removePendingAttach();
-            this.state.getAttachment(maidIdx, card, isPrivate);
+            const { webrtc, opponents, targetChamber } = this.state;
+            if (targetChamber) {
+              const opp = opponents.find((item) => item.name === targetChamber);
+              const data = { maidIdx, card, isPrivate };
+              if (webrtc) webrtc.whisper(opp.peer, 'sendAttach', data);
+            } else this.state.getAttachment({ maidIdx, card, isPrivate });
           },
         };
       default:
         return {
           gameState: 'targetPlayer',
-          playerClick: () => {
+          playerClick: (name) => {
             this.removePendingAttach();
-            this.state.getChamberMaid(card); // Aquí iría esto o mandársela a otro
+            if (name) {
+              const { webrtc, opponents } = this.state;
+              const opp = opponents.find((item) => item.name === name);
+              if (webrtc) webrtc.whisper(opp.peer, 'sendEvent', card);
+            } else this.state.getChamberMaid(card);
           },
         };
     }
@@ -176,6 +185,12 @@ export default class ConnexionGame extends React.Component {
           };
           return { opponents };
         });
+        break;
+      case 'sendEvent':
+        this.state.getChamberMaid(payload);
+        break;
+      case 'sendAttach':
+        this.state.getAttachment(payload);
         break;
       default:
         break;

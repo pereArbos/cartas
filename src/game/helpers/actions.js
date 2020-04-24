@@ -34,3 +34,18 @@ export function getTrueData(card) {
       return set1Fixed.find((item) => item.name === card.name);
   }
 }
+
+export function checkChamberMaids(data) {
+  const { chamberMaids, boughtPrivateMaids } = data;
+  return (
+    boughtPrivateMaids[0] ||
+    chamberMaids.find((maid) => maid.type.includes('maid'))
+  );
+}
+
+export function hasTargets(context) {
+  if (context.parentState.hasChamberMaids()) return true;
+  return context.parentState.opponents.find((opp) => {
+    return checkChamberMaids(opp.data);
+  });
+}
