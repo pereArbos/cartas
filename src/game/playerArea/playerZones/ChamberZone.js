@@ -5,11 +5,15 @@ import _ from 'lodash';
 import CardDisplayModal from '../../cardDisplayModal/CardDisplayModal';
 import PrivateMaidsDisplay from '../../cardDisplayModal/PrivateMaidsDisplay';
 import { checkChamberMaids } from '../../helpers/actions';
+import { getChamberMaid, getAttachment } from './helpers/dataUpdates';
 
 export default class ChamberZone extends React.Component {
   static contextTypes = {
     parentState: PropTypes.object,
     updateParent: PropTypes.func,
+    updatePlayer: PropTypes.func,
+    updateImage: PropTypes.func,
+    draw: PropTypes.func,
   };
 
   constructor(props) {
@@ -24,10 +28,11 @@ export default class ChamberZone extends React.Component {
   componentDidMount() {
     if (!this.props.oppName) {
       this.context.updateParent({
-        getChamberMaid: this.getChamberMaid,
+        getChamberMaid: (card) => getChamberMaid(this, card),
         getPrivateMaid: this.getPrivateMaid,
-        getAttachment: this.getAttachment,
+        getAttachment: (data) => getAttachment(this, data),
         hasChamberMaids: () => checkChamberMaids(this.state),
+        getCurrentMaid: this.getHealthyMaid,
       });
     }
   }
@@ -35,7 +40,6 @@ export default class ChamberZone extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     const { chamberMaids, boughtPrivateMaids } = this.state;
     const { webrtc, playerName } = this.context.parentState;
-
     if (
       webrtc &&
       !_.isEqual(boughtPrivateMaids, prevState.boughtPrivateMaids)
@@ -53,62 +57,16 @@ export default class ChamberZone extends React.Component {
     }
   }
 
-  getChamberMaid = (card) => {
-    this.setState((prevState) => {
-      const newMaids = _.cloneDeep(prevState.chamberMaids);
-      const idx = newMaids.findIndex((item) => {
-        const hasAttachments = item.attachments && item.attachments[0];
-        return !hasAttachments && item.name === card.name;
-      });
-      if (idx >= 0) {
-        newMaids[idx].chambered = newMaids[idx].chambered + 1;
-      } else {
-        newMaids.push({ ...card, chambered: 1 });
-      }
-      return { chamberMaids: newMaids };
-    });
-  };
-
-  getAttachment = (data) => {
-    const { maidIdx, card, isPrivate } = data;
-    if (isPrivate) {
-      this.setState((prevState) => {
-        const privateMaids = _.cloneDeep(prevState.boughtPrivateMaids);
-        const attachments = privateMaids[0] && privateMaids[0].attachments;
-        privateMaids[0].attachments = [...(attachments || []), card];
-        return { boughtPrivateMaids: privateMaids };
-      });
-      return;
+  componentWillReceiveProps(nextProps, nextContext) {
+    const oldState = this.context.parentState.gameState;
+    const newState = nextContext.parentState.gameState;
+    if (oldState !== newState && newState === 'startPhase') {
+      const currentMaid = this.getHealthyMaid();
+      if (currentMaid && currentMaid.onStart) {
+        if (currentMaid.auto) currentMaid.onStart(this.context);
+      } else this.context.updateParent({ gameState: 'servingPhase' });
     }
-    this.setState((prevState) => {
-      let newMaids = _.cloneDeep(prevState.chamberMaids);
-      const maid = newMaids[maidIdx];
-      const attachments = [...(maid.attachments || []), card];
-      // Quitar maid con antiguos attachments
-      if (maid.chambered > 1) {
-        newMaids[maidIdx].chambered -= 1;
-      } else {
-        newMaids = newMaids.filter((foo, idx) => idx !== maidIdx);
-      }
-      // Meter maid con nuevos attachments
-      const newIdx = newMaids.findIndex((item) => {
-        const same = this.hasSameAttachments(item.attachments, attachments);
-        return item.name === maid.name && same;
-      });
-      if (newIdx >= 0) {
-        newMaids[newIdx].chambered += 1;
-      } else {
-        newMaids.push({ ...maid, chambered: 1, attachments });
-      }
-      return { chamberMaids: newMaids };
-    });
-  };
-
-  hasSameAttachments = (list1, list2) => {
-    const namelist1 = (list1 || []).map((item) => item.name);
-    const namelist2 = (list2 || []).map((item) => item.name);
-    return _.isEqual(namelist1, namelist2);
-  };
+  }
 
   getPrivateMaid = (card) => {
     this.setState((prevState) => {
@@ -131,6 +89,33 @@ export default class ChamberZone extends React.Component {
     return set ? `set${set}/${name}` : name;
   };
 
+  hasIllness = (card) => {
+    if (!card.attachments) return false;
+    const ill = card.attachments.find((item) => item.name === 'Illness');
+    return ill ? true : false;
+  };
+
+  getHealthyMaid = () => {
+    const currentMaid = this.state.boughtPrivateMaids[0];
+    if (!currentMaid) return null;
+    return this.hasIllness(currentMaid) ? null : currentMaid;
+  };
+
+  getExtra = (card) => {
+    const { gameState } = this.context.parentState;
+    if (card.type !== 'privateMaid' || gameState !== 'startPhase') return {};
+    if (card.auto || !card.onStart || this.hasIllness(card)) return {};
+    return {
+      className: 'playable',
+      onClick: (e) => {
+        e.stopPropagation();
+        card.onStart(this.context);
+      },
+      onMouseOver: () => this.context.updateImage(this.getRoute(card)),
+      onMouseOut: () => this.context.updateImage(null),
+    };
+  };
+
   renderCard = (card) => {
     const { attachments } = card;
     const hasAttachments = attachments && attachments[0];
@@ -141,6 +126,7 @@ export default class ChamberZone extends React.Component {
         <img
           alt="noseve"
           src={require(`../../cards/${this.getRoute(card)}.jpg`)}
+          {...this.getExtra(card)}
         />
         {hasAttachments && (
           <img

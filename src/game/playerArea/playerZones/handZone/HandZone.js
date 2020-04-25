@@ -15,7 +15,11 @@ export default class HandZone extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { message: '' };
+    this.state = { message: '', usadaJoder: 'no' };
+  }
+
+  componentDidMount() {
+    this.context.updateParent({ setActions: (data) => this.setState(data) });
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
@@ -36,6 +40,9 @@ export default class HandZone extends React.Component {
     if (oldState !== newState && newState === 'targetChamberMaid') {
       const { name } = nextContext.parentState.attachmentsLeft[0];
       this.setState({ message: `Asigna ${name} a una Doncella` });
+    }
+    if (oldState !== newState && newState === 'startPhase') {
+      this.setState({ usadaJoder: 'no' });
     }
   }
 
@@ -73,14 +80,16 @@ export default class HandZone extends React.Component {
 
   msgButton = (data, func) => {
     const { prevState, card, idx } = data;
-    func(card, idx);
-    this.setState(prevState);
+    this.setState(prevState, () => func(card, idx));
   };
 
   cardPlay = (card, cardIdx) => {
     const { love = 0, servings = 0, contract = 0, onPlay } = card;
-    if (card.draw > 0) this.context.draw(card.draw);
-    if (typeof onPlay === 'function') onPlay(this);
+    if (card.draw > 0) {
+      this.draw(card.draw, () => {
+        if (typeof onPlay === 'function') onPlay(this);
+      });
+    } else if (typeof onPlay === 'function') onPlay(this);
     this.context.updatePlayer((prevState) => {
       const hand = [...prevState.hand];
       const playedCards = [...prevState.playedCards];
@@ -101,6 +110,15 @@ export default class HandZone extends React.Component {
       return { servings: prevState.servings - card.chamberCost, hand };
     });
     this.context.parentState.getChamberMaid(card);
+  };
+
+  draw = (amount, cb) => {
+    this.context.draw(amount);
+    const currentMaid = this.context.parentState.getCurrentMaid();
+    if (currentMaid && currentMaid.onDraw && this.state.usadaJoder === 'no') {
+      console.log('k onda');
+      currentMaid.onDraw(this, cb);
+    } else cb();
   };
 
   render() {

@@ -37,7 +37,14 @@ export const config = {
     button2Text: 'Fin de Turno',
     button2Click: (context) => {
       context.draw(5);
-      context.updateParent({ gameState: 'servingPhase' }); // Pasar turno
+      context.updateParent({ gameState: 'startPhase' }); // Pasar turno
+    },
+  },
+  startPhase: {
+    message: 'Fase de Inicio',
+    button2Text: 'Fase de Servicios',
+    button2Click: (context) => {
+      context.updateParent({ gameState: 'servingPhase' });
     },
   },
 };

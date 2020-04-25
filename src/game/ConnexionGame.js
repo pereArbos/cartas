@@ -76,7 +76,7 @@ export default class ConnexionGame extends React.Component {
 
   sendToDeck = (cards) => {
     this.setState(
-      { deck: shuffle(cards), gameState: 'servingPhase' }, // En realidad se pasaría a la espera de empezar el juego
+      { deck: shuffle(cards), gameState: 'startPhase' }, // En realidad se pasaría a la espera de empezar el juego
       this.state.getInitialHand
     );
   };

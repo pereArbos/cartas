@@ -1,3 +1,5 @@
+import { functions } from './privateMaidFunctions';
+
 export const privateMaids = [
   {
     name: 'AmberTwilight',
@@ -5,7 +7,7 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 5,
     vp: -3,
-    onEndOfEveryTurn: () => {},
+    onDraw: functions.Milly,
   },
   {
     name: 'NordTwilight',
@@ -13,7 +15,7 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 4,
     vp: -4,
-    onStart: () => {},
+    onStart: functions.Lalande,
   },
   {
     name: 'SoraNakachi',
@@ -21,7 +23,7 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 7,
     vp: 2,
-    onStart: () => {},
+    onStart: functions.Lalande,
   },
   {
     name: 'FayLongfang',
@@ -29,7 +31,8 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 6,
     vp: 0,
-    onStart: () => {},
+    auto: true,
+    onStart: functions.Fay,
   },
   {
     name: 'LalandeDreyfus',
@@ -37,7 +40,7 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 6,
     vp: 2,
-    onStart: () => {},
+    onStart: functions.Lalande,
   },
   {
     name: 'MillyViolet',
@@ -45,7 +48,7 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 5,
     vp: 2,
-    onPlayPhase: () => {},
+    onDraw: functions.Milly,
   },
   {
     name: 'EugenieFontaine',
@@ -53,7 +56,7 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 5,
     vp: 0,
-    onStart: () => {},
+    onStart: functions.Lalande,
   },
   {
     name: 'LucienneDeMarlboro',
@@ -61,7 +64,8 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 5,
     vp: 1,
-    onStart: () => {},
+    auto: true,
+    onStart: functions.Lucienne,
   },
   {
     name: 'RosaTopaz',
@@ -69,7 +73,8 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 5,
     vp: 1,
-    onStart: () => {},
+    auto: true,
+    onStart: functions.Rosa,
   },
   {
     name: 'TanyaPetrushka',
@@ -77,6 +82,6 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 4,
     vp: 1,
-    onPlayPhase: () => {},
+    onDraw: functions.Tanya,
   },
 ];
