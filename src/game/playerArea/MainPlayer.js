@@ -49,11 +49,8 @@ export default class MainPlayer extends React.Component {
     const { hand, playedCards } = this.state;
     const { webrtc, playerName } = this.context.parentState;
 
-    if (webrtc && hand.length !== prevState.hand.length) {
-      webrtc.shout('oppUpdate', {
-        name: playerName,
-        data: { handLen: hand.length },
-      });
+    if (webrtc && !_.isEqual(hand, prevState.hand)) {
+      webrtc.shout('oppUpdate', { name: playerName, data: { hand } });
     }
     if (webrtc && !_.isEqual(playedCards, prevState.playedCards)) {
       webrtc.shout('oppUpdate', { name: playerName, data: { playedCards } });
@@ -108,7 +105,7 @@ export default class MainPlayer extends React.Component {
       if (webrtc)
         webrtc.shout('oppUpdate', {
           name: playerName,
-          data: { deckLen: deck.length },
+          data: { deck },
         });
     });
   };

@@ -65,7 +65,7 @@ export default class App extends React.Component {
   render() {
     const { playerName, mainPlayer, start } = this.state;
     if (typeof mainPlayer === typeof undefined) return this.getGameMenu();
-    // if (!start) return this.getNameMenu();
+    if (!start) return this.getNameMenu();
     return <ConnexionGame playerName={playerName} mainPlayer={mainPlayer} />;
   }
 }

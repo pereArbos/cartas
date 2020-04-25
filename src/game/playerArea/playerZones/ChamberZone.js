@@ -58,13 +58,16 @@ export default class ChamberZone extends React.Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-    const oldState = this.context.parentState.gameState;
-    const newState = nextContext.parentState.gameState;
-    if (oldState !== newState && newState === 'startPhase') {
-      const currentMaid = this.getHealthyMaid();
-      if (currentMaid && currentMaid.onStart) {
-        if (currentMaid.auto) currentMaid.onStart(this.context);
-      } else this.context.updateParent({ gameState: 'servingPhase' });
+    if (!this.props.oppName) {
+      const oldState = this.context.parentState.gameState;
+      const newState = nextContext.parentState.gameState;
+      if (oldState !== newState && newState === 'startPhase') {
+        const currentMaid = this.getHealthyMaid();
+        console.log('hola?', currentMaid);
+        if (currentMaid && currentMaid.onStart) {
+          if (currentMaid.auto) currentMaid.onStart(this.context);
+        } else this.context.updateParent({ gameState: 'servingPhase' });
+      }
     }
   }
 
@@ -126,7 +129,7 @@ export default class ChamberZone extends React.Component {
         <img
           alt="noseve"
           src={require(`../../cards/${this.getRoute(card)}.jpg`)}
-          {...this.getExtra(card)}
+          {...(this.props.oppName ? {} : this.getExtra(card))}
         />
         {hasAttachments && (
           <img

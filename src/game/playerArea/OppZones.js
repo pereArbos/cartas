@@ -22,11 +22,11 @@ export default class MainPlayer extends React.Component {
   getIconStructure = () => {
     const { opponents } = this.context.parentState;
     const { oppIdx } = this.props;
-    const { discard, handLen, deckLen } = opponents[oppIdx].data;
+    const { discard, hand, deck } = opponents[oppIdx].data;
     return {
       iconData: [
-        ['deck.png', deckLen],
-        ['hand.png', handLen],
+        ['deck.png', deck ? deck.length : 5],
+        ['hand.png', hand ? hand.length : 5],
         ['trash.png', discard && discard.length],
       ],
       firstTop: 3.5,

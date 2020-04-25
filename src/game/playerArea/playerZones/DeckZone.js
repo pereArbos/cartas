@@ -17,17 +17,15 @@ export default class DeckZone extends React.Component {
   showModal = () => this.setState({ show: true });
 
   render() {
-    const { deck, opponents } = this.context.parentState;
+    const { opponents } = this.context.parentState;
     const { oppName, oppIdx } = this.props;
 
-    const { discard } = oppName
+    const { discard, deck } = oppName
       ? opponents[oppIdx].data
       : this.context.parentState;
-    const deckLength = oppName
-      ? opponents[oppIdx].data.deckLen
-      : deck && deck.length;
+    const deckLength = deck && deck.length;
 
-    const deckVisible = deckLength > 0 ? 'visible' : 'hidden';
+    const deckVisible = deckLength === 0 ? 'hidden' : 'visible';
     const discardTop = discard.length > 0 && discard[discard.length - 1];
     const { name, set } = discardTop || {};
     const route = set ? `set${set}/${name}` : name;
