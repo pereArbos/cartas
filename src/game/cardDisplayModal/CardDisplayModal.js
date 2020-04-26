@@ -14,6 +14,7 @@ export default function CardDisplayModal(props, context) {
     title,
     mode,
     extraCmp,
+    oppName,
   } = props;
 
   const { overlay, content } =
@@ -36,7 +37,7 @@ export default function CardDisplayModal(props, context) {
         <div className="cards">
           {typeof extraCmp === 'function' && extraCmp()}
           {cards.map((card, idx) =>
-            renderCard(card, idx, context, mode, maxAttach)
+            renderCard(card, idx, context, mode, maxAttach, oppName)
           )}
         </div>
         <button type="button" onClick={hideModal}>
@@ -73,17 +74,17 @@ function getImage(route, context, style, selectInfo) {
   );
 }
 
-function renderCard(card, cardIdx, context, mode, maxAttach) {
+function renderCard(card, cardIdx, context, mode, maxAttach, oppName) {
   const { chambered, attachments, type } = card;
   const AttachmentsDisplay = (attachments || []).map((item, idx) => {
     return getImage(
       getRoute(item),
       context,
       { position: 'absolute', top: `${1.5 * (idx + 1)}vw`, left: 0 },
-      getSelectInfo(mode, type, cardIdx, context)
+      getSelectInfo(mode, type, cardIdx, context, oppName)
     );
   });
-  const info = getSelectInfo(mode, type, cardIdx, context);
+  const info = getSelectInfo(mode, type, cardIdx, context, oppName);
 
   return (
     <div className="cardBlock">
@@ -112,7 +113,7 @@ function getMaxAttachment(cards) {
   return Math.max(...attachNums);
 }
 
-function getSelectInfo(mode, type, cardIdx, context) {
+function getSelectInfo(mode, type, cardIdx, context, oppName) {
   const { gameState, maidClick } = context.parentState;
   const selecting = maidClick && gameState === 'targetChamberMaid';
   const chamberCard = mode === 'chamber' && type.includes('maid');
@@ -121,7 +122,7 @@ function getSelectInfo(mode, type, cardIdx, context) {
 
   const imageClass = clickable ? 'selectable' : '';
   const imageClick = (event) => {
-    maidClick(parseInt(event.target.name), type === 'privateMaid');
+    maidClick(parseInt(event.target.name), type === 'privateMaid', oppName);
   };
   const onClick = clickable ? imageClick : () => {};
   return { imageClass, onClick, cardIdx };

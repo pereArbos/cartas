@@ -123,7 +123,6 @@ export default class Field extends React.Component {
     });
     let parsedMsg = '';
     message.split(',').forEach((msg, idx, list) => {
-      console.log(msg, idx, list);
       let end = idx === list.length - 3 ? ' y' : ',';
       end = idx >= list.length - 2 ? '' : end;
       parsedMsg = `${parsedMsg}${msg}${end}`;

@@ -45,18 +45,8 @@ function Esquine(inst) {
       button2Text: 'Hecho',
       button2Click: () => getServings(inst, prevMessages),
       handSelection: [],
-      cardOnClick: (idx) => selectCard(inst, idx),
+      selectionOn: 2,
     };
-  });
-}
-
-function selectCard(inst, idx) {
-  inst.setState((prevState) => {
-    let selection = [...prevState.handSelection];
-    if (selection.find((item) => item === idx)) {
-      selection = selection.filter((item) => item !== idx);
-    } else if (selection.length < 2) selection.push(idx);
-    return { handSelection: selection };
   });
 }
 
@@ -75,7 +65,7 @@ function getServings(inst, prevMessages) {
       hand: newHand.filter((foo, idx) => !handSelection.includes(idx)),
     };
   });
-  inst.setState({ ...prevMessages, handSelection: null, cardOnClick: null });
+  inst.setState({ ...prevMessages, handSelection: null, selectionOn: null });
 }
 
 export const playFuncs = { Sainsbury, Esquine };

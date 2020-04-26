@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { config } from './playerActions';
+import { handSelect } from '../helpers/dataUpdates';
 
 export default class HandZone extends React.Component {
   static contextTypes = {
@@ -24,9 +25,9 @@ export default class HandZone extends React.Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-    const oldState = this.context.parentState.gameState;
     const newState = nextContext.parentState.gameState;
-    if (oldState !== newState && config[newState]) {
+    const change = this.context.parentState.gameState !== newState;
+    if (change && config[newState]) {
       this.setState({
         message: '',
         button1Text: null,
@@ -34,25 +35,27 @@ export default class HandZone extends React.Component {
         ...config[newState],
       });
     }
-    if (oldState !== newState && newState === 'targetPlayer') {
-      const { name } = nextContext.parentState.attachmentsLeft[0];
+    const { attachmentsLeft } = nextContext.parentState;
+    if (change && newState === 'targetPlayer' && attachmentsLeft[0]) {
+      const { name } = attachmentsLeft[0];
       this.setState({ message: `Asigna ${name} a un Jugador` });
     }
-    if (oldState !== newState && newState === 'targetChamberMaid') {
-      const { name } = nextContext.parentState.attachmentsLeft[0];
+    if (change && newState === 'targetChamberMaid' && attachmentsLeft[0]) {
+      const { name } = attachmentsLeft[0];
       this.setState({ message: `Asigna ${name} a una Doncella` });
     }
-    if (oldState !== newState && newState === 'startPhase') {
+    if (change && newState === 'startPhase') {
       this.setState({ usadaJoder: 'no' });
     }
   }
 
   button1 = () => this.state.button1Click(this.context);
-  button2 = () => this.state.button2Click(this.context);
+  button2 = () =>
+    this.state.button2Click(this.context, this.state.handSelection);
 
   getCardPlay = (card, idx) => {
-    const { cardOnClick, button1Text } = this.state;
-    if (cardOnClick) return () => cardOnClick(idx);
+    const { selectionOn, button1Text } = this.state;
+    if (selectionOn) return () => handSelect(this, idx);
     if (button1Text) return null;
 
     const { servings } = this.context.playerState;

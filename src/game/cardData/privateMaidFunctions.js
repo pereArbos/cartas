@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 function Lucienne(context) {
   increaseParam(context, 'servings', 'Lucienne');
 }
@@ -63,4 +65,77 @@ function Tanya(inst, cb) {
   });
 }
 
-export const functions = { Lucienne, Rosa, Fay, Lalande, Milly, Tanya };
+function Nord(context) {
+  context.parentState.setActions((prevActions) => {
+    return {
+      message: 'Quieres usar la habilidad de Nord ?',
+      button1Text: 'Sí',
+      button1Click: () => selectHand(context, prevActions),
+      button2Text: 'No',
+      button2Click: () => context.parentState.setActions(prevActions),
+    };
+  });
+}
+
+function selectHand(context, prevActions) {
+  context.parentState.setActions({
+    message: 'Selecciona la carta a MANTENER',
+    button1Text: null,
+    button2Text: 'Hecho',
+    button2Click: (a, b) => discardAndTarget(a, b, prevActions),
+    handSelection: [],
+    selectionOn: 1,
+  });
+}
+
+function discardAndTarget(context, handSelection, prevActions) {
+  const newDiscards = context.playerState.hand.filter(
+    (foo, idx) => idx !== handSelection[0]
+  );
+  context.parentState.setActions({
+    message: 'Asigna 2 Illness a una Doncella',
+    button2Text: null,
+    handSelection: null,
+    selectionOn: null,
+  });
+  context.updatePlayer((prevState) => {
+    const hand = [...prevState.hand];
+    return { hand: hand.filter((foo, idx) => idx === handSelection[0]) };
+  });
+  context.updateParent((prevState) => {
+    const discard = [...prevState.discard];
+    discard.push(...newDiscards);
+    return {
+      discard,
+      gameState: 'targetChamberMaid',
+      maidClick: (a, b, c) => sendIllness(context, a, b, c),
+    };
+  });
+}
+
+function sendIllness(context, maidIdx, isPrivate, oppName) {
+  const city = _.cloneDeep(context.parentState.city);
+  const illIdx = city.findIndex((item) => item.name === 'Illness');
+  const numIll = Math.min(city[illIdx].quantity, 2);
+  const card = [];
+  if (numIll > 0) card.push(city[illIdx]);
+  if (numIll > 1) card.push(city[illIdx]);
+
+  city[illIdx].quantity -= numIll;
+  context.updateParent({ city, gameState: 'servingPhase' });
+
+  const { webrtc, opponents, playerName } = context.parentState;
+  webrtc.shout('cityUpdate', { city });
+  const data = { maidIdx, card, isPrivate, count: numIll };
+  if (oppName) {
+    const opp = opponents.find((item) => item.name === oppName);
+    if (webrtc) webrtc.whisper(opp.peer, 'sendAttach', data);
+  } else context.parentState.getAttachment({ maidIdx, card, isPrivate });
+  context.updateMessage(
+    `${playerName} envía ${numIll} Illness a una Doncella de ${
+      oppName || playerName
+    }.`
+  );
+}
+
+export const functions = { Lucienne, Rosa, Fay, Lalande, Milly, Tanya, Nord };

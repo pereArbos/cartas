@@ -7,7 +7,7 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 5,
     vp: -3,
-    onDraw: functions.Milly,
+    onStart: functions.Nord,
   },
   {
     name: 'NordTwilight',
@@ -15,7 +15,7 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 4,
     vp: -4,
-    onStart: functions.Lalande,
+    onStart: functions.Nord,
   },
   {
     name: 'SoraNakachi',
@@ -23,7 +23,7 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 7,
     vp: 2,
-    onStart: functions.Lalande,
+    onStart: functions.Nord,
   },
   {
     name: 'FayLongfang',
@@ -32,7 +32,7 @@ export const privateMaids = [
     cost: 6,
     vp: 0,
     auto: true,
-    onStart: functions.Fay,
+    onStart: functions.Nord,
   },
   {
     name: 'LalandeDreyfus',
@@ -40,7 +40,7 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 6,
     vp: 2,
-    onStart: functions.Lalande,
+    onStart: functions.Nord,
   },
   {
     name: 'MillyViolet',
@@ -56,7 +56,7 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 5,
     vp: 0,
-    onStart: functions.Lalande,
+    onStart: functions.Nord,
   },
   {
     name: 'LucienneDeMarlboro',
@@ -65,7 +65,7 @@ export const privateMaids = [
     cost: 5,
     vp: 1,
     auto: true,
-    onStart: functions.Lucienne,
+    onStart: functions.Nord,
   },
   {
     name: 'RosaTopaz',
@@ -74,7 +74,7 @@ export const privateMaids = [
     cost: 5,
     vp: 1,
     auto: true,
-    onStart: functions.Rosa,
+    onStart: functions.Nord,
   },
   {
     name: 'TanyaPetrushka',

@@ -70,18 +70,16 @@ export function getAttachInfo(inst, card) {
     case 'maid':
       return {
         gameState: 'targetChamberMaid',
-        maidClick: (maidIdx, isPrivate) => {
+        maidClick: (maidIdx, isPrivate, oppName) => {
           removePendingAttach(inst);
-          const { webrtc, opponents, targetChamber, playerName } = inst.state;
-          if (targetChamber) {
-            const opp = opponents.find((item) => item.name === targetChamber);
+          const { webrtc, opponents, playerName } = inst.state;
+          if (oppName) {
+            const opp = opponents.find((item) => item.name === oppName);
             const data = { maidIdx, card, isPrivate };
             if (webrtc) webrtc.whisper(opp.peer, 'sendAttach', data);
           } else inst.state.getAttachment({ maidIdx, card, isPrivate });
           inst.updateMessage(
-            `${playerName} envía 1 ${card.name} a ${
-              targetChamber || playerName
-            }.`
+            `${playerName} envía 1 ${card.name} a ${oppName || playerName}.`
           );
         },
       };

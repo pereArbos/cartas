@@ -60,8 +60,6 @@ export default class PrivateMaidsDisplay extends React.Component {
     );
   };
 
-  // PILA DE MAIDS PRIVADAS CON ENFERMEDAD
-
   render() {
     const { oppName } = this.props;
     const displayedMaids = this.getDisplayedMaids();
@@ -89,6 +87,7 @@ export default class PrivateMaidsDisplay extends React.Component {
         background="rgba(0,0,0,0.75)"
         cards={this.props.privateMaids}
         hideModal={this.hideModal}
+        oppName={oppName}
         title={
           oppName ? `Maids Particulares de ${oppName}` : 'Tus Maids Paticulares'
         }

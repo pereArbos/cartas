@@ -66,7 +66,10 @@ export default class ChamberZone extends React.Component {
         const currentMaid = this.getHealthyMaid();
         if (currentMaid && currentMaid.onStart) {
           if (currentMaid.auto) currentMaid.onStart(this.context);
-        } else this.context.updateParent({ gameState: 'servingPhase' });
+        } else
+          this.context.updateParent({
+            gameState: 'servingPhase',
+          });
       }
     }
   }
@@ -80,12 +83,7 @@ export default class ChamberZone extends React.Component {
   };
 
   hideModal = () => this.setState({ show: false });
-
-  showModal = () => {
-    const { oppName } = this.props;
-    this.context.updateParent({ targetChamber: oppName });
-    this.setState({ show: true });
-  };
+  showModal = () => this.setState({ show: true });
 
   getRoute = (card) => {
     const { name, set } = card;
@@ -173,7 +171,7 @@ export default class ChamberZone extends React.Component {
         onClick={this.showModal}
       >
         {currentMaid && this.renderCard(currentMaid)}
-        {chamberMaids.map((card, idx) => {
+        {chamberMaids.map((card, idx, list) => {
           return idx < displayLimit ? this.renderCard(card) : null;
         })}
       </div>,
@@ -188,6 +186,7 @@ export default class ChamberZone extends React.Component {
         showModal={this.state.show}
         hideModal={this.hideModal}
         cards={chamberMaids}
+        oppName={oppName}
         title={
           oppName
             ? `Habitación Privada de ${oppName}`

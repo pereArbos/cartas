@@ -23,12 +23,14 @@ export function getChamberMaid(inst, card) {
 }
 
 export function getAttachment(inst, data) {
-  const { maidIdx, card, isPrivate } = data;
+  const { maidIdx, isPrivate } = data;
+  let cards = data.card;
+  if (!Array.isArray(cards)) cards = [data.card];
   if (isPrivate) {
     inst.setState((prevState) => {
       const privateMaids = _.cloneDeep(prevState.boughtPrivateMaids);
       const attachments = privateMaids[0] && privateMaids[0].attachments;
-      privateMaids[0].attachments = [...(attachments || []), card];
+      privateMaids[0].attachments = [...(attachments || []), ...cards];
       return { boughtPrivateMaids: privateMaids };
     });
     return;
@@ -36,7 +38,7 @@ export function getAttachment(inst, data) {
   inst.setState((prevState) => {
     let newMaids = _.cloneDeep(prevState.chamberMaids);
     const maid = newMaids[maidIdx];
-    const attachments = [...(maid.attachments || []), card];
+    const attachments = [...(maid.attachments || []), ...cards];
     // Quitar maid con antiguos attachments
     if (maid.chambered > 1) {
       newMaids[maidIdx].chambered -= 1;
@@ -61,4 +63,15 @@ function hasSameAttachments(list1, list2) {
   const namelist1 = (list1 || []).map((item) => item.name);
   const namelist2 = (list2 || []).map((item) => item.name);
   return _.isEqual(namelist1, namelist2);
+}
+
+export function handSelect(inst, idx) {
+  const limit = inst.state.selectionOn;
+  inst.setState((prevState) => {
+    let selection = [...prevState.handSelection];
+    if (selection.find((item) => item === idx) >= 0) {
+      selection = selection.filter((item) => item !== idx);
+    } else if (selection.length < limit) selection.push(idx);
+    return { handSelection: selection };
+  });
 }
