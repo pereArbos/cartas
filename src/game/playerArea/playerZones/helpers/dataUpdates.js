@@ -14,6 +14,12 @@ export function getChamberMaid(inst, card) {
     }
     return { chamberMaids: newMaids };
   });
+  if (card.type !== 'event') {
+    const { updateMessage, parentState } = inst.context;
+    updateMessage(
+      `${parentState.playerName} pone 1 ${card.name} como Doncella.`
+    );
+  }
 }
 
 export function getAttachment(inst, data) {

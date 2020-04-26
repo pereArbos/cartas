@@ -8,18 +8,23 @@ export default class MessageArea extends React.Component {
     parentState: PropTypes.object,
   };
 
+  getMessage = () => {
+    return this.context.parentState.message.split('&').map((item, idx) => {
+      if (idx % 2 === 0) return item;
+      return (
+        <img
+          alt="icon"
+          src={require(`../playerArea/iconFooter/icons/${item}.png`)}
+        ></img>
+      );
+    });
+  };
+
   render() {
     return (
       <div className="msgArea">
         <div className="msgTitle">Turno de Pere</div>
-        <div className="msgContent">
-          Pere usa muchas maids y se compra muchas{' '}
-          <img
-            alt="icon"
-            src={require('../playerArea/iconFooter/icons/love.png')}
-          ></img>{' '}
-          cartas. Pere usa muchas maids y se compra muchas cartas.
-        </div>
+        <div className="msgContent">{this.getMessage()}</div>
       </div>
     );
   }

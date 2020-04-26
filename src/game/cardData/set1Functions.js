@@ -30,6 +30,10 @@ function sendToHand(inst, cards, loveIdx) {
     city[idx].quantity += 1;
     return { gameState: 'servingPhase', city };
   });
+  const { playerName } = inst.context.parentState;
+  inst.context.updateMessage(
+    `Con los servicios de Sainsbury, ${playerName} intercambia un 1Love de su mano por 1 ${cards[0].name} de la ciudad.`
+  );
 }
 
 function Esquine(inst) {

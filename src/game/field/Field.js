@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import './Field.css';
 
 import CardBlock from './CardBlock';
@@ -10,6 +11,7 @@ export default class Field extends React.Component {
     parentState: PropTypes.object,
     updateParent: PropTypes.func,
     attachEvent: PropTypes.func,
+    updateMessage: PropTypes.func,
   };
 
   constructor(props) {
@@ -75,7 +77,10 @@ export default class Field extends React.Component {
   buyCards = (event, sendToFunc) => {
     const boughtCards = [];
     let hasEvents = false;
-    this.context.parentState.city.forEach((card) => {
+    const city = _.cloneDeep(this.context.parentState.city);
+    if (!sendToFunc) this.context.updateMessage(this.getBuyMsg(city));
+
+    city.forEach((card) => {
       const { selected, name, type } = card;
       if (selected && selected > 0) {
         if (type === 'privateMaid') {
@@ -104,6 +109,26 @@ export default class Field extends React.Component {
 
     if (!hasEvents && !sendToFunc)
       this.context.updateParent({ gameState: 'discardPhase' });
+  };
+
+  getBuyMsg = (city) => {
+    const { playerName } = this.context.parentState;
+    let message = `${playerName} compra`;
+    let bought = false;
+    city.forEach((card) => {
+      if (card.selected) {
+        message = `${message} ${card.selected} ${card.name},`;
+        bought = true;
+      }
+    });
+    let parsedMsg = '';
+    message.split(',').forEach((msg, idx, list) => {
+      console.log(msg, idx, list);
+      let end = idx === list.length - 3 ? ' y' : ',';
+      end = idx >= list.length - 2 ? '' : end;
+      parsedMsg = `${parsedMsg}${msg}${end}`;
+    });
+    return bought ? `${parsedMsg}.` : `${playerName} no compra nada.`;
   };
 
   sendToDiscard = (cards) => {

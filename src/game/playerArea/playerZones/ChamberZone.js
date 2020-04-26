@@ -14,6 +14,7 @@ export default class ChamberZone extends React.Component {
     updatePlayer: PropTypes.func,
     updateImage: PropTypes.func,
     draw: PropTypes.func,
+    updateMessage: PropTypes.func,
   };
 
   constructor(props) {
@@ -63,7 +64,6 @@ export default class ChamberZone extends React.Component {
       const newState = nextContext.parentState.gameState;
       if (oldState !== newState && newState === 'startPhase') {
         const currentMaid = this.getHealthyMaid();
-        console.log('hola?', currentMaid);
         if (currentMaid && currentMaid.onStart) {
           if (currentMaid.auto) currentMaid.onStart(this.context);
         } else this.context.updateParent({ gameState: 'servingPhase' });

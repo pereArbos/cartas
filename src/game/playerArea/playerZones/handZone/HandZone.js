@@ -11,6 +11,7 @@ export default class HandZone extends React.Component {
     updateParent: PropTypes.func,
     updatePlayer: PropTypes.func,
     draw: PropTypes.func,
+    updateMessage: PropTypes.func,
   };
 
   constructor(props) {
@@ -116,7 +117,6 @@ export default class HandZone extends React.Component {
     this.context.draw(amount);
     const currentMaid = this.context.parentState.getCurrentMaid();
     if (currentMaid && currentMaid.onDraw && this.state.usadaJoder === 'no') {
-      console.log('k onda');
       currentMaid.onDraw(this, cb);
     } else cb();
   };

@@ -4,6 +4,7 @@ export const config = {
     button2Text: 'Fase de Contratación',
     button2Click: (context) => {
       const { hand } = context.playerState;
+      const { playerName } = context.parentState;
       const loveCards = hand.filter((card) => card.type === 'love');
       const newDiscards = hand.filter((card) => card.type !== 'love');
       let love = 0;
@@ -28,6 +29,9 @@ export const config = {
               money: { love, contract },
             };
           });
+          context.updateMessage(
+            `${playerName} termina su fase de Servicios con ${love} &love& y ${contract} &contract&`
+          );
         }
       );
     },

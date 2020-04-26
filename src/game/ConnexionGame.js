@@ -13,6 +13,7 @@ export default class ConnexionGame extends React.Component {
     parentState: PropTypes.object,
     updateParent: PropTypes.func,
     attachEvent: PropTypes.func,
+    updateMessage: PropTypes.func,
   };
 
   constructor(props) {
@@ -23,6 +24,7 @@ export default class ConnexionGame extends React.Component {
       mainPlayer: props.mainPlayer,
       playerName: props.playerName,
       opponents: [],
+      message: '',
     };
   }
 
@@ -35,6 +37,7 @@ export default class ConnexionGame extends React.Component {
         });
       },
       attachEvent: this.attachEvent,
+      updateMessage: this.updateMessage,
     };
   }
 
@@ -47,12 +50,24 @@ export default class ConnexionGame extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     const { deck, discard, webrtc, playerName } = this.state;
     if (webrtc && !_.isEqual(discard, prevState.discard)) {
-      webrtc.shout('oppUpdate', { name: playerName, data: { deck } });
+      webrtc.shout('oppUpdate', {
+        name: playerName,
+        data: { deck },
+      });
     }
     if (webrtc && !_.isEqual(discard, prevState.discard)) {
-      webrtc.shout('oppUpdate', { name: playerName, data: { discard } });
+      webrtc.shout('oppUpdate', {
+        name: playerName,
+        data: { discard },
+      });
     }
   }
+
+  updateMessage = (message) => {
+    const { webrtc } = this.state;
+    this.setState({ message });
+    if (webrtc) webrtc.shout('msgUpdate', message);
+  };
 
   getInitialDeck = () => {
     this.setState(
@@ -97,12 +112,22 @@ export default class ConnexionGame extends React.Component {
           gameState: 'targetChamberMaid',
           maidClick: (maidIdx, isPrivate) => {
             this.removePendingAttach();
-            const { webrtc, opponents, targetChamber } = this.state;
+            const { webrtc, opponents, targetChamber, playerName } = this.state;
             if (targetChamber) {
               const opp = opponents.find((item) => item.name === targetChamber);
               const data = { maidIdx, card, isPrivate };
               if (webrtc) webrtc.whisper(opp.peer, 'sendAttach', data);
-            } else this.state.getAttachment({ maidIdx, card, isPrivate });
+            } else
+              this.state.getAttachment({
+                maidIdx,
+                card,
+                isPrivate,
+              });
+            this.updateMessage(
+              `${playerName} envía 1 ${card.name} a ${
+                targetChamber || playerName
+              }.`
+            );
           },
         };
       default:
@@ -110,11 +135,14 @@ export default class ConnexionGame extends React.Component {
           gameState: 'targetPlayer',
           playerClick: (name) => {
             this.removePendingAttach();
+            const { webrtc, opponents, playerName } = this.state;
             if (name) {
-              const { webrtc, opponents } = this.state;
               const opp = opponents.find((item) => item.name === name);
               if (webrtc) webrtc.whisper(opp.peer, 'sendEvent', card);
             } else this.state.getChamberMaid(card);
+            this.updateMessage(
+              `${playerName} envía 1 ${card.name} a ${name || playerName}.`
+            );
           },
         };
     }
@@ -179,6 +207,9 @@ export default class ConnexionGame extends React.Component {
           };
           return { opponents };
         });
+        break;
+      case 'msgUpdate':
+        this.setState({ message: payload });
         break;
       case 'sendEvent':
         this.state.getChamberMaid(payload);
