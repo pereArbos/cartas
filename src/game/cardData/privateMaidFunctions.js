@@ -1,20 +1,31 @@
 import _ from 'lodash';
 
 function Lucienne(context) {
-  increaseParam(context, 'servings', 'Lucienne');
+  const noUpdate = context.parentState.hasPlayables();
+  increaseParam(context, 'servings', 'Lucienne', noUpdate);
 }
 
 function Rosa(context) {
-  increaseParam(context, 'love', 'Rosa');
+  const noUpdate = context.parentState.hasPlayables();
+  increaseParam(context, 'love', 'Rosa', noUpdate);
 }
 
 function Fay(context) {
-  context.parentState.setActions({
-    message: 'Qué quieres obtener con FayLongfang ?',
-    button1Text: '1 Amor',
-    button2Text: '1 Contratación',
-    button1Click: () => increaseParam(context, 'love', 'Fay'),
-    button2Click: () => increaseParam(context, 'contract', 'Fay'),
+  const noUpdate = context.parentState.hasPlayables();
+  context.parentState.setActions((prevActions) => {
+    return {
+      message: 'Qué quieres obtener con FayLongfang ?',
+      button1Text: '1 Amor',
+      button2Text: '1 Contratación',
+      button1Click: () => {
+        context.parentState.setActions(prevActions);
+        increaseParam(context, 'love', 'Fay', noUpdate);
+      },
+      button2Click: () => {
+        context.parentState.setActions(prevActions);
+        increaseParam(context, 'contract', 'Fay', noUpdate);
+      },
+    };
   });
 }
 
@@ -31,11 +42,13 @@ function increaseParam(context, param, name, noUpdate) {
   );
 }
 
-function Lalande(context) {
-  const { playerName } = context.parentState;
-  context.draw(1);
-  context.updateParent({ gameState: 'servingPhase' });
-  context.updateMessage(
+function Lalande(inst) {
+  const { playerName } = inst.context.parentState;
+  inst.context.draw(1);
+  inst.setState({ usadaJoder: 'si' });
+  if (!inst.context.parentState.hasPlayables())
+    inst.context.updateParent({ gameState: 'servingPhase' });
+  inst.context.updateMessage(
     `En su fase de Inicio, ${playerName} roba 1 carta con la habilidad de Lalande.`
   );
 }
@@ -65,30 +78,31 @@ function Tanya(inst, cb) {
   });
 }
 
-function Nord(context) {
-  context.parentState.setActions((prevActions) => {
+function Nord(inst) {
+  inst.setState({ usadaJoder: 'si' });
+  inst.context.parentState.setActions((prevActions) => {
     return {
       message: 'Quieres usar la habilidad de Nord ?',
       button1Text: 'Sí',
-      button1Click: () => selectHand(context, prevActions),
+      button1Click: () => selectHand(inst.context),
       button2Text: 'No',
-      button2Click: () => context.parentState.setActions(prevActions),
+      button2Click: () => inst.context.parentState.setActions(prevActions),
     };
   });
 }
 
-function selectHand(context, prevActions) {
+function selectHand(context) {
   context.parentState.setActions({
     message: 'Selecciona la carta a MANTENER',
     button1Text: null,
     button2Text: 'Hecho',
-    button2Click: (a, b) => discardAndTarget(a, b, prevActions),
+    button2Click: (a, b) => discardAndTarget(a, b),
     handSelection: [],
     selectionOn: 1,
   });
 }
 
-function discardAndTarget(context, handSelection, prevActions) {
+function discardAndTarget(context, handSelection) {
   const newDiscards = context.playerState.hand.filter(
     (foo, idx) => idx !== handSelection[0]
   );
@@ -122,7 +136,11 @@ function sendIllness(context, maidIdx, isPrivate, oppName) {
   if (numIll > 1) card.push(city[illIdx]);
 
   city[illIdx].quantity -= numIll;
-  context.updateParent({ city, gameState: 'servingPhase' });
+  const playables = context.parentState.hasPlayables();
+  context.updateParent({
+    city,
+    gameState: playables ? 'startPhase' : 'servingPhase',
+  });
 
   const { webrtc, opponents, playerName } = context.parentState;
   webrtc.shout('cityUpdate', { city });

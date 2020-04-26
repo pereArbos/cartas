@@ -1,6 +1,8 @@
 import _ from 'lodash';
+import { getTrueData } from '../../../helpers/actions';
 
-export function getChamberMaid(inst, card) {
+export function getChamberMaid(inst, mehCard) {
+  const card = getTrueData(mehCard);
   inst.setState((prevState) => {
     const newMaids = _.cloneDeep(prevState.chamberMaids);
     const idx = newMaids.findIndex((item) => {
@@ -26,6 +28,7 @@ export function getAttachment(inst, data) {
   const { maidIdx, isPrivate } = data;
   let cards = data.card;
   if (!Array.isArray(cards)) cards = [data.card];
+  cards = cards.map(getTrueData);
   if (isPrivate) {
     inst.setState((prevState) => {
       const privateMaids = _.cloneDeep(prevState.boughtPrivateMaids);

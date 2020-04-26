@@ -21,6 +21,7 @@ export default class ChamberZone extends React.Component {
     super(props);
     this.state = {
       show: false,
+      usadaJoder: 'no',
       chamberMaids: [],
       boughtPrivateMaids: [],
     };
@@ -33,6 +34,7 @@ export default class ChamberZone extends React.Component {
         getPrivateMaid: this.getPrivateMaid,
         getAttachment: (data) => getAttachment(this, data),
         hasChamberMaids: () => checkChamberMaids(this.state),
+        hasPlayables: this.hasPlayables,
         getCurrentMaid: this.getHealthyMaid,
       });
     }
@@ -60,13 +62,14 @@ export default class ChamberZone extends React.Component {
 
   componentWillReceiveProps(nextProps, nextContext) {
     if (!this.props.oppName) {
-      const oldState = this.context.parentState.gameState;
+      const oldState = this.context.parentState.gameState || '';
       const newState = nextContext.parentState.gameState;
       if (oldState !== newState && newState === 'startPhase') {
+        if (!oldState.includes('target')) this.setState({ usadaJoder: 'no' });
         const currentMaid = this.getHealthyMaid();
         if (currentMaid && currentMaid.onStart) {
           if (currentMaid.auto) currentMaid.onStart(this.context);
-        } else
+        } else if (!this.hasPlayables())
           this.context.updateParent({
             gameState: 'servingPhase',
           });
@@ -92,8 +95,7 @@ export default class ChamberZone extends React.Component {
 
   hasIllness = (card) => {
     if (!card.attachments) return false;
-    const ill = card.attachments.find((item) => item.name === 'Illness');
-    return ill ? true : false;
+    return card.attachments.find((item) => item.name === 'Illness');
   };
 
   getHealthyMaid = () => {
@@ -102,15 +104,24 @@ export default class ChamberZone extends React.Component {
     return this.hasIllness(currentMaid) ? null : currentMaid;
   };
 
+  hasPlayables = () => {
+    return this.state.chamberMaids.find((maid) => {
+      const illness = this.hasIllness(maid);
+      return illness; // && illlness.restric()
+    });
+  };
+
   getExtra = (card) => {
     const { gameState } = this.context.parentState;
-    if (card.type !== 'privateMaid' || gameState !== 'startPhase') return {};
-    if (card.auto || !card.onStart || this.hasIllness(card)) return {};
+    const { type, auto } = card;
+    if (type === 'privateMaid' && this.state.usadaJoder === 'si') return {};
+    if (gameState !== 'startPhase') return {};
+    if (auto || !card.onStart || this.hasIllness(card)) return {};
     return {
       className: 'playable',
       onClick: (e) => {
         e.stopPropagation();
-        card.onStart(this.context);
+        card.onStart(this);
       },
       onMouseOver: () => this.context.updateImage(this.getRoute(card)),
       onMouseOut: () => this.context.updateImage(null),
@@ -133,6 +144,7 @@ export default class ChamberZone extends React.Component {
           <img
             alt="noseve"
             src={require(`../../cards/${this.getRoute(topAttachment)}.jpg`)}
+            {...(this.props.oppName ? {} : this.getExtra(topAttachment))}
             style={{
               position: 'absolute',
               top: '0.4vw',

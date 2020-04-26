@@ -1,4 +1,5 @@
 import { playFuncs } from './set1Functions';
+import { eventFuncs } from './set1ChamberFuncs';
 
 export const set1Fixed = [
   {
@@ -8,6 +9,7 @@ export const set1Fixed = [
     cost: 4,
     quantity: 10,
     attachTo: 'maid',
+    onStart: eventFuncs.Illness,
   },
   {
     name: 'BadHabit',

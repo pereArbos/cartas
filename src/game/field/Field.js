@@ -85,14 +85,14 @@ export default class Field extends React.Component {
       if (selected && selected > 0) {
         if (type === 'privateMaid') {
           this.buyPrivateMaid(name);
-          this.context.parentState.getPrivateMaid(getTrueData(card));
+          this.context.parentState.getPrivateMaid(card);
         } else {
           card.selected = 0;
           card.quantity -= selected;
           this.updateCard(name, card, this.updatePeers);
           if (type === 'event') {
             hasEvents = true;
-            this.context.attachEvent(getTrueData(card), selected);
+            this.context.attachEvent(card, selected);
           } else {
             for (let i = 0; i < selected; i++) {
               boughtCards.push(getTrueData(card));
