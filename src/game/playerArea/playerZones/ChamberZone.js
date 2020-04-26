@@ -65,14 +65,16 @@ export default class ChamberZone extends React.Component {
       const oldState = this.context.parentState.gameState || '';
       const newState = nextContext.parentState.gameState;
       if (oldState !== newState && newState === 'startPhase') {
+        console.log('holastart');
         if (!oldState.includes('target')) this.setState({ usadaJoder: 'no' });
         const currentMaid = this.getHealthyMaid();
         if (currentMaid && currentMaid.onStart) {
+          console.log('holafunc');
           if (currentMaid.auto) currentMaid.onStart(this.context);
-        } else if (!this.hasPlayables())
-          this.context.updateParent({
-            gameState: 'servingPhase',
-          });
+        } else if (!this.hasPlayables()) {
+          console.log('holamiera');
+          this.context.updateParent({ gameState: 'servingPhase' });
+        }
       }
     }
   }
@@ -100,12 +102,14 @@ export default class ChamberZone extends React.Component {
 
   getHealthyMaid = () => {
     const currentMaid = this.state.boughtPrivateMaids[0];
+    console.log(currentMaid, this.props.oppName);
     if (!currentMaid) return null;
     return this.hasIllness(currentMaid) ? null : currentMaid;
   };
 
   hasPlayables = () => {
-    return this.state.chamberMaids.find((maid) => {
+    const { chamberMaids, boughtPrivateMaids } = this.state;
+    return [...chamberMaids, boughtPrivateMaids[0] || {}].find((maid) => {
       const illness = this.hasIllness(maid);
       return illness; // && illlness.restric()
     });

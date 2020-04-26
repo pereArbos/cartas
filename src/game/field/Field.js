@@ -85,7 +85,7 @@ export default class Field extends React.Component {
       if (selected && selected > 0) {
         if (type === 'privateMaid') {
           this.buyPrivateMaid(name);
-          this.context.parentState.getPrivateMaid(card);
+          this.context.parentState.getPrivateMaid(getTrueData(card));
         } else {
           card.selected = 0;
           card.quantity -= selected;
