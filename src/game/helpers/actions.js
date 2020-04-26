@@ -49,3 +49,67 @@ export function hasTargets(context) {
     return checkChamberMaids(opp.data);
   });
 }
+
+export function attachEvent(inst, card, selected) {
+  inst.setState((prevState) => {
+    let data = {
+      attachmentsLeft: [...prevState.attachmentsLeft],
+    };
+    if (data.attachmentsLeft.length === 0) {
+      data = { ...data, ...getAttachInfo(inst, card) };
+    }
+    for (let i = 0; i < selected; i++) {
+      data.attachmentsLeft.push(card);
+    }
+    return data;
+  });
+}
+
+export function getAttachInfo(inst, card) {
+  switch (card.attachTo) {
+    case 'maid':
+      return {
+        gameState: 'targetChamberMaid',
+        maidClick: (maidIdx, isPrivate) => {
+          removePendingAttach(inst);
+          const { webrtc, opponents, targetChamber, playerName } = inst.state;
+          if (targetChamber) {
+            const opp = opponents.find((item) => item.name === targetChamber);
+            const data = { maidIdx, card, isPrivate };
+            if (webrtc) webrtc.whisper(opp.peer, 'sendAttach', data);
+          } else inst.state.getAttachment({ maidIdx, card, isPrivate });
+          inst.updateMessage(
+            `${playerName} envía 1 ${card.name} a ${
+              targetChamber || playerName
+            }.`
+          );
+        },
+      };
+    default:
+      return {
+        gameState: 'targetPlayer',
+        playerClick: (name) => {
+          removePendingAttach(inst);
+          const { webrtc, opponents, playerName } = inst.state;
+          if (name) {
+            const opp = opponents.find((item) => item.name === name);
+            if (webrtc) webrtc.whisper(opp.peer, 'sendEvent', card);
+          } else inst.state.getChamberMaid(card);
+          inst.updateMessage(
+            `${playerName} envía 1 ${card.name} a ${name || playerName}.`
+          );
+        },
+      };
+  }
+}
+
+function removePendingAttach(inst) {
+  inst.setState((prevState) => {
+    const left = [...prevState.attachmentsLeft].filter((foo, idx) => idx > 0);
+    let data = { attachmentsLeft: left };
+    if (left[0]) {
+      data = { ...data, ...getAttachInfo(inst, left[0]) };
+    } else data.gameState = 'discardPhase';
+    return data;
+  });
+}

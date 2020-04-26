@@ -6,7 +6,7 @@ import { LioWebRTC } from 'react-liowebrtc';
 import MainGame from './MainGame';
 import { initiateCity } from './field/CityGenerator';
 import { initialDeck, initialOppData } from './initialData.js';
-import { shuffle } from './helpers/actions';
+import { shuffle, attachEvent } from './helpers/actions';
 
 export default class ConnexionGame extends React.Component {
   static childContextTypes = {
@@ -36,7 +36,7 @@ export default class ConnexionGame extends React.Component {
           if (typeof cb === 'function') cb();
         });
       },
-      attachEvent: this.attachEvent,
+      attachEvent: (card, selected) => attachEvent(this, card, selected),
       updateMessage: this.updateMessage,
     };
   }
@@ -88,75 +88,6 @@ export default class ConnexionGame extends React.Component {
       { deck: shuffle(cards), gameState: 'startPhase' }, // En realidad se pasaría a la espera de empezar el juego
       this.state.getInitialHand
     );
-  };
-
-  attachEvent = (card, selected) => {
-    this.setState((prevState) => {
-      let data = {
-        attachmentsLeft: [...prevState.attachmentsLeft],
-      };
-      if (data.attachmentsLeft.length === 0) {
-        data = { ...data, ...this.getAttachInfo(card) };
-      }
-      for (let i = 0; i < selected; i++) {
-        data.attachmentsLeft.push(card);
-      }
-      return data;
-    });
-  };
-
-  getAttachInfo = (card) => {
-    switch (card.attachTo) {
-      case 'maid':
-        return {
-          gameState: 'targetChamberMaid',
-          maidClick: (maidIdx, isPrivate) => {
-            this.removePendingAttach();
-            const { webrtc, opponents, targetChamber, playerName } = this.state;
-            if (targetChamber) {
-              const opp = opponents.find((item) => item.name === targetChamber);
-              const data = { maidIdx, card, isPrivate };
-              if (webrtc) webrtc.whisper(opp.peer, 'sendAttach', data);
-            } else
-              this.state.getAttachment({
-                maidIdx,
-                card,
-                isPrivate,
-              });
-            this.updateMessage(
-              `${playerName} envía 1 ${card.name} a ${
-                targetChamber || playerName
-              }.`
-            );
-          },
-        };
-      default:
-        return {
-          gameState: 'targetPlayer',
-          playerClick: (name) => {
-            this.removePendingAttach();
-            const { webrtc, opponents, playerName } = this.state;
-            if (name) {
-              const opp = opponents.find((item) => item.name === name);
-              if (webrtc) webrtc.whisper(opp.peer, 'sendEvent', card);
-            } else this.state.getChamberMaid(card);
-            this.updateMessage(
-              `${playerName} envía 1 ${card.name} a ${name || playerName}.`
-            );
-          },
-        };
-    }
-  };
-
-  removePendingAttach = () => {
-    this.setState((prevState) => {
-      const left = [...prevState.attachmentsLeft].filter((foo, idx) => idx > 0);
-      let data = { attachmentsLeft: left };
-      if (left[0]) {
-        data = { ...data, ...this.getAttachInfo(left[0]) };
-      } else data.gameState = 'discardPhase';
-      return data;
-    });
   };
 
   join = (webrtc) => {
