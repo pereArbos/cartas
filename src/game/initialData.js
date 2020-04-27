@@ -1,4 +1,4 @@
-export const initialDeck = { '2Love': 7, AzureCrescent: 3 };
+export const initialDeck = { '3Love': 7, AzureCrescent: 3 };
 
 export const initialOppData = {
   deck: null,

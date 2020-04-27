@@ -40,7 +40,7 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 6,
     vp: 2,
-    onStart: functions.Nord,
+    onStart: functions.Lalande,
   },
   {
     name: 'MillyViolet',

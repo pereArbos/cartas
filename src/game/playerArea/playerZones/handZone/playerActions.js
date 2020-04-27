@@ -40,8 +40,7 @@ export const config = {
   discardPhase: {
     button2Text: 'Fin de Turno',
     button2Click: (context) => {
-      context.draw(5);
-      context.updateParent({ gameState: 'startPhase' }); // Pasar turno
+      context.draw(5, () => context.updateParent({ gameState: 'startPhase' })); // pasar turno
     },
   },
   startPhase: {

@@ -25,15 +25,15 @@ export function getChamberMaid(inst, mehCard) {
 }
 
 export function getAttachment(inst, data) {
-  const { maidIdx, isPrivate } = data;
+  const { maidIdx, isPrivate, remove } = data;
   let cards = data.card;
   if (!Array.isArray(cards)) cards = [data.card];
-  cards = cards.map(getTrueData);
+  if (!remove) cards = cards.map(getTrueData);
   if (isPrivate) {
     inst.setState((prevState) => {
       const privateMaids = _.cloneDeep(prevState.boughtPrivateMaids);
       const attachments = privateMaids[0] && privateMaids[0].attachments;
-      privateMaids[0].attachments = [...(attachments || []), ...cards];
+      privateMaids[0].attachments = addOrRemove(attachments, cards, remove);
       return { boughtPrivateMaids: privateMaids };
     });
     return;
@@ -41,7 +41,7 @@ export function getAttachment(inst, data) {
   inst.setState((prevState) => {
     let newMaids = _.cloneDeep(prevState.chamberMaids);
     const maid = newMaids[maidIdx];
-    const attachments = [...(maid.attachments || []), ...cards];
+    const attachments = addOrRemove(maid.attachments, cards, remove);
     // Quitar maid con antiguos attachments
     if (maid.chambered > 1) {
       newMaids[maidIdx].chambered -= 1;
@@ -60,6 +60,13 @@ export function getAttachment(inst, data) {
     }
     return { chamberMaids: newMaids };
   });
+}
+
+function addOrRemove(list, cards, remove) {
+  if (remove) {
+    return (list || []).filter((foo, idx) => idx < list.length - 1);
+  }
+  return [...(list || []), ...cards];
 }
 
 function hasSameAttachments(list1, list2) {

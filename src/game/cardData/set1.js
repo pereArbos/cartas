@@ -10,6 +10,7 @@ export const set1Fixed = [
     quantity: 10,
     attachTo: 'maid',
     onStart: eventFuncs.Illness,
+    restric: eventFuncs.restricIllness,
   },
   {
     name: 'BadHabit',

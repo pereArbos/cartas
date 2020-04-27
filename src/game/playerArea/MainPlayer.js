@@ -84,7 +84,7 @@ export default class MainPlayer extends React.Component {
     }
   }
 
-  drawAndReload = (amount) => {
+  drawAndReload = (amount, cb) => {
     this.context.updateParent(
       (prevState) => {
         const { deck, discard } = prevState;
@@ -93,14 +93,14 @@ export default class MainPlayer extends React.Component {
         }
         return {};
       },
-      () => this.drawCards(amount)
+      () => this.drawCards(amount, cb)
     );
   };
 
-  drawCards = (amount) => {
+  drawCards = (amount, cb = () => {}) => {
     const { deck, webrtc, playerName } = this.context.parentState;
     const { hand } = this.state;
-    this.setState({ hand: [...deck.splice(0, amount), ...hand] });
+    this.setState({ hand: [...deck.splice(0, amount), ...hand] }, cb);
     this.context.updateParent({ deck }, () => {
       if (webrtc)
         webrtc.shout('oppUpdate', {
