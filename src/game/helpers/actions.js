@@ -111,3 +111,9 @@ function removePendingAttach(inst) {
     return data;
   });
 }
+
+export function handleAction(data, inst) {
+  if (data.type === 'auto') {
+    getTrueData(data.card).forcedAction(inst);
+  }
+}

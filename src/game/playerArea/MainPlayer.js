@@ -10,7 +10,7 @@ import DeckZone from './playerZones/DeckZone';
 import './playerZones/PlayerZones.css';
 
 import IconFooter from './iconFooter/IconFooter';
-import { shuffle } from '../helpers/actions';
+import { shuffle, handleAction } from '../helpers/actions';
 
 export default class MainPlayer extends React.Component {
   static childContextTypes = {
@@ -42,7 +42,10 @@ export default class MainPlayer extends React.Component {
   }
 
   componentDidMount() {
-    this.context.updateParent({ getInitialHand: () => this.drawCards(5) });
+    this.context.updateParent({
+      getInitialHand: () => this.drawCards(5),
+      getForcedAction: (data) => handleAction(data, this),
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {

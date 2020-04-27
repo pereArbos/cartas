@@ -148,6 +148,9 @@ export default class ConnexionGame extends React.Component {
       case 'sendAttach':
         this.state.getAttachment(payload);
         break;
+      case 'sendAction':
+        this.state.getForcedAction(payload);
+        break;
       default:
         break;
     }

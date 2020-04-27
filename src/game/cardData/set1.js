@@ -77,7 +77,8 @@ export const set1Maids = [
     cost: 5,
     love: 3,
     contract: 1,
-    onPlay: () => {},
+    onPlay: playFuncs.Tenalys,
+    forcedAction: playFuncs.actionTenalys,
     quantity: 10,
   },
   {
@@ -96,7 +97,8 @@ export const set1Maids = [
     cost: 5,
     draw: 1,
     servings: 2,
-    onPlay: () => {},
+    onPlay: playFuncs.Natsumi,
+    forcedAction: playFuncs.actionNatsumi,
     quantity: 10,
   },
   {

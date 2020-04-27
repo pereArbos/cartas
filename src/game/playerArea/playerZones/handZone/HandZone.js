@@ -91,9 +91,9 @@ export default class HandZone extends React.Component {
     const { love = 0, servings = 0, contract = 0, onPlay } = card;
     if (card.draw > 0) {
       this.draw(card.draw, () => {
-        if (typeof onPlay === 'function') onPlay(this);
+        if (typeof onPlay === 'function') onPlay(this, card);
       });
-    } else if (typeof onPlay === 'function') onPlay(this);
+    } else if (typeof onPlay === 'function') onPlay(this, card);
     this.context.updatePlayer((prevState) => {
       const hand = [...prevState.hand];
       const playedCards = [...prevState.playedCards];

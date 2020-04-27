@@ -37,13 +37,11 @@ function sendToHand(inst, cards, loveIdx) {
 }
 
 function Esquine(inst) {
-  let prevMessages = {};
   inst.setState((prevState) => {
-    prevMessages = prevState;
     return {
       message: 'Selecciona cartas para descartar',
       button2Text: 'Hecho',
-      button2Click: () => getServings(inst, prevMessages),
+      button2Click: () => getServings(inst, prevState),
       handSelection: [],
       selectionOn: 2,
     };
@@ -68,4 +66,76 @@ function getServings(inst, prevMessages) {
   inst.setState({ ...prevMessages, handSelection: null, selectionOn: null });
 }
 
-export const playFuncs = { Sainsbury, Esquine };
+function Tenalys(inst, card) {
+  const { webrtc, playerName } = inst.context.parentState;
+  if (webrtc) webrtc.shout('sendAction', { type: 'auto', card });
+  inst.context.updateMessage(
+    `${playerName} usa los servicios de TenalysTrent y los demás jugadores roban 1 carta.`
+  );
+}
+
+function actionTenalys(inst) {
+  inst.drawAndReload(1);
+}
+
+function Natsumi(inst, card) {
+  inst.setState((prevState) => {
+    return {
+      message: 'Descarta, si quieres, 1 carta',
+      button2Text: 'Hecho',
+      button2Click: (a, b) => forcedDiscard(a, b, prevState, card),
+      handSelection: [],
+      selectionOn: 1,
+    };
+  });
+}
+
+function forcedDiscard(context, handSelection, prevMessages, card) {
+  const discardIdx = handSelection[0];
+  if (discardIdx >= 0) {
+    const { hand } = context.playerState;
+    context.updateParent((prevState) => {
+      return { discard: [...prevState.discard, hand[discardIdx]] };
+    });
+    context.updatePlayer((prevState) => {
+      const newHand = [...prevState.hand];
+      return { hand: newHand.filter((foo, idx) => idx !== discardIdx) };
+    });
+    if (card) {
+      const { webrtc, playerName } = context.parentState;
+      if (webrtc) webrtc.shout('sendAction', { type: 'auto', card });
+      context.updateMessage(
+        `${playerName} descarta 1 carta con la habilidad de NatsumiFujikawa, lo que obliga a los demás jugadores a hacer lo mismo.`
+      );
+    }
+  }
+  if (discardIdx >= 0 || card)
+    context.parentState.setActions({
+      ...prevMessages,
+      handSelection: null,
+      selectionOn: null,
+    });
+}
+
+function actionNatsumi(inst) {
+  if (inst.state.hand.length >= 4) {
+    inst.context.parentState.setActions((prevState) => {
+      return {
+        message: 'Descarta 1 carta',
+        button2Text: 'Hecho',
+        button2Click: (a, b) => forcedDiscard(a, b, prevState),
+        handSelection: [],
+        selectionOn: 1,
+      };
+    });
+  }
+}
+
+export const playFuncs = {
+  Sainsbury,
+  Esquine,
+  Tenalys,
+  actionTenalys,
+  Natsumi,
+  actionNatsumi,
+};
