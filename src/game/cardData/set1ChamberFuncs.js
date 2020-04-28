@@ -2,6 +2,18 @@ import _ from 'lodash';
 import { getAttachment } from '../playerArea/playerZones/helpers/dataUpdates';
 
 function Illness(inst, maidIdx, isPrivate) {
+  inst.context.parentState.setActions((prevActions) => {
+    return {
+      message: 'Quieres descartar un 3Love y devolvr esta Illness a la ciudad?',
+      button1Text: 'Sí',
+      button1Click: () => healIllness(inst, maidIdx, isPrivate, prevActions),
+      button2Text: 'No',
+      button2Click: () => inst.context.parentState.setActions(prevActions),
+    };
+  });
+}
+
+function healIllness(inst, maidIdx, isPrivate, prevActions) {
   const hand = _.cloneDeep(inst.context.playerState.hand);
   const loveIdx = hand.findIndex((item) => item.name === '3Love');
   const threeLove = hand[loveIdx];
@@ -20,6 +32,7 @@ function Illness(inst, maidIdx, isPrivate) {
     return { discard, city };
   });
   getAttachment(inst, { maidIdx, isPrivate, remove: true });
+  inst.context.parentState.setActions(prevActions);
   inst.context.updateMessage(
     `En su fase de Inicio, ${playerName} descarta un 3Love para devolver 1 de sus Illness a la ciudad.`
   );

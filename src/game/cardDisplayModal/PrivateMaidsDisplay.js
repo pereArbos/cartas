@@ -40,8 +40,9 @@ export default class PrivateMaidsDisplay extends React.Component {
   };
 
   getCardImage = (card, topMaid, style) => {
+    const { gameState } = this.context.parentState;
     const selecting =
-      this.context.parentState.gameState === 'targetChamberMaid';
+      gameState === 'targetChamberMaid' || gameState === 'targetEvent';
     return (
       <img
         alt="noseve"

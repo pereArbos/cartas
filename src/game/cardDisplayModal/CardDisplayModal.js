@@ -54,13 +54,12 @@ CardDisplayModal.contextTypes = {
 };
 
 function getImage(route, context, style, selectInfo) {
-  const { imageClass, onClick, cardIdx } = selectInfo;
+  const { imageClass, onClick } = selectInfo;
 
   return (
     <img
       alt="noseve"
       src={require(`../cards/${route}.jpg`)}
-      name={cardIdx}
       className={imageClass}
       onMouseOver={() => {
         context.updateImage(route);
@@ -75,16 +74,16 @@ function getImage(route, context, style, selectInfo) {
 }
 
 function renderCard(card, cardIdx, context, mode, maxAttach, oppName) {
-  const { chambered, attachments, type } = card;
+  const { chambered, attachments } = card;
   const AttachmentsDisplay = (attachments || []).map((item, idx) => {
     return getImage(
       getRoute(item),
       context,
       { position: 'absolute', top: `${1.5 * (idx + 1)}vw`, left: 0 },
-      getSelectInfo(mode, type, cardIdx, context, oppName)
+      getSelectInfo(mode, card, cardIdx, context, oppName, item)
     );
   });
-  const info = getSelectInfo(mode, type, cardIdx, context, oppName);
+  const info = getSelectInfo(mode, card, cardIdx, context, oppName);
 
   return (
     <div className="cardBlock">
@@ -113,17 +112,28 @@ function getMaxAttachment(cards) {
   return Math.max(...attachNums);
 }
 
-function getSelectInfo(mode, type, cardIdx, context, oppName) {
-  const { gameState, maidClick } = context.parentState;
+function getSelectInfo(mode, card, cardIdx, context, oppName, attach) {
+  const { gameState, maidClick, eventClick } = context.parentState;
+  const { type } = card;
+
+  if (gameState === 'targetEvent' && eventClick) {
+    if (type === 'event' || attach) {
+      return {
+        imageClass: 'selectable',
+        onClick: () =>
+          eventClick(attach || card, cardIdx, type === 'privateMaid', oppName),
+      };
+    }
+  }
   const selecting = maidClick && gameState === 'targetChamberMaid';
   const chamberCard = mode === 'chamber' && type.includes('maid');
   const privateMaid = type === 'privateMaid' && cardIdx === 0;
   const clickable = selecting && (chamberCard || privateMaid);
 
   const imageClass = clickable ? 'selectable' : '';
-  const imageClick = (event) => {
-    maidClick(parseInt(event.target.name), type === 'privateMaid', oppName);
+  const imageClick = () => {
+    maidClick(cardIdx, type === 'privateMaid', oppName);
   };
   const onClick = clickable ? imageClick : () => {};
-  return { imageClass, onClick, cardIdx };
+  return { imageClass, onClick };
 }

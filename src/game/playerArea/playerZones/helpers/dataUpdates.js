@@ -1,16 +1,19 @@
 import _ from 'lodash';
 import { getTrueData } from '../../../helpers/actions';
 
-export function getChamberMaid(inst, mehCard) {
+export function getChamberMaid(inst, mehCard, add = 1) {
   const card = getTrueData(mehCard);
   inst.setState((prevState) => {
-    const newMaids = _.cloneDeep(prevState.chamberMaids);
+    let newMaids = _.cloneDeep(prevState.chamberMaids);
     const idx = newMaids.findIndex((item) => {
       const hasAttachments = item.attachments && item.attachments[0];
       return !hasAttachments && item.name === card.name;
     });
     if (idx >= 0) {
-      newMaids[idx].chambered = newMaids[idx].chambered + 1;
+      newMaids[idx].chambered = newMaids[idx].chambered + add;
+      if (newMaids[idx].chambered <= 0) {
+        newMaids = newMaids.filter((foo, i) => i !== idx);
+      }
     } else {
       newMaids.push({ ...card, chambered: 1 });
     }

@@ -91,7 +91,7 @@ export function getAttachInfo(inst, card) {
           const { webrtc, opponents, playerName } = inst.state;
           if (name) {
             const opp = opponents.find((item) => item.name === name);
-            if (webrtc) webrtc.whisper(opp.peer, 'sendEvent', card);
+            if (webrtc) webrtc.whisper(opp.peer, 'sendEvent', [card]);
           } else inst.state.getChamberMaid(card);
           inst.updateMessage(
             `${playerName} envía 1 ${card.name} a ${name || playerName}.`
@@ -103,10 +103,13 @@ export function getAttachInfo(inst, card) {
 
 function removePendingAttach(inst) {
   inst.setState((prevState) => {
+    const removed = prevState.attachmentsLeft[0];
     const left = [...prevState.attachmentsLeft].filter((foo, idx) => idx > 0);
     let data = { attachmentsLeft: left };
     if (left[0]) {
       data = { ...data, ...getAttachInfo(inst, left[0]) };
+    } else if (removed.backToStart) {
+      data.gameState = 'startPhase';
     } else data.gameState = 'discardPhase';
     return data;
   });

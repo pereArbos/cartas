@@ -143,7 +143,7 @@ export default class ConnexionGame extends React.Component {
         this.setState({ message: payload });
         break;
       case 'sendEvent':
-        this.state.getChamberMaid(payload);
+        this.state.getChamberMaid(...payload);
         break;
       case 'sendAttach':
         this.state.getAttachment(payload);

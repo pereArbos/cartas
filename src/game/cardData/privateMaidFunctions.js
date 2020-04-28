@@ -1,4 +1,8 @@
 import _ from 'lodash';
+import {
+  getAttachment,
+  getChamberMaid,
+} from '../playerArea/playerZones/helpers/dataUpdates';
 
 function Lucienne(context) {
   const noUpdate = context.parentState.hasPlayables();
@@ -156,4 +160,59 @@ function sendIllness(context, maidIdx, isPrivate, oppName) {
   );
 }
 
-export const functions = { Lucienne, Rosa, Fay, Lalande, Milly, Tanya, Nord };
+function Sora(inst) {
+  inst.context.parentState.setActions((prevActions) => {
+    return {
+      message: 'Elige el Evento que quieras mover',
+      button2Text: 'Cancelar',
+      button2Click: () =>
+        inst.context.updateParent({
+          gameState: 'startPhase',
+          eventClick: null,
+        }),
+    };
+  });
+  inst.context.updateParent({
+    gameState: 'targetEvent',
+    eventClick: (a, b, c, d) => removeAndTarget(inst, a, b, c, d),
+  });
+  inst.setState({ usadaJoder: 'si' });
+}
+
+function removeAndTarget(inst, card, idx, isPrivate, oppName) {
+  console.log(card, idx, isPrivate, oppName);
+  const { webrtc, opponents, playerName } = inst.context.parentState;
+  if (!oppName) {
+    if (card.name === 'Illness') {
+      // if is attachment
+      getAttachment(inst, { maidIdx: idx, isPrivate, remove: true });
+    } else getChamberMaid(inst, card, -1);
+  } else {
+    const opp = opponents.find((item) => item.name === oppName);
+    if (card.name === 'Illness') {
+      const data = { maidIdx: idx, isPrivate, remove: true };
+      if (webrtc) webrtc.whisper(opp.peer, 'sendAttach', data);
+    } else if (webrtc) {
+      webrtc.whisper(opp.peer, 'sendEvent', [card, -1]);
+    }
+  }
+  inst.context.attachEvent({ ...card, backToStart: true }, 1);
+  inst.context.updateMessage(
+    `En su fase de Inicio, ${playerName} toma 1 ${
+      card.name
+    } de la habitación de ${
+      oppName || playerName
+    } para enviarlo a otro jugador.`
+  );
+}
+
+export const functions = {
+  Lucienne,
+  Rosa,
+  Fay,
+  Lalande,
+  Milly,
+  Tanya,
+  Nord,
+  Sora,
+};

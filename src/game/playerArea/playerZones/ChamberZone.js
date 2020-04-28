@@ -16,6 +16,7 @@ export default class ChamberZone extends React.Component {
     playerState: PropTypes.object,
     draw: PropTypes.func,
     updateMessage: PropTypes.func,
+    attachEvent: PropTypes.func,
   };
 
   constructor(props) {
@@ -31,7 +32,7 @@ export default class ChamberZone extends React.Component {
   componentDidMount() {
     if (!this.props.oppName) {
       this.context.updateParent({
-        getChamberMaid: (card) => getChamberMaid(this, card),
+        getChamberMaid: (card, add) => getChamberMaid(this, card, add),
         getPrivateMaid: this.getPrivateMaid,
         getAttachment: (data) => getAttachment(this, data),
         hasChamberMaids: () => checkChamberMaids(this.state),
@@ -112,18 +113,17 @@ export default class ChamberZone extends React.Component {
     });
   };
 
-  getExtra = (card, idx) => {
+  getExtra = (card, idx, isPrivate) => {
     const { gameState } = this.context.parentState;
-    const { type, auto } = card;
-    if (type === 'privateMaid' && this.state.usadaJoder === 'si') return {};
+    if (isPrivate && this.state.usadaJoder === 'si') return {};
     if (card.restric && !card.restric(this.context)) return {};
     if (gameState !== 'startPhase') return {};
-    if (auto || !card.onStart || this.hasIllness(card)) return {};
+    if (card.auto || !card.onStart || this.hasIllness(card)) return {};
     return {
       className: 'playable',
       onClick: (e) => {
         e.stopPropagation();
-        card.onStart(this, idx, type === 'privateMaid');
+        card.onStart(this, idx, isPrivate);
       },
       onMouseOver: () => this.context.updateImage(this.getRoute(card)),
       onMouseOut: () => this.context.updateImage(null),
@@ -131,22 +131,25 @@ export default class ChamberZone extends React.Component {
   };
 
   renderCard = (card, idx) => {
-    const { attachments } = card;
+    const { attachments, type } = card;
     const hasAttachments = attachments && attachments[0];
     const topAttachment = hasAttachments && attachments[attachments.length - 1];
+    const isPrivate = type === 'privateMaid';
 
     return (
       <div style={{ position: 'relative', float: 'left' }}>
         <img
           alt="noseve"
           src={require(`../../cards/${this.getRoute(card)}.jpg`)}
-          {...(this.props.oppName ? {} : this.getExtra(card))}
+          {...(this.props.oppName ? {} : this.getExtra(card, idx, isPrivate))}
         />
         {hasAttachments && (
           <img
             alt="noseve"
             src={require(`../../cards/${this.getRoute(topAttachment)}.jpg`)}
-            {...(this.props.oppName ? {} : this.getExtra(topAttachment, idx))}
+            {...(this.props.oppName
+              ? {}
+              : this.getExtra(topAttachment, idx, isPrivate))}
             style={{
               position: 'absolute',
               top: '0.4vw',
@@ -170,7 +173,8 @@ export default class ChamberZone extends React.Component {
 
     const hasMaids =
       currentMaid || chamberMaids.find((maid) => maid.type.includes('maid'));
-    const hasBorder = gameState === 'targetChamberMaid' && hasMaids;
+    let hasBorder = gameState === 'targetChamberMaid' && hasMaids;
+    hasBorder = hasBorder || gameState === 'targetEvent';
 
     return [
       <div
