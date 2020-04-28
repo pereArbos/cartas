@@ -161,16 +161,14 @@ function sendIllness(context, maidIdx, isPrivate, oppName) {
 }
 
 function Sora(inst) {
-  inst.context.parentState.setActions((prevActions) => {
-    return {
-      message: 'Elige el Evento que quieras mover',
-      button2Text: 'Cancelar',
-      button2Click: () =>
-        inst.context.updateParent({
-          gameState: 'startPhase',
-          eventClick: null,
-        }),
-    };
+  inst.context.parentState.setActions({
+    message: 'Elige el Evento que quieras mover',
+    button2Text: 'Cancelar',
+    button2Click: () =>
+      inst.context.updateParent({
+        gameState: 'startPhase',
+        eventClick: null,
+      }),
   });
   inst.context.updateParent({
     gameState: 'targetEvent',
@@ -196,6 +194,7 @@ function removeAndTarget(inst, card, idx, isPrivate, oppName) {
       webrtc.whisper(opp.peer, 'sendEvent', [card, -1]);
     }
   }
+  inst.context.updateParent({ eventClick: null });
   inst.context.attachEvent({ ...card, backToStart: true }, 1);
   inst.context.updateMessage(
     `En su fase de Inicio, ${playerName} toma 1 ${

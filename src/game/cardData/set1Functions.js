@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { getAttachment } from '../playerArea/playerZones/helpers/dataUpdates';
 
 function Sainsbury(inst) {
   const { hand } = inst.context.playerState;
@@ -131,6 +132,58 @@ function actionNatsumi(inst) {
   }
 }
 
+function Claire(inst) {
+  inst.context.parentState.setActions({
+    message: 'Elige 1 Illness para devolverla a la ciudad',
+    button2Text: 'Cancelar',
+    button2Click: () =>
+      inst.context.updateParent({
+        gameState: 'servingPhase',
+      }),
+  });
+  inst.context.updateParent({
+    gameState: 'targetIllness',
+    illnessClick: healIllnes,
+  });
+}
+
+function ClaireDefend(inst, data) {
+  const { maidIdx, isPrivate, remove } = data;
+  if (!remove) {
+    const message = 'se defiende de la Illness revelando 1 Claire de su mano';
+    inst.context.parentState.setActions((prevActions) => {
+      return {
+        message: 'Quieres defenderte de la Illness con Claire ?',
+        button1Text: 'Sí',
+        button1Click: () => {
+          healIllnes(inst, maidIdx, isPrivate, message);
+          inst.context.parentState.setActions(prevActions);
+        },
+        button2Text: 'No',
+        button2Click: () => inst.context.parentState.setActions(prevActions),
+      };
+    });
+  }
+}
+
+function healIllnes(inst, maidIdx, isPrivate, message) {
+  const { playerName, webrtc } = inst.context.parentState;
+  inst.context.updateParent((prevState) => {
+    const city = _.cloneDeep(prevState.city);
+    const illIdx = city.findIndex((item) => item.name === 'Illness');
+    city[illIdx].quantity += 1;
+    if (webrtc) webrtc.shout('cityUpdate', { city });
+    return { city, gameState: 'servingPhase' };
+  });
+  getAttachment(inst, { maidIdx, isPrivate, remove: true });
+  inst.context.updateMessage(
+    `${playerName} ${
+      message ||
+      'usa los servicios de Claire para devolver 1 de sus Illness a la ciudad'
+    }`
+  );
+}
+
 export const playFuncs = {
   Sainsbury,
   Esquine,
@@ -138,4 +191,6 @@ export const playFuncs = {
   actionTenalys,
   Natsumi,
   actionNatsumi,
+  Claire,
+  ClaireDefend,
 };

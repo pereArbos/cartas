@@ -38,6 +38,7 @@ export default class ChamberZone extends React.Component {
         hasChamberMaids: () => checkChamberMaids(this.state),
         hasPlayables: this.hasPlayables,
         getCurrentMaid: this.getHealthyMaid,
+        getDefend: (data) => this.defend(data),
       });
     }
   }
@@ -72,7 +73,9 @@ export default class ChamberZone extends React.Component {
         if (currentMaid && currentMaid.onStart) {
           if (currentMaid.auto) currentMaid.onStart(this.context);
         } else if (!this.hasPlayables()) {
-          this.context.updateParent({ gameState: 'servingPhase' });
+          this.context.updateParent({
+            gameState: 'servingPhase',
+          });
         }
       }
     }
@@ -84,6 +87,13 @@ export default class ChamberZone extends React.Component {
         boughtPrivateMaids: [card, ...prevState.boughtPrivateMaids],
       };
     });
+  };
+
+  defend = (data) => {
+    const defensor = this.context.playerState.hand.find(
+      (maid) => maid.onDefend
+    );
+    if (defensor) defensor.onDefend(this, data);
   };
 
   hideModal = () => this.setState({ show: false });
@@ -114,7 +124,17 @@ export default class ChamberZone extends React.Component {
   };
 
   getExtra = (card, idx, isPrivate) => {
-    const { gameState } = this.context.parentState;
+    const { gameState, illnessClick } = this.context.parentState;
+    if (gameState === 'targetIllness' && card.name === 'Illness') {
+      return {
+        className: 'playable',
+        onClick: (e) => {
+          e.stopPropagation();
+          illnessClick(this, idx, isPrivate);
+        },
+      };
+    }
+
     if (isPrivate && this.state.usadaJoder === 'si') return {};
     if (card.restric && !card.restric(this.context)) return {};
     if (gameState !== 'startPhase') return {};

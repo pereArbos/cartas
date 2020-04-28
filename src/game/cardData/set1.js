@@ -162,8 +162,8 @@ export const set1Maids = [
     type: 'maid',
     cost: 3,
     servings: 1,
-    onPlay: () => {},
-    whileInHand: () => {},
+    onPlay: playFuncs.Claire,
+    onDefend: playFuncs.ClaireDefend,
     quantity: 10,
   },
   {

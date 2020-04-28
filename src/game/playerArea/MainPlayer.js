@@ -12,6 +12,8 @@ import './playerZones/PlayerZones.css';
 import IconFooter from './iconFooter/IconFooter';
 import { shuffle, handleAction } from '../helpers/actions';
 
+const serviceStates = ['cityPick', 'targetIllness'];
+
 export default class MainPlayer extends React.Component {
   static childContextTypes = {
     playerState: PropTypes.object,
@@ -64,7 +66,7 @@ export default class MainPlayer extends React.Component {
     const oldState = this.context.parentState.gameState;
     const newState = nextContext.parentState.gameState;
     if (oldState !== newState) {
-      if (newState === 'servingPhase' && oldState !== 'cityPick') {
+      if (newState === 'servingPhase' && !serviceStates.includes(oldState)) {
         this.setState((prevState) => {
           const { servings, contract } = prevState;
           return {
