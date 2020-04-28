@@ -178,7 +178,6 @@ function Sora(inst) {
 }
 
 function removeAndTarget(inst, card, idx, isPrivate, oppName) {
-  console.log(card, idx, isPrivate, oppName);
   const { webrtc, opponents, playerName } = inst.context.parentState;
   if (!oppName) {
     if (card.name === 'Illness') {
@@ -205,6 +204,30 @@ function removeAndTarget(inst, card, idx, isPrivate, oppName) {
   );
 }
 
+function Amber(context) {
+  context.draw(1, (hand) => {
+    const discarded = hand[0];
+    context.updatePlayer({ hand: [] });
+    context.updateParent((prevState) => {
+      return { discard: [...prevState.discard, discarded] };
+    });
+    const amount = discarded.type.includes('maid') ? 5 : 4;
+    context.draw(amount, () =>
+      context.updateParent({ gameState: 'startPhase' })
+    );
+    const { playerName } = context.parentState;
+    context.updateMessage(
+      `Debido a la habilidad de AmberTwilight, ${playerName} descarta ${
+        discarded.name
+      } de su mazo. ${
+        amount === 4
+          ? 'Como no es una Maid, roba 1 carta menos para su nueva mano.'
+          : ''
+      }`
+    );
+  });
+}
+
 export const functions = {
   Lucienne,
   Rosa,
@@ -214,4 +237,5 @@ export const functions = {
   Tanya,
   Nord,
   Sora,
+  Amber,
 };

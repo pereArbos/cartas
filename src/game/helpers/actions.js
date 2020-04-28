@@ -23,6 +23,7 @@ export function shuffle(array) {
 }
 
 export function getTrueData(card) {
+  if (!card) return null;
   switch (card.type) {
     case 'love':
       return love.find((item) => item.name === card.name);

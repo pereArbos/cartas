@@ -1,3 +1,5 @@
+import { getTrueData } from '../../../helpers/actions';
+
 export const config = {
   servingPhase: {
     message: 'Fase de Servicios',
@@ -40,7 +42,15 @@ export const config = {
   discardPhase: {
     button2Text: 'Fin de Turno',
     button2Click: (context) => {
-      context.draw(5, () => context.updateParent({ gameState: 'startPhase' })); // pasar turno
+      const endTurn = () => {
+        context.draw(5, () =>
+          context.updateParent({ gameState: 'startPhase' })
+        );
+      };
+      const discardAction = getDiscardAction(context);
+      if (discardAction) {
+        discardAction(context, endTurn);
+      } else endTurn();
     },
   },
   startPhase: {
@@ -51,3 +61,17 @@ export const config = {
     },
   },
 };
+
+function getDiscardAction(context) {
+  const { opponents } = context.parentState;
+  const bullyOpp = opponents.find((opp) => {
+    const oppMaid = getTrueData(opp.data.boughtPrivateMaids[0]);
+    if (!oppMaid || !oppMaid.onOppDiscard) return false;
+    if (oppMaid.attachemnts)
+      return !oppMaid.attachemnts.find((item) => item.name === 'Illness');
+    return true;
+  });
+  return (
+    bullyOpp && getTrueData(bullyOpp.data.boughtPrivateMaids[0]).onOppDiscard
+  );
+}

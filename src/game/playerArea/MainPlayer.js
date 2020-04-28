@@ -104,8 +104,8 @@ export default class MainPlayer extends React.Component {
 
   drawCards = (amount, cb = () => {}) => {
     const { deck, webrtc, playerName } = this.context.parentState;
-    const { hand } = this.state;
-    this.setState({ hand: [...deck.splice(0, amount), ...hand] }, cb);
+    const hand = [...deck.splice(0, amount), ...this.state.hand];
+    this.setState({ hand }, () => cb(hand));
     this.context.updateParent({ deck }, () => {
       if (webrtc)
         webrtc.shout('oppUpdate', {
