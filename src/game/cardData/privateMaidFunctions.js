@@ -3,6 +3,7 @@ import {
   getAttachment,
   getChamberMaid,
 } from '../playerArea/playerZones/helpers/dataUpdates';
+import { getTrueData } from '../helpers/actions';
 
 function Lucienne(context) {
   const noUpdate = context.parentState.hasPlayables();
@@ -140,11 +141,7 @@ function sendIllness(context, maidIdx, isPrivate, oppName) {
   if (numIll > 1) card.push(city[illIdx]);
 
   city[illIdx].quantity -= numIll;
-  const playables = context.parentState.hasPlayables();
-  context.updateParent({
-    city,
-    gameState: playables ? 'startPhase' : 'servingPhase',
-  });
+  context.updateParent({ city, gameState: 'startPhase' });
 
   const { webrtc, opponents, playerName } = context.parentState;
   webrtc.shout('cityUpdate', { city });
@@ -228,6 +225,83 @@ function Amber(context) {
   });
 }
 
+function Eugenie(inst) {
+  inst.setState({ usadaJoder: 'si' });
+  inst.context.parentState.setActions({
+    message: 'Elige un oponente para el efecto',
+    button2Text: null,
+  });
+  inst.context.updateParent({
+    gameState: 'targetPlayer',
+    playerClick: (name) => getModal(inst, name),
+    freeChambersToo: true,
+  });
+}
+
+function getModal(inst, oppName) {
+  if (!oppName) return;
+  const { webrtc, playerName, opponents } = inst.context.parentState;
+  const opp = opponents.find((item) => item.name === oppName);
+  const oppRandom = getHandRandom(opp.data.hand);
+  const { name, set } = oppRandom.card;
+  const route = set ? `set${set}/${name}` : name;
+
+  inst.context.updateParent({
+    showSCModal: true,
+    scModalData: {
+      title: `Esta es la carta revelada de la mano de ${oppName}`,
+      message: 'Quieres intercambiarla con una carta aleatoria de tu mano ?',
+      imgRoute: route,
+      yesFunc: () => {
+        const playerRandom = getHandRandom(inst.context.playerState.hand);
+        inst.context.updatePlayer((prevState) => {
+          const hand = _.cloneDeep(prevState.hand);
+          hand[playerRandom.idx] = getTrueData(oppRandom.card);
+          return { hand };
+        });
+        if (webrtc) {
+          webrtc.whisper(opp.peer, 'sendAction', {
+            type: 'auto',
+            card: {
+              name: 'EugenieFontaine',
+              set: 1,
+              type: 'privateMaid',
+            },
+            funcData: [oppRandom.idx, playerRandom.card],
+          });
+        }
+        inst.context.updateMessage(
+          `En su fase de Inicio, ${playerName} usa la habilidad de Eugenie para intercambiar una carta aleatoria de su mano con ${oppName}`
+        );
+        EugenieFinish(inst);
+      },
+      noFunc: () => EugenieFinish(inst),
+    },
+  });
+}
+
+function actionEugenie(inst, idx, newCard) {
+  inst.setState((prevState) => {
+    const hand = _.cloneDeep(prevState.hand);
+    hand[idx] = getTrueData(newCard);
+    return { hand };
+  });
+}
+
+function getHandRandom(hand) {
+  const idx = Math.floor(Math.random() * hand.length);
+  return { idx, card: hand[idx] };
+}
+
+function EugenieFinish(inst) {
+  inst.context.updateParent({
+    gameState: 'startPhase',
+    freeChambersToo: false,
+    playerClick: null,
+    showSCModal: false,
+  });
+}
+
 export const functions = {
   Lucienne,
   Rosa,
@@ -238,4 +312,6 @@ export const functions = {
   Nord,
   Sora,
   Amber,
+  Eugenie,
+  actionEugenie,
 };

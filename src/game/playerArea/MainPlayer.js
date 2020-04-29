@@ -12,7 +12,7 @@ import './playerZones/PlayerZones.css';
 import IconFooter from './iconFooter/IconFooter';
 import { shuffle, handleAction } from '../helpers/actions';
 
-const serviceStates = ['cityPick', 'targetIllness'];
+const serviceStates = ['cityPick', 'targetIllness', 'targetPlayer'];
 
 export default class MainPlayer extends React.Component {
   static childContextTypes = {
@@ -142,9 +142,16 @@ export default class MainPlayer extends React.Component {
 
   render() {
     const { parentState } = this.context;
-    const { gameState, playerClick, playerName, hasChamberMaids } = parentState;
+    const {
+      gameState,
+      playerClick,
+      playerName,
+      hasChamberMaids,
+      freeChambersToo,
+    } = parentState;
     const checkMaids =
-      typeof hasChamberMaids === 'function' && hasChamberMaids();
+      (typeof hasChamberMaids === 'function' && hasChamberMaids()) ||
+      freeChambersToo;
     const circleOn = gameState === 'targetPlayer' && playerClick && checkMaids;
     const playerClass = circleOn ? 'selectable' : '';
     const circleClick = circleOn ? playerClick : () => {};

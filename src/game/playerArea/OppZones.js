@@ -37,7 +37,9 @@ export default class MainPlayer extends React.Component {
     const { oppIdx } = this.props;
     const { gameState, playerClick, opponents } = this.context.parentState;
 
-    const checkMaids = checkChamberMaids(opponents[oppIdx].data);
+    const checkMaids =
+      checkChamberMaids(opponents[oppIdx].data) ||
+      this.context.parentState.freeChambersToo;
     const circleOn = gameState === 'targetPlayer' && playerClick && checkMaids;
     const playerClass = circleOn ? 'selectable' : '';
     const circleClick = circleOn ? playerClick : () => {};

@@ -15,7 +15,7 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 4,
     vp: -4,
-    onOppDiscard: functions.Amber,
+    onStart: functions.Eugenie,
   },
   {
     name: 'SoraNakachi',
@@ -23,7 +23,7 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 7,
     vp: 2,
-    onOppDiscard: functions.Amber,
+    onStart: functions.Eugenie,
   },
   {
     name: 'FayLongfang',
@@ -40,7 +40,7 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 6,
     vp: 2,
-    onOppDiscard: functions.Amber,
+    onStart: functions.Eugenie,
   },
   {
     name: 'MillyViolet',
@@ -56,7 +56,8 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 5,
     vp: 0,
-    onOppDiscard: functions.Amber,
+    onStart: functions.Eugenie,
+    forcedAction: functions.actionEugenie,
   },
   {
     name: 'LucienneDeMarlboro',

@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { LioWebRTC } from 'react-liowebrtc';
 
 import MainGame from './MainGame';
+import SingleCardModal from './cardDisplayModal/SingleCardModal';
 import { initiateCity } from './field/CityGenerator';
 import { initialDeck, initialOppData } from './initialData.js';
 import { shuffle, attachEvent } from './helpers/actions';
@@ -25,6 +26,7 @@ export default class ConnexionGame extends React.Component {
       playerName: props.playerName,
       opponents: [],
       message: '',
+      showSCModal: false,
     };
   }
 
@@ -174,6 +176,7 @@ export default class ConnexionGame extends React.Component {
         onJoinedRoom={this.onJoin}
       >
         <MainGame />
+        <SingleCardModal />
       </LioWebRTC>
     );
   }

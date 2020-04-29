@@ -45,7 +45,7 @@ export const set1Maids = [
     set: 1,
     type: 'maid',
     cost: 7,
-    vp: 3,
+    vp: () => 3,
     draw: 3,
     contract: 1,
     quantity: 8,
@@ -135,7 +135,8 @@ export const set1Maids = [
     type: 'maid',
     cost: 3,
     love: 2,
-    onPlay: () => {},
+    onPlay: playFuncs.Eliza,
+    forcedAction: playFuncs.ElizaDiscard,
     quantity: 10,
   },
   {

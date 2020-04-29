@@ -184,6 +184,83 @@ function healIllnes(inst, maidIdx, isPrivate, message) {
   );
 }
 
+function Eliza(inst, card) {
+  inst.setState({
+    message: 'Elige un jugador para el efecto',
+    button2Text: null,
+  });
+  inst.context.updateParent({
+    gameState: 'targetPlayer',
+    playerClick: (name) => getSCModal(inst, name, card),
+    freeChambersToo: true,
+  });
+}
+
+function getSCModal(inst, oppName, card) {
+  const { webrtc, playerName, opponents } = inst.context.parentState;
+  const opp = opponents.find((item) => item.name === oppName);
+  const { deck } = oppName ? opp.data : inst.context.parentState;
+  if (!deck[0]) {
+    ElizaFinish(inst);
+    return;
+  }
+  const { name, set } = deck[0];
+  const route = set ? `set${set}/${name}` : name;
+
+  inst.context.updateParent({
+    showSCModal: true,
+    scModalData: {
+      title: `Esta es la primera carta de${
+        oppName ? `l mazo de ${oppName}` : ' tu mazo'
+      }`,
+      message: 'Quieres descartarla ?',
+      imgRoute: route,
+      yesFunc: () => {
+        ElizaFinish(inst);
+        if (oppName) {
+          if (webrtc)
+            webrtc.whisper(opp.peer, 'sendAction', { type: 'auto', card });
+        } else {
+          inst.context.draw(1, (hand) => {
+            const discarded = hand[0];
+            inst.context.updatePlayer({
+              hand: hand.filter((foo, idx) => idx > 0),
+            });
+            inst.context.updateParent((prevState) => {
+              return { discard: [...prevState.discard, discarded] };
+            });
+          });
+        }
+        inst.context.updateMessage(
+          `${playerName} usa los servicios de Eliza para descartar 1 carta del mazo de ${
+            oppName || playerName
+          }`
+        );
+      },
+      noFunc: () => ElizaFinish(inst),
+    },
+  });
+}
+
+function ElizaFinish(inst) {
+  inst.context.updateParent({
+    gameState: 'servingPhase',
+    freeChambersToo: false,
+    playerClick: null,
+    showSCModal: false,
+  });
+}
+
+function ElizaDiscard(inst) {
+  inst.drawAndReload(1, (hand) => {
+    const discarded = hand[0];
+    inst.setState({ hand: hand.filter((foo, idx) => idx > 0) });
+    inst.context.updateParent((prevState) => {
+      return { discard: [...prevState.discard, discarded] };
+    });
+  });
+}
+
 export const playFuncs = {
   Sainsbury,
   Esquine,
@@ -193,4 +270,6 @@ export const playFuncs = {
   actionNatsumi,
   Claire,
   ClaireDefend,
+  Eliza,
+  ElizaDiscard,
 };

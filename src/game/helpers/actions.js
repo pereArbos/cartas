@@ -118,6 +118,6 @@ function removePendingAttach(inst) {
 
 export function handleAction(data, inst) {
   if (data.type === 'auto') {
-    getTrueData(data.card).forcedAction(inst);
+    getTrueData(data.card).forcedAction(inst, ...(data.funcData || []));
   }
 }
