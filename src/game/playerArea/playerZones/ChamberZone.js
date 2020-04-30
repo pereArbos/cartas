@@ -5,7 +5,7 @@ import _ from 'lodash';
 import CardDisplayModal from '../../cardDisplayModal/CardDisplayModal';
 import PrivateMaidsDisplay from '../../cardDisplayModal/PrivateMaidsDisplay';
 import { checkChamberMaids } from '../../helpers/actions';
-import { getChamberMaid, getAttachment } from './helpers/dataUpdates';
+import { getChamberMaid, getAttachment, getVP } from './helpers/dataUpdates';
 
 export default class ChamberZone extends React.Component {
   static contextTypes = {
@@ -39,6 +39,7 @@ export default class ChamberZone extends React.Component {
         hasPlayables: this.hasPlayables,
         getCurrentMaid: this.getHealthyMaid,
         getDefend: (data) => this.defend(data),
+        getResults: this.getResults,
       });
     }
   }
@@ -94,6 +95,12 @@ export default class ChamberZone extends React.Component {
       (maid) => maid.onDefend
     );
     if (defensor) defensor.onDefend(this, data);
+  };
+
+  getResults = () => {
+    this.context.updateParent({
+      results: [{ name: this.context.parentState.playerName, vp: getVP(this) }],
+    });
   };
 
   hideModal = () => this.setState({ show: false });

@@ -1,5 +1,6 @@
 import { playFuncs } from './set1Functions';
 import { eventFuncs } from './set1ChamberFuncs';
+import { vpFuncs } from './vpFunctions';
 
 export const set1Fixed = [
   {
@@ -17,7 +18,7 @@ export const set1Fixed = [
     set: 1,
     type: 'event',
     cost: 2,
-    vp: () => {},
+    vp: vpFuncs.BadHabit,
     quantity: 16,
   },
   {
@@ -25,7 +26,7 @@ export const set1Fixed = [
     set: 1,
     type: 'maidChief',
     cost: 3,
-    vp: () => {},
+    vp: vpFuncs.Colette,
     chamberCost: 2,
     quantity: 24,
   },
@@ -34,7 +35,7 @@ export const set1Fixed = [
     set: 1,
     type: 'maidChief',
     cost: 9,
-    vp: 6,
+    vp: (chamber, deck) => 6 * (chamber + deck),
     quantity: 8,
   },
 ];
@@ -45,7 +46,7 @@ export const set1Maids = [
     set: 1,
     type: 'maid',
     cost: 7,
-    vp: () => 3,
+    vp: (chamber, deck) => 3 * deck,
     draw: 3,
     contract: 1,
     quantity: 8,
@@ -59,7 +60,7 @@ export const set1Maids = [
     servings: 1,
     love: 1,
     contract: 1,
-    vp: () => {},
+    vp: vpFuncs.Ophelia,
     quantity: 8,
   },
   {
@@ -144,7 +145,7 @@ export const set1Maids = [
     set: 1,
     type: 'maid',
     cost: 3,
-    vp: () => {},
+    vp: vpFuncs.Safran,
     love: 2,
     chamberCost: 1,
     quantity: 10,
@@ -172,7 +173,7 @@ export const set1Maids = [
     set: 1,
     type: 'maid',
     cost: 2,
-    vp: () => {},
+    vp: vpFuncs.Azure,
     contract: 1,
     chamberCost: 1,
     quantity: 10,
@@ -182,7 +183,7 @@ export const set1Maids = [
     set: 1,
     type: 'maid',
     cost: 2,
-    vp: () => {},
+    vp: vpFuncs.Viola,
     draw: 1,
     chamberCost: 1,
     quantity: 10,
@@ -192,7 +193,7 @@ export const set1Maids = [
     set: 1,
     type: 'maid',
     cost: 2,
-    vp: () => {},
+    vp: vpFuncs.Rouge,
     love: 1,
     chamberCost: 1,
     quantity: 10,

@@ -15,7 +15,7 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 4,
     vp: -4,
-    onStart: functions.Eugenie,
+    onStart: functions.Nord,
   },
   {
     name: 'SoraNakachi',
@@ -23,7 +23,7 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 7,
     vp: 2,
-    onStart: functions.Eugenie,
+    onStart: functions.Sora,
   },
   {
     name: 'FayLongfang',
@@ -40,7 +40,7 @@ export const privateMaids = [
     type: 'privateMaid',
     cost: 6,
     vp: 2,
-    onStart: functions.Eugenie,
+    onStart: functions.Lalande,
   },
   {
     name: 'MillyViolet',

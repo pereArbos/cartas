@@ -1,0 +1,39 @@
+.ResultsModal {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  color: white;
+}
+
+.ResultsModal .ResTitle {
+  font-size: 24px;
+  margin-bottom: 30px;
+  width: 100%;
+  text-align: center;
+  font-weight: 700;
+}
+
+.ResultsModal button {
+  position: absolute;
+  top: 92.5%;
+  left: 90%;
+  width: 40px;
+  height: 30px;
+  font-size: 15px;
+  background-color: aqua;
+  border: none;
+  color: #dddddd;
+  font-weight: bold;
+}
+
+.ResultsModal .playerRes {
+  width: 100%;
+  margin-top: 15px;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.ResultsModal .playerRes div {
+  display: inline-block;
+  text-align: center;
+}

@@ -202,6 +202,17 @@ export default class Field extends React.Component {
               Hecho
             </button>
           )}
+          {!buying && (
+            <button
+              type="button"
+              onClick={() => {
+                this.context.parentState.getResults();
+                this.context.updateParent({ showResultsModal: true });
+              }}
+            >
+              Resultados
+            </button>
+          )}
         </div>
       </div>
     );

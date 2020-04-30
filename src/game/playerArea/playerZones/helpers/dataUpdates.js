@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { getTrueData } from '../../../helpers/actions';
+import { getByDisplayValue } from '@testing-library/react';
 
 export function getChamberMaid(inst, mehCard, add = 1) {
   const card = getTrueData(mehCard);
@@ -87,4 +88,49 @@ export function handSelect(inst, idx) {
     } else if (selection.length < limit) selection.push(idx);
     return { handSelection: selection };
   });
+}
+
+export function getVP(inst) {
+  const { discard } = inst.context.parentState;
+  const { boughtPrivateMaids, chamberMaids } = inst.state;
+  const hasPoints = (maid) => maid.vp && !inst.hasIllness(maid);
+  const chamberCards = chamberMaids.filter(hasPoints);
+  const privateMaids = boughtPrivateMaids.filter(hasPoints);
+  const pointMaids = parseDiscard(discard);
+
+  chamberCards.forEach((maid) => {
+    const { name, chambered, vp } = maid;
+    if (pointMaids[name]) {
+      pointMaids[name].chambered = chambered;
+    } else pointMaids[name] = { chambered, inDeck: 0, vp };
+  });
+  return getPrivatePoints(privateMaids) + getMaidPoints(inst, pointMaids);
+}
+
+function parseDiscard(list) {
+  const result = {};
+  list.forEach((card) => {
+    const { name, vp } = card;
+    if (vp) {
+      if (result[name]) {
+        result[name].inDeck += 1;
+      } else {
+        result[name] = { inDeck: 1, chambered: 0, vp };
+      }
+    }
+  });
+  return result;
+}
+
+function getPrivatePoints(maids) {
+  const points = maids.map((card) => card.vp);
+  return [0, ...points].reduce((a, b) => a + b);
+}
+
+function getMaidPoints(inst, maids) {
+  const points = Object.keys(maids).map((name) => {
+    const { vp, chambered, inDeck } = maids[name];
+    return vp(chambered, inDeck, inst, maids);
+  });
+  return [0, ...points].reduce((a, b) => a + b);
 }

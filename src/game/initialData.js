@@ -1,9 +1,8 @@
 export const initialDeck = {
-  '2Love': 2,
-  '3Love': 2,
-  '1Love': 2,
-  ColetteFramboise: 2,
-  MarianneSoleil: 2,
+  ColetteFramboise: 5,
+  KagariIchinomiya: 3,
+  NatsumiFujikawa: 3,
+  '3Love': 4,
 };
 
 export const initialOppData = {
