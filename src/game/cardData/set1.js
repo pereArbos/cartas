@@ -88,7 +88,7 @@ export const set1Maids = [
     type: 'maid',
     cost: 5,
     love: 1,
-    onPlay: () => {},
+    onPlay: playFuncs.Nena,
     quantity: 10,
   },
   {

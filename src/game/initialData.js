@@ -1,6 +1,6 @@
 export const initialDeck = {
-  ColetteFramboise: 3,
-  '1Love': 7,
+  NenaWilder: 3,
+  '2Love': 7,
 };
 
 export const initialOppData = {

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { getAttachment } from '../playerArea/playerZones/helpers/dataUpdates';
+import { checkChamberMaids } from '../helpers/actions';
 
 function Sainsbury(inst) {
   const { hand } = inst.context.playerState;
@@ -261,6 +262,44 @@ function ElizaDiscard(inst) {
   });
 }
 
+function Nena(inst) {
+  const { webrtc, playerName, opponents, turnOrder } = inst.context.parentState;
+  const playerIdx = inst.context.parentState.turnNum % turnOrder.length;
+  const city = _.cloneDeep(inst.context.parentState.city);
+  const bhIdx = city.findIndex((item) => item.name === 'BadHabit');
+  const bhLeft = city[bhIdx].quantity;
+  let message = null;
+  if (bhLeft > 0) {
+    const opp1 = opponents.find(
+      (opp) => opp.name === turnOrder[(playerIdx + 1) % turnOrder.length]
+    );
+    if (checkChamberMaids(opp1.data)) {
+      city[bhIdx].quantity -= 1;
+      if (webrtc) webrtc.whisper(opp1.peer, 'sendEvent', [city[bhIdx]]);
+      message = `${playerName} usa los servicios de NenaWilder para enviar 1 BadHabit a ${opp1.name}`;
+    }
+  }
+  if (bhLeft > 1) {
+    const opp2 = opponents.find(
+      (opp) =>
+        opp.name ===
+        turnOrder[(playerIdx + turnOrder.length - 1) % turnOrder.length]
+    );
+    if (checkChamberMaids(opp2.data)) {
+      city[bhIdx].quantity -= 1;
+      if (webrtc) webrtc.whisper(opp2.peer, 'sendEvent', [city[bhIdx]]);
+      message = message
+        ? `${message} y a ${opp2.name}`
+        : `${playerName} usa los servicios de NenaWilder para enviar 1 BadHabit a ${opp2.name}`;
+    }
+  }
+  if (message) {
+    inst.context.updateParent({ city });
+    webrtc.shout('cityUpdate', { city });
+    inst.context.updateMessage(message);
+  }
+}
+
 export const playFuncs = {
   Sainsbury,
   Esquine,
@@ -272,4 +311,5 @@ export const playFuncs = {
   ClaireDefend,
   Eliza,
   ElizaDiscard,
+  Nena,
 };
