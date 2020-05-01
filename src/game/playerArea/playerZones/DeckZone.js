@@ -17,13 +17,15 @@ export default class DeckZone extends React.Component {
   showModal = () => this.setState({ show: true });
 
   render() {
-    const { opponents } = this.context.parentState;
+    const { opponents, gameState } = this.context.parentState;
     const { oppName, oppIdx } = this.props;
 
     const { discard, deck } = oppName
       ? opponents[oppIdx].data
       : this.context.parentState;
     const deckLength = deck && deck.length;
+    const pileName =
+      gameState === 'gameEnded' ? 'Cartas Compradas' : 'Descartes';
 
     const deckVisible = deckLength === 0 ? 'hidden' : 'visible';
     const discardTop = discard.length > 0 && discard[discard.length - 1];
@@ -42,7 +44,7 @@ export default class DeckZone extends React.Component {
           <img
             alt="noseve"
             className="showesModal"
-            title={oppName ? `Descartes de ${oppName}` : 'Tus Descartes'}
+            title={oppName ? `${pileName} de ${oppName}` : `Tus ${pileName}`}
             onClick={this.showModal}
             src={require(`../../cards/${route}.jpg`)}
           />
@@ -53,7 +55,7 @@ export default class DeckZone extends React.Component {
         showModal={this.state.show}
         hideModal={this.hideModal}
         cards={[...discard].reverse()}
-        title={oppName ? `Descartes de ${oppName}` : 'Tus Descartes'}
+        title={oppName ? `${pileName} de ${oppName}` : `Tus ${pileName}`}
       />,
     ];
   }

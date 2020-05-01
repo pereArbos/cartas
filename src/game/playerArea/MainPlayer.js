@@ -10,7 +10,7 @@ import DeckZone from './playerZones/DeckZone';
 import './playerZones/PlayerZones.css';
 
 import IconFooter from './iconFooter/IconFooter';
-import { shuffle, handleAction } from '../helpers/actions';
+import { shuffle, handleAction, checkGameFinish } from '../helpers/actions';
 
 const serviceStates = ['cityPick', 'targetIllness', 'targetPlayer'];
 
@@ -47,6 +47,7 @@ export default class MainPlayer extends React.Component {
     this.context.updateParent({
       getInitialHand: () => this.drawCards(5),
       getForcedAction: (data) => handleAction(data, this),
+      checkGameFinish: () => checkGameFinish(this),
     });
   }
 

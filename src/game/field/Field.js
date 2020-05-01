@@ -211,22 +211,18 @@ export default class Field extends React.Component {
               Empezar
             </button>
           )}
-        </div>
-      </div>
-    );
-  }
-}
-
-/*
-          {!buying && (
+          {gameState === 'gameEnded' && (
             <button
               type="button"
               onClick={() => {
-                this.context.parentState.getResults();
                 this.context.updateParent({ showResultsModal: true });
               }}
             >
               Resultados
             </button>
           )}
-          */
+        </div>
+      </div>
+    );
+  }
+}

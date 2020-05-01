@@ -155,11 +155,14 @@ export default class ConnexionGame extends React.Component {
       case 'passTurn':
         const { turnNum, turnOrder } = this.state;
         const newTurn = turnOrder[(turnNum + 1) % turnOrder.length];
-        this.setState({
-          msgTitle: `Turno de ${newTurn}`,
-          turnNum: turnNum + 1,
-          gameState: newTurn === playerName ? 'startPhase' : 'opponentTurn',
-        });
+        this.setState(
+          {
+            msgTitle: `Turno de ${newTurn}`,
+            turnNum: turnNum + 1,
+            gameState: newTurn === playerName ? 'startPhase' : 'opponentTurn',
+          },
+          this.state.checkGameFinish
+        );
         break;
       case 'sendEvent':
         this.state.getChamberMaid(...payload);
@@ -170,6 +173,15 @@ export default class ConnexionGame extends React.Component {
         break;
       case 'sendAction':
         this.state.getForcedAction(payload);
+        break;
+      case 'results':
+        this.setState((prevState) => {
+          return {
+            results: [...prevState.results, payload].sort((a, b) =>
+              a.vp > b.vp ? -1 : 1
+            ),
+          };
+        });
         break;
       default:
         break;

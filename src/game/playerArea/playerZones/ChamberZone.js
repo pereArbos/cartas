@@ -98,9 +98,17 @@ export default class ChamberZone extends React.Component {
   };
 
   getResults = () => {
-    this.context.updateParent({
-      results: [{ name: this.context.parentState.playerName, vp: getVP(this) }],
-    });
+    const playerRes = {
+      name: this.context.parentState.playerName,
+      vp: getVP(this),
+    };
+    this.context.updateParent({ results: [playerRes] });
+    const { webrtc } = this.context.parentState;
+    if (webrtc)
+      setTimeout(
+        () => webrtc.shout('results', playerRes),
+        Math.random() * 1500
+      );
   };
 
   hideModal = () => this.setState({ show: false });

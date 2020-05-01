@@ -147,9 +147,43 @@ export function finishTurn(context) {
   const { webrtc, turnOrder, turnNum, playerName } = context.parentState;
   if (webrtc) webrtc.shout('passTurn', {});
   const newTurn = turnOrder[(turnNum + 1) % turnOrder.length];
-  context.updateParent({
-    msgTitle: `Turno de ${newTurn}`,
-    turnNum: turnNum + 1,
-    gameState: newTurn === playerName ? 'startPhase' : 'opponentTurn',
+  context.updateParent(
+    {
+      msgTitle: `Turno de ${newTurn}`,
+      turnNum: turnNum + 1,
+      gameState: newTurn === playerName ? 'startPhase' : 'opponentTurn',
+    },
+    context.parentState.checkGameFinish
+  );
+}
+
+export function checkGameFinish(inst) {
+  const { city } = inst.context.parentState;
+  let soldOut = 0;
+  city.forEach((item) => {
+    const { type, name, quantity } = item;
+    const validCard = name === 'cardback' || (type || '').includes('maid');
+    if (validCard && quantity === 0) soldOut += 1;
   });
+  if (soldOut >= 2) {
+    finishGame(inst);
+  }
+}
+
+function finishGame(inst) {
+  const { playedCards, hand } = inst.state;
+  inst.context.updateParent(
+    (prevState) => {
+      const { deck, discard } = prevState;
+      return {
+        discard: [...discard, ...deck, ...hand, ...playedCards],
+        deck: [],
+        gameState: 'gameEnded',
+        msgTitle: 'Fin de la Partida',
+        message: "Pulsa 'Resultados' para ver la clasificación.",
+      };
+    },
+    () => setTimeout(inst.context.parentState.getResults, 1000)
+  );
+  inst.setState({ playedCards: [], hand: [] });
 }

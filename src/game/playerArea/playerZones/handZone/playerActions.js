@@ -52,6 +52,7 @@ export const config = {
     },
   },
   opponentTurn: { message: '', button2Text: null },
+  gameEnded: { message: '', button2Text: null },
   startPhase: {
     message: 'Fase de Inicio',
     button2Text: 'Fase de Servicios',
@@ -66,11 +67,14 @@ function getDiscardAction(context) {
   const bullyOpp = opponents.find((opp) => {
     const oppMaid = getTrueData(opp.data.boughtPrivateMaids[0]);
     if (!oppMaid || !oppMaid.onOppDiscard) return false;
-    if (oppMaid.attachemnts)
-      return !oppMaid.attachemnts.find((item) => item.name === 'Illness');
-    return true;
+    return !hasIllness(oppMaid);
   });
   return (
     bullyOpp && getTrueData(bullyOpp.data.boughtPrivateMaids[0]).onOppDiscard
   );
+}
+
+function hasIllness(card) {
+  if (!card.attachments) return false;
+  return card.attachments.find((item) => item.name === 'Illness');
 }

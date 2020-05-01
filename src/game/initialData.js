@@ -1,5 +1,5 @@
 export const initialDeck = {
-  NenaWilder: 3,
+  ColetteFramboise: 3,
   '2Love': 7,
 };
 
