@@ -140,12 +140,13 @@ export default class ConnexionGame extends React.Component {
         break;
       case 'oppUpdate':
         this.setState((prevState) => {
+          console.log(payload.data);
           const opponents = _.cloneDeep(prevState.opponents);
           const idx = opponents.findIndex((opp) => opp.name === payload.name);
-          opponents[idx].data = {
-            ...opponents[idx].data,
-            ...payload.data,
-          };
+          Object.keys(payload.data).forEach((key) => {
+            opponents[idx].data[key] = payload.data[key];
+          });
+          console.log(opponents);
           return { opponents };
         });
         break;
