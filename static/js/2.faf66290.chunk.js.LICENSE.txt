@@ -1,0 +1,203 @@
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
+
+/*!
+  Copyright (c) 2015 Jed Watson.
+  Based on code that is Copyright 2013-2015, Facebook, Inc.
+  All rights reserved.
+*/
+
+/*!
+ * Adapted from jQuery UI core
+ *
+ * http://jqueryui.com
+ *
+ * Copyright 2014 jQuery Foundation and other contributors
+ * Released under the MIT license.
+ * http://jquery.org/license
+ *
+ * http://api.jqueryui.com/category/ui-core/
+ */
+
+/*! ../collections */
+
+/*! ./../webpack/buildin/module.js */
+
+/*! ./cjs/react-is.development.js */
+
+/*! ./collections */
+
+/*! ./conversions */
+
+/*! ./escapeHTML */
+
+/*! ./lib/markup */
+
+/*! ./plugins/AsymmetricMatcher */
+
+/*! ./plugins/ConvertAnsi */
+
+/*! ./plugins/DOMCollection */
+
+/*! ./plugins/DOMElement */
+
+/*! ./plugins/Immutable */
+
+/*! ./plugins/ReactElement */
+
+/*! ./plugins/ReactTestComponent */
+
+/*! ./route */
+
+/*! JSON v3.2.6 | http://bestiejs.github.io/json3 | Copyright 2012-2013, Kit Cambridge | http://kit.mit-license.org */
+
+/*! ansi-regex */
+
+/*! ansi-styles */
+
+/*! color-convert */
+
+/*! color-name */
+
+/*! https://mths.be/utf8js v2.0.0 by @mathias */
+
+/*! no static exports found */
+
+/*! react-is */
+
+/*!***********************************!*\
+        !*** (webpack)/buildin/module.js ***!
+        \***********************************/
+
+/*!****************************************!*\
+        !*** ./node_modules/react-is/index.js ***!
+        \****************************************/
+
+/*!******************************************!*\
+        !*** ./node_modules/ansi-regex/index.js ***!
+        \******************************************/
+
+/*!******************************************!*\
+        !*** ./node_modules/color-name/index.js ***!
+        \******************************************/
+
+/*!*******************************************!*\
+        !*** ./node_modules/ansi-styles/index.js ***!
+        \*******************************************/
+
+/*!*********************************************!*\
+        !*** ./packages/pretty-format/src/index.ts ***!
+        \*********************************************/
+
+/*!***************************************************!*\
+        !*** ./packages/pretty-format/src/collections.ts ***!
+        \***************************************************/
+
+/*!*********************************************************!*\
+        !*** ./packages/pretty-format/src/plugins/Immutable.ts ***!
+        \*********************************************************/
+
+/*!**********************************************************!*\
+        !*** ./packages/pretty-format/src/plugins/DOMElement.ts ***!
+        \**********************************************************/
+
+/*!**********************************************************!*\
+        !*** ./packages/pretty-format/src/plugins/lib/markup.ts ***!
+        \**********************************************************/
+
+/*!***********************************************************!*\
+        !*** ./node_modules/react-is/cjs/react-is.development.js ***!
+        \***********************************************************/
+
+/*!***********************************************************!*\
+        !*** ./packages/pretty-format/src/plugins/ConvertAnsi.ts ***!
+        \***********************************************************/
+
+/*!************************************************************!*\
+        !*** ./packages/pretty-format/src/plugins/ReactElement.ts ***!
+        \************************************************************/
+
+/*!*************************************************************!*\
+        !*** ./packages/pretty-format/src/plugins/DOMCollection.ts ***!
+        \*************************************************************/
+
+/*!**************************************************************!*\
+        !*** ./packages/pretty-format/src/plugins/lib/escapeHTML.ts ***!
+        \**************************************************************/
+
+/*!*****************************************************************!*\
+        !*** ./packages/pretty-format/src/plugins/AsymmetricMatcher.ts ***!
+        \*****************************************************************/
+
+/*!******************************************************************!*\
+        !*** ./packages/pretty-format/src/plugins/ReactTestComponent.ts ***!
+        \******************************************************************/
+
+/*!**********************************************************************!*\
+        !*** ./node_modules/ansi-styles/node_modules/color-convert/index.js ***!
+        \**********************************************************************/
+
+/*!**********************************************************************!*\
+        !*** ./node_modules/ansi-styles/node_modules/color-convert/route.js ***!
+        \**********************************************************************/
+
+/*!****************************************************************************!*\
+        !*** ./node_modules/ansi-styles/node_modules/color-convert/conversions.js ***!
+        \****************************************************************************/
+
+/**
+ * @license
+ * Lodash <https://lodash.com/>
+ * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
+ * Released under MIT license <https://lodash.com/license>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ */
+
+/** @license React v0.19.1
+ * scheduler.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/** @license React v16.13.1
+         * react-is.development.js
+         *
+         * Copyright (c) Facebook, Inc. and its affiliates.
+         *
+         * This source code is licensed under the MIT license found in the
+         * LICENSE file in the root directory of this source tree.
+         */
+
+/** @license React v16.13.1
+ * react-dom-test-utils.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/** @license React v16.13.1
+ * react-dom.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/** @license React v16.13.1
+ * react.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
