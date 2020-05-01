@@ -4,7 +4,7 @@ import _ from 'lodash';
 import './Field.css';
 
 import CardBlock from './CardBlock';
-import { getTrueData, hasTargets } from '../helpers/actions';
+import { getTrueData, hasTargets, getTurnOrder } from '../helpers/actions';
 
 export default class Field extends React.Component {
   static contextTypes = {
@@ -178,7 +178,7 @@ export default class Field extends React.Component {
   };
 
   render() {
-    const { city, gameState, sendTo } = this.context.parentState;
+    const { city, gameState, sendTo, mainPlayer } = this.context.parentState;
     const picking = gameState === 'cityPick';
     const buying = gameState === 'contractPhase' || picking;
 
@@ -202,6 +202,22 @@ export default class Field extends React.Component {
               Hecho
             </button>
           )}
+          {gameState === 'gameSetUp' && mainPlayer && (
+            <button
+              type="button"
+              style={{ marginLeft: '2vw' }}
+              onClick={() => getTurnOrder(this.context)}
+            >
+              Empezar
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+}
+
+/*
           {!buying && (
             <button
               type="button"
@@ -213,8 +229,4 @@ export default class Field extends React.Component {
               Resultados
             </button>
           )}
-        </div>
-      </div>
-    );
-  }
-}
+          */

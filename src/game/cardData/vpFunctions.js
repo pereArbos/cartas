@@ -17,7 +17,6 @@ function BadHabit(chambered) {
 }
 
 function Rouge(chamber, inDeck) {
-  console.log(chamber + inDeck);
   return chamber + inDeck;
 }
 
@@ -25,10 +24,6 @@ function Viola(chamber, inDeck, inst, maids) {
   let points = inDeck + chamber;
   if (maids.AzureCrescent) return points;
   const numRouge = maids.RougeCrescent ? maids.RougeCrescent.chambered : 0;
-  console.log(
-    points + Math.min(numRouge, chamber) * 3,
-    Math.min(numRouge, chamber)
-  );
   return points + Math.min(numRouge, chamber) * 3;
 }
 
@@ -42,7 +37,6 @@ function Azure(chamber, inDeck, inst, maids) {
     .map((num) => num - minThree)
     .filter((num) => num > 0);
   const minTwo = pairNums.length === 2 ? Math.min(...pairNums) : 0;
-  console.log(points + minThree * 7 + minTwo * 3, minThree, minTwo);
   return points + minThree * 7 + minTwo * 3;
 }
 
@@ -50,7 +44,6 @@ function Colette(chamber, inDeck, inst) {
   const { opponents } = inst.context.parentState;
   const oppColettes = opponents.map((opp) => getColettes(opp, inst));
   const total = chamber + inDeck;
-  console.log(total, oppColettes);
   return total + (total > Math.max(...oppColettes) ? 5 : 0);
 }
 
@@ -63,8 +56,6 @@ function getColettes(opp, inst) {
   discard.forEach((item) => {
     if (item.name === 'ColetteFramboise') deckColettes += 1;
   });
-  console.log(chamberColettes);
-  console.log(chamberColettes ? chamberColettes.chambered : 0);
   return deckColettes + (chamberColettes ? chamberColettes.chambered : 0);
 }
 

@@ -1,8 +1,6 @@
 export const initialDeck = {
-  ColetteFramboise: 5,
-  KagariIchinomiya: 3,
-  NatsumiFujikawa: 3,
-  '3Love': 4,
+  ColetteFramboise: 3,
+  '1Love': 7,
 };
 
 export const initialOppData = {

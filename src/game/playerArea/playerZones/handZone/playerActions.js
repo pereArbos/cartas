@@ -1,4 +1,4 @@
-import { getTrueData } from '../../../helpers/actions';
+import { getTrueData, finishTurn } from '../../../helpers/actions';
 
 export const config = {
   servingPhase: {
@@ -43,9 +43,7 @@ export const config = {
     button2Text: 'Fin de Turno',
     button2Click: (context) => {
       const endTurn = () => {
-        context.draw(5, () =>
-          context.updateParent({ gameState: 'startPhase' })
-        );
+        context.draw(5, () => finishTurn(context));
       };
       const discardAction = getDiscardAction(context);
       if (discardAction) {
@@ -53,6 +51,7 @@ export const config = {
       } else endTurn();
     },
   },
+  opponentTurn: { message: '', button2Text: null },
   startPhase: {
     message: 'Fase de Inicio',
     button2Text: 'Fase de Servicios',

@@ -121,3 +121,35 @@ export function handleAction(data, inst) {
     getTrueData(data.card).forcedAction(inst, ...(data.funcData || []));
   }
 }
+
+export function getTurnOrder(context) {
+  const { opponents, playerName, webrtc } = context.parentState;
+  const players = opponents.map((opp) => opp.name);
+  players.push(playerName);
+  const turnOrder = shuffle(players);
+  let message = 'El orden de juego es:';
+  turnOrder.forEach((name, idx) => {
+    message = `${message} ${idx > 0 ? '-> ' : ''}${name}`;
+  });
+  if (webrtc) {
+    webrtc.shout('turnOrder', turnOrder);
+    context.updateMessage(message);
+    context.updateParent({
+      msgTitle: `Turno de ${turnOrder[0]}`,
+      turnNum: 0,
+      gameState: turnOrder[0] === playerName ? 'startPhase' : 'opponentTurn',
+      turnOrder,
+    });
+  }
+}
+
+export function finishTurn(context) {
+  const { webrtc, turnOrder, turnNum, playerName } = context.parentState;
+  if (webrtc) webrtc.shout('passTurn', {});
+  const newTurn = turnOrder[(turnNum + 1) % turnOrder.length];
+  context.updateParent({
+    msgTitle: `Turno de ${newTurn}`,
+    turnNum: turnNum + 1,
+    gameState: newTurn === playerName ? 'startPhase' : 'opponentTurn',
+  });
+}

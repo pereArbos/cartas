@@ -23,7 +23,7 @@ export default class MessageArea extends React.Component {
   render() {
     return (
       <div className="msgArea">
-        <div className="msgTitle">Turno de Pere</div>
+        <div className="msgTitle">{this.context.parentState.msgTitle}</div>
         <div className="msgContent">{this.getMessage()}</div>
       </div>
     );

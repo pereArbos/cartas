@@ -27,6 +27,7 @@ export default class ConnexionGame extends React.Component {
       playerName: props.playerName,
       opponents: [],
       message: '',
+      msgTitle: 'Preparando la partida...',
       showSCModal: false,
       showResultsModal: false,
       results: [],
@@ -90,18 +91,14 @@ export default class ConnexionGame extends React.Component {
 
   sendToDeck = (cards) => {
     this.setState(
-      { deck: shuffle(cards), gameState: 'startPhase' }, // En realidad se pasaría a la espera de empezar el juego
+      { deck: shuffle(cards), gameState: 'gameSetUp' },
       this.state.getInitialHand
     );
   };
 
   join = (webrtc) => {
     webrtc.joinRoom('cartasPereTantoCuore_v1');
-    this.setState({ webrtc }, () => {
-      if (!this.state.mainPlayer) {
-        this.state.webrtc.shout('hola', this.state.playerName);
-      }
-    });
+    this.setState({ webrtc });
   };
 
   onJoin = () => {
@@ -128,6 +125,14 @@ export default class ConnexionGame extends React.Component {
       case 'queTal':
         this.getOpp(peer, payload);
         break;
+      case 'turnOrder':
+        this.setState({
+          msgTitle: `Turno de ${payload[0]}`,
+          turnNum: 0,
+          turnOrder: payload,
+          gameState: payload[0] === playerName ? 'startPhase' : 'opponentTurn',
+        });
+        break;
       case 'cityUpdate':
         this.setState(payload, () => {
           if (!deck) this.getInitialDeck();
@@ -146,6 +151,15 @@ export default class ConnexionGame extends React.Component {
         break;
       case 'msgUpdate':
         this.setState({ message: payload });
+        break;
+      case 'passTurn':
+        const { turnNum, turnOrder } = this.state;
+        const newTurn = turnOrder[(turnNum + 1) % turnOrder.length];
+        this.setState({
+          msgTitle: `Turno de ${newTurn}`,
+          turnNum: turnNum + 1,
+          gameState: newTurn === playerName ? 'startPhase' : 'opponentTurn',
+        });
         break;
       case 'sendEvent':
         this.state.getChamberMaid(...payload);

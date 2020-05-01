@@ -3,7 +3,7 @@ import {
   getAttachment,
   getChamberMaid,
 } from '../playerArea/playerZones/helpers/dataUpdates';
-import { getTrueData } from '../helpers/actions';
+import { getTrueData, finishTurn } from '../helpers/actions';
 
 function Lucienne(context) {
   const noUpdate = context.parentState.hasPlayables();
@@ -209,16 +209,14 @@ function Amber(context) {
       return { discard: [...prevState.discard, discarded] };
     });
     const amount = discarded.type.includes('maid') ? 5 : 4;
-    context.draw(amount, () =>
-      context.updateParent({ gameState: 'startPhase' })
-    );
+    context.draw(amount, () => finishTurn(context));
     const { playerName } = context.parentState;
     context.updateMessage(
       `Debido a la habilidad de AmberTwilight, ${playerName} descarta ${
         discarded.name
-      } de su mazo. ${
+      } de su mazo.${
         amount === 4
-          ? 'Como no es una Maid, roba 1 carta menos para su nueva mano.'
+          ? ' Como no es una Maid, roba 1 carta menos para su nueva mano.'
           : ''
       }`
     );
