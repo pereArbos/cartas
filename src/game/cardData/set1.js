@@ -109,7 +109,7 @@ export const set1Maids = [
     cost: 4,
     draw: 2,
     onPlay: playFuncs.Esquine,
-    quantity: 2,
+    quantity: 10,
   },
   {
     name: 'GenevieveDaubigny',
@@ -119,7 +119,7 @@ export const set1Maids = [
     draw: 1,
     servings: 1,
     love: 1,
-    quantity: 2,
+    quantity: 10,
   },
   {
     name: 'MoineDeLefevre',
@@ -128,7 +128,7 @@ export const set1Maids = [
     cost: 4,
     draw: 2,
     contract: 2,
-    quantity: 2,
+    quantity: 10,
   },
   {
     name: 'ElizaRosewater',
@@ -138,7 +138,7 @@ export const set1Maids = [
     love: 2,
     onPlay: playFuncs.Eliza,
     forcedAction: playFuncs.ElizaDiscard,
-    quantity: 2,
+    quantity: 10,
   },
   {
     name: 'SafranVirginie',
@@ -156,7 +156,7 @@ export const set1Maids = [
     type: 'maid',
     cost: 3,
     servings: 2,
-    quantity: 2,
+    quantity: 10,
   },
   {
     name: 'ClaireSaintJuste',
@@ -166,7 +166,7 @@ export const set1Maids = [
     servings: 1,
     onPlay: playFuncs.Claire,
     onDefend: playFuncs.ClaireDefend,
-    quantity: 2,
+    quantity: 10,
   },
   {
     name: 'AzureCrescent',
