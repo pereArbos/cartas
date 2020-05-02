@@ -134,20 +134,27 @@ export default class ConnexionGame extends React.Component {
         });
         break;
       case 'cityUpdate':
-        this.setState(payload, () => {
-          if (!deck) this.getInitialDeck();
-        });
+        this.setState(
+          { city: payload.city, privateMaids: payload.privateMaids },
+          () => {
+            if (!deck) this.getInitialDeck();
+          }
+        );
         break;
       case 'oppUpdate':
         this.setState((prevState) => {
-          console.log(payload.data);
-          const opponents = _.cloneDeep(prevState.opponents);
-          const idx = opponents.findIndex((opp) => opp.name === payload.name);
+          const newOpps = prevState.opponents.slice();
+          const oppIdx = prevState.opponents.findIndex(
+            (opp) => opp.name === payload.name
+          );
+          console.log(payload);
           Object.keys(payload.data).forEach((key) => {
-            opponents[idx].data[key] = payload.data[key];
+            console.log(newOpps);
+            console.log(oppIdx, key);
+            newOpps[oppIdx].data[key] = payload.data[key];
+            console.log(newOpps);
           });
-          console.log(opponents);
-          return { opponents };
+          return { opponents: newOpps };
         });
         break;
       case 'msgUpdate':
@@ -191,8 +198,9 @@ export default class ConnexionGame extends React.Component {
 
   getOpp = (peer, name) => {
     this.setState((prevState) => {
-      const opponents = [...prevState.opponents];
+      const opponents = _.cloneDeep(prevState.opponents);
       opponents.push({ peer, name, data: initialOppData });
+      console.log(opponents);
       return { opponents };
     });
   };
