@@ -16,14 +16,16 @@ function Sainsbury(inst) {
     },
     restrType: ['maidChief', 'event', 'privateMaid'],
     restrName: ['1Love', '3Love'],
-    sendTo: (cards) => sendToHand(inst, cards, loveIdx),
+    sendTo: (cards) => sendToHand(inst, cards),
   });
 }
 
-function sendToHand(inst, cards, loveIdx) {
+function sendToHand(inst, cards) {
+  if (!cards[0]) return;
   inst.context.updatePlayer((prevState) => {
     const hand = [...prevState.hand];
     hand.push(...cards);
+    const loveIdx = hand.findIndex((card) => card.name === '1Love');
     return { hand: hand.filter((foo, idx) => idx !== loveIdx) };
   });
   inst.context.updateParent((prevState) => {

@@ -147,12 +147,8 @@ export default class ConnexionGame extends React.Component {
           const oppIdx = prevState.opponents.findIndex(
             (opp) => opp.name === payload.name
           );
-          console.log(payload);
           Object.keys(payload.data).forEach((key) => {
-            console.log(newOpps);
-            console.log(oppIdx, key);
             newOpps[oppIdx].data[key] = payload.data[key];
-            console.log(newOpps);
           });
           return { opponents: newOpps };
         });
@@ -200,7 +196,6 @@ export default class ConnexionGame extends React.Component {
     this.setState((prevState) => {
       const opponents = _.cloneDeep(prevState.opponents);
       opponents.push({ peer, name, data: initialOppData });
-      console.log(opponents);
       return { opponents };
     });
   };
