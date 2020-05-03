@@ -146,7 +146,10 @@ function Claire(inst) {
   });
   inst.context.updateParent({
     gameState: 'targetIllness',
-    illnessClick: healIllnes,
+    illnessClick: (inst, b, c, d) => {
+      healIllness(inst, b, c, d);
+      inst.context.updateParent({ gameState: 'servingPhase' });
+    },
   });
 }
 
@@ -159,7 +162,7 @@ function ClaireDefend(inst, data) {
         message: 'Quieres defenderte de la Illness con Claire ?',
         button1Text: 'Sí',
         button1Click: () => {
-          healIllnes(inst, maidIdx, isPrivate, message);
+          healIllness(inst, maidIdx, isPrivate, message);
           inst.context.parentState.setActions(prevActions);
         },
         button2Text: 'No',
@@ -169,16 +172,19 @@ function ClaireDefend(inst, data) {
   }
 }
 
-function healIllnes(inst, maidIdx, isPrivate, message) {
+function healIllness(inst, maidIdx, isPrivate, message) {
   const { playerName, webrtc } = inst.context.parentState;
-  inst.context.updateParent((prevState) => {
-    const city = _.cloneDeep(prevState.city);
-    const illIdx = city.findIndex((item) => item.name === 'Illness');
-    city[illIdx].quantity += 1;
-    if (webrtc) webrtc.shout('cityUpdate', { city });
-    return { city, gameState: 'servingPhase' };
+  const city = _.cloneDeep(inst.context.parentState.city);
+  const illIdx = city.findIndex((item) => item.name === 'Illness');
+  city[illIdx].quantity += 1;
+  if (webrtc) webrtc.shout('cityUpdate', { city });
+  inst.context.updateParent({ city });
+  getAttachment(inst, {
+    maidIdx,
+    isPrivate,
+    remove: true,
+    card: [city[illIdx]],
   });
-  getAttachment(inst, { maidIdx, isPrivate, remove: true });
   inst.context.updateMessage(
     `${playerName} ${
       message ||
