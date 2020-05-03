@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "eee797c2bd475b14b46fe98276f1c5e9",
+    "revision": "4ebc956619c93f520aca2c4571efda1a",
     "url": "/cartas/index.html"
   },
   {
-    "revision": "d7a0eff1b8dc31515028",
+    "revision": "3986ed0b7fdf0fc2bf8e",
     "url": "/cartas/static/css/main.1526e64e.chunk.css"
   },
   {
-    "revision": "131001925c4ea997136b",
-    "url": "/cartas/static/js/2.faf66290.chunk.js"
+    "revision": "638f1d52677a09afeb23",
+    "url": "/cartas/static/js/2.ba3fe98f.chunk.js"
   },
   {
-    "revision": "1f2eb086d6b1f4e6c1057460ea6a6d63",
-    "url": "/cartas/static/js/2.faf66290.chunk.js.LICENSE.txt"
+    "revision": "51c6de924fb2dee4a14dfda7a3e4b2f8",
+    "url": "/cartas/static/js/2.ba3fe98f.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "d7a0eff1b8dc31515028",
-    "url": "/cartas/static/js/main.b65f96a2.chunk.js"
+    "revision": "3986ed0b7fdf0fc2bf8e",
+    "url": "/cartas/static/js/main.51ca802e.chunk.js"
   },
   {
     "revision": "484f3934135145e81bc0",
