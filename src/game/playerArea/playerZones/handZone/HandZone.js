@@ -47,6 +47,13 @@ export default class HandZone extends React.Component {
     if (change && newState === 'startPhase') {
       this.setState({ usadaJoder: 'no' });
     }
+    if (change && this.context.parentState.gameState === 'opponentTurn') {
+      this.setState({
+        usadaJoder: 'no',
+        handSelection: null,
+        selectionOn: null,
+      });
+    }
   }
 
   button1 = () => this.state.button1Click(this.context);
