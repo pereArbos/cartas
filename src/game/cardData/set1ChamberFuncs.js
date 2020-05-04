@@ -4,7 +4,8 @@ import { getAttachment } from '../playerArea/playerZones/helpers/dataUpdates';
 function Illness(inst, maidIdx, isPrivate) {
   inst.context.parentState.setActions((prevActions) => {
     return {
-      message: 'Quieres descartar un 3Love y devolvr esta Illness a la ciudad?',
+      message:
+        'Quieres descartar un 3Love y devolver esta Illness a la ciudad?',
       button1Text: 'Sí',
       button1Click: () => healIllness(inst, maidIdx, isPrivate, prevActions),
       button2Text: 'No',

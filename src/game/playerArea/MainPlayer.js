@@ -12,7 +12,7 @@ import './playerZones/PlayerZones.css';
 import IconFooter from './iconFooter/IconFooter';
 import { shuffle, handleAction, checkGameFinish } from '../helpers/actions';
 
-const serviceStates = ['cityPick', 'targetIllness', 'targetPlayer'];
+const serviceStates = ['cityPick', 'targetEvent', 'targetPlayer'];
 
 export default class MainPlayer extends React.Component {
   static childContextTypes = {

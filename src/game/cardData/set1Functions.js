@@ -1,5 +1,8 @@
 import _ from 'lodash';
-import { getAttachment } from '../playerArea/playerZones/helpers/dataUpdates';
+import {
+  getAttachment,
+  getChamberMaid,
+} from '../playerArea/playerZones/helpers/dataUpdates';
 import { checkChamberMaids } from '../helpers/actions';
 
 function Sainsbury(inst) {
@@ -137,7 +140,7 @@ function actionNatsumi(inst) {
 
 function Claire(inst) {
   inst.context.parentState.setActions({
-    message: 'Elige 1 Illness para devolverla a la ciudad',
+    message: 'Elige 1 Evento para devolver a la ciudad',
     button2Text: 'Cancelar',
     button2Click: () =>
       inst.context.updateParent({
@@ -145,52 +148,64 @@ function Claire(inst) {
       }),
   });
   inst.context.updateParent({
-    gameState: 'targetIllness',
-    illnessClick: (inst, b, c, d) => {
-      healIllness(inst, b, c, d);
-      inst.context.updateParent({ gameState: 'servingPhase' });
-    },
+    gameState: 'targetEvent',
+    eventClick: (a, b, c, d) => removeEvent(inst, a, b, c, d),
   });
 }
 
-function ClaireDefend(inst, data) {
-  const { maidIdx, isPrivate, remove } = data;
-  if (!remove) {
-    const message = 'se defiende de la Illness revelando 1 Claire de su mano';
-    inst.context.parentState.setActions((prevActions) => {
-      return {
-        message: 'Quieres defenderte de la Illness con Claire ?',
-        button1Text: 'Sí',
-        button1Click: () => {
-          healIllness(inst, maidIdx, isPrivate, message);
-          inst.context.parentState.setActions(prevActions);
-        },
-        button2Text: 'No',
-        button2Click: () => inst.context.parentState.setActions(prevActions),
-      };
-    });
-  }
-}
-
-function healIllness(inst, maidIdx, isPrivate, message) {
+function removeEvent(inst, card, idx, isPrivate, oppName) {
   const { playerName, webrtc } = inst.context.parentState;
+  if (oppName) return;
+  if (card.name === 'Illness') {
+    // if is attachment
+    inst.context.parentState.getAttachment({
+      maidIdx: idx,
+      isPrivate,
+      remove: true,
+    });
+  } else inst.context.parentState.getChamberMaid(card, -1);
+
   const city = _.cloneDeep(inst.context.parentState.city);
-  const illIdx = city.findIndex((item) => item.name === 'Illness');
-  city[illIdx].quantity += 1;
+  const cityIdx = city.findIndex((item) => item.name === card.name);
+  city[cityIdx].quantity += 1;
   if (webrtc) webrtc.shout('cityUpdate', { city });
-  inst.context.updateParent({ city });
-  getAttachment(inst, {
-    maidIdx,
-    isPrivate,
-    remove: true,
-    card: [city[illIdx]],
+  inst.context.updateParent({
+    eventClick: null,
+    city,
+    gameState: 'servingPhase',
   });
   inst.context.updateMessage(
-    `${playerName} ${
-      message ||
-      'usa los servicios de Claire para devolver 1 de sus Illness a la ciudad'
-    }`
+    `Usando los servicios de Claire, ${playerName} devuelve 1 de sus ${card.name} a la ciudad`
   );
+}
+
+function ClaireDefend(inst, data, isAttachment) {
+  const cardName = isAttachment ? 'Illness' : data[0].name; // tehepelo
+  const { playerName, webrtc } = inst.context.parentState;
+  const message = `${playerName} se defiende del ${cardName} revelando 1 Claire de su mano`;
+  inst.context.parentState.setActions((prevActions) => {
+    return {
+      message: `Quieres defenderte del ${cardName} con Claire ?`,
+      button1Text: 'Sí',
+      button1Click: () => {
+        const city = _.cloneDeep(inst.context.parentState.city);
+        const cityIdx = city.findIndex((item) => item.name === cardName);
+        city[cityIdx].quantity += data.count || 1;
+        if (webrtc) webrtc.shout('cityUpdate', { city });
+
+        inst.context.parentState.setActions(prevActions);
+        inst.context.updateParent({ city });
+        inst.context.updateMessage(message);
+      },
+      button2Text: 'No',
+      button2Click: () => {
+        inst.context.parentState.setActions(prevActions);
+        if (isAttachment) {
+          getAttachment(inst, data);
+        } else getChamberMaid(inst, ...data);
+      },
+    };
+  });
 }
 
 function Eliza(inst, card) {

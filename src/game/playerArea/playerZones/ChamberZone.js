@@ -38,7 +38,7 @@ export default class ChamberZone extends React.Component {
         hasChamberMaids: () => checkChamberMaids(this.state),
         hasPlayables: this.hasPlayables,
         getCurrentMaid: this.getHealthyMaid,
-        getDefend: (data) => this.defend(data),
+        getDefend: (data, isAttachment) => this.defend(data, isAttachment),
         getResults: this.getResults,
       });
     }
@@ -90,11 +90,19 @@ export default class ChamberZone extends React.Component {
     });
   };
 
-  defend = (data) => {
+  defend = (data, isAttachment) => {
     const defensor = this.context.playerState.hand.find(
       (maid) => maid.onDefend
     );
-    if (defensor) defensor.onDefend(this, data);
+    if (defensor && !data.remove) {
+      defensor.onDefend(this, data, isAttachment);
+    } else {
+      if (isAttachment) {
+        getAttachment(this, data);
+      } else {
+        getChamberMaid(this, ...data);
+      }
+    }
   };
 
   getResults = () => {
@@ -139,17 +147,7 @@ export default class ChamberZone extends React.Component {
   };
 
   getExtra = (card, idx, isPrivate) => {
-    const { gameState, illnessClick } = this.context.parentState;
-    if (gameState === 'targetIllness' && card.name === 'Illness') {
-      return {
-        className: 'playable',
-        onClick: (e) => {
-          e.stopPropagation();
-          illnessClick(this, idx, isPrivate);
-        },
-      };
-    }
-
+    const { gameState } = this.context.parentState;
     if (isPrivate && this.state.usadaJoder === 'si') return {};
     if (card.restric && !card.restric(this.context)) return {};
     if (gameState !== 'startPhase') return {};
