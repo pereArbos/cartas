@@ -135,7 +135,13 @@ export default class ConnexionGame extends React.Component {
         break;
       case 'cityUpdate':
         this.setState(
-          { city: payload.city, privateMaids: payload.privateMaids },
+          (prevState) => {
+            const { city, privateMaids } = prevState;
+            return {
+              city: payload.city || city,
+              privateMaids: payload.privateMaids || privateMaids,
+            };
+          },
           () => {
             if (!deck) this.getInitialDeck();
           }
@@ -169,6 +175,7 @@ export default class ConnexionGame extends React.Component {
         );
         break;
       case 'sendEvent':
+        console.log(payload);
         this.state.getDefend(payload, false);
         break;
       case 'sendAttach':
