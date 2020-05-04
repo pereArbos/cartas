@@ -55,6 +55,7 @@ export default class ConnexionGame extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { deck, discard, webrtc, playerName } = this.state;
+    console.log(prevState, this.state);
     if (webrtc && !_.isEqual(discard, prevState.discard)) {
       webrtc.shout('oppUpdate', {
         name: playerName,
