@@ -98,7 +98,7 @@ export default class ConnexionGame extends React.Component {
   };
 
   join = (webrtc) => {
-    webrtc.joinRoom('cartasPereTantoCuore_v1');
+    webrtc.joinRoom('cartasPereTantoCuore_v3');
     this.setState({ webrtc });
   };
 
