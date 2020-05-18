@@ -57,15 +57,30 @@ export default class App extends React.Component {
           >
             Listos
           </button>
+          <div className="title sub">Número de la Sala (opcional)</div>
+          <input
+            type="text"
+            className="sub"
+            value={this.state.roomNum}
+            onChange={(e) => {
+              this.setState({ roomNum: e.target.value });
+            }}
+          />
         </div>
       </div>
     );
   };
 
   render() {
-    const { playerName, mainPlayer, start } = this.state;
+    const { playerName, mainPlayer, start, roomNum } = this.state;
     if (typeof mainPlayer === typeof undefined) return this.getGameMenu();
     if (!start) return this.getNameMenu();
-    return <ConnexionGame playerName={playerName} mainPlayer={mainPlayer} />;
+    return (
+      <ConnexionGame
+        playerName={playerName}
+        mainPlayer={mainPlayer}
+        roomNum={roomNum || ''}
+      />
+    );
   }
 }

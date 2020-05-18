@@ -43,7 +43,7 @@ button:disabled {
 .App-base .nameMenu input {
   font-family: 'Comic Sans MS', cursive, sans-serif;
   position: absolute;
-  top: 42.5vh;
+  top: 25vh;
   height: 15vh;
   left: 27.5vw;
   width: 22.5vw;
@@ -57,7 +57,7 @@ button:disabled {
 .App-base .nameMenu button {
   font-family: 'Comic Sans MS', cursive, sans-serif;
   position: absolute;
-  top: 42.5vh;
+  top: 25vh;
   height: 15vh;
   left: 55vw;
   width: 17.5vw;
@@ -68,8 +68,16 @@ button:disabled {
 
 .App-base .nameMenu .title {
   position: absolute;
-  top: 15vh;
+  top: 10vh;
   left: 40vw;
   font-size: 30px;
   color: pink;
+}
+
+.App-base .nameMenu .title.sub {
+  top: 55vh;
+}
+
+.App-base .nameMenu input.sub {
+  top: 65vh;
 }

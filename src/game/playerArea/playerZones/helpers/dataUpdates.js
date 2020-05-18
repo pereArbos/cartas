@@ -133,3 +133,35 @@ function getMaidPoints(inst, maids) {
   });
   return [0, ...points].reduce((a, b) => a + b);
 }
+
+export function getPlayerData(inst) {
+  const { deck, discard } = inst.context.parentState;
+  const { hand, playedCards } = inst.context.playerState;
+  const { chamberMaids, boughtPrivateMaids } = inst.state;
+  return { deck, discard, hand, playedCards, chamberMaids, boughtPrivateMaids };
+}
+
+export function setPlayerData(inst, data) {
+  const { deck, discard, hand, playedCards } = data;
+  inst.context.updateParent({
+    deck: deck.map(getTrueData),
+    discard: discard.map(getTrueData),
+  });
+  inst.context.updatePlayer({
+    hand: hand.map(getTrueData),
+    playedCards: playedCards.map(getTrueData),
+  });
+  inst.setState({
+    chamberMaids: data.chamberMaids.map(parseChamberCard),
+    boughtPrivateMaids: data.boughtPrivateMaids.map(parseChamberCard),
+  });
+}
+
+function parseChamberCard(card) {
+  const { attachments, chambered } = card;
+  return {
+    ...getTrueData(card),
+    chambered,
+    attachments: (attachments || []).map(getTrueData),
+  };
+}

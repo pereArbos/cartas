@@ -98,7 +98,7 @@ export default class ConnexionGame extends React.Component {
   };
 
   join = (webrtc) => {
-    webrtc.joinRoom('cartasPereTantoCuore_v4');
+    webrtc.joinRoom(`cartasPereTantoCuore_v4_${this.props.roomNum}`);
     this.setState({ webrtc });
   };
 
@@ -111,20 +111,17 @@ export default class ConnexionGame extends React.Component {
   };
 
   getPeerData = (webrtcBad, type, payload, peer) => {
-    const { webrtc, city, privateMaids, deck, playerName } = this.state;
+    const { deck, playerName } = this.state;
     switch (type) {
       case 'hola':
-        if (this.state.mainPlayer) {
-          (webrtc || webrtcBad).whisper(peer, 'cityUpdate', {
-            city,
-            privateMaids,
-          });
-        }
-        this.getOpp(peer, payload);
-        (webrtc || webrtcBad).whisper(peer, 'queTal', playerName);
+        this.handleOpp(peer, payload);
         break;
       case 'queTal':
+        console.log('reb ktal', payload);
         this.getOpp(peer, payload);
+        break;
+      case 'recoverData':
+        this.getRecover(peer, payload);
         break;
       case 'turnOrder':
         this.setState({
@@ -157,26 +154,26 @@ export default class ConnexionGame extends React.Component {
           Object.keys(payload.data).forEach((key) => {
             newOpps[oppIdx].data[key] = payload.data[key];
           });
+          newOpps.peer = peer;
           return { opponents: newOpps };
         });
         break;
       case 'msgUpdate':
         this.setState({ message: payload });
         break;
-      case 'passTurn':
-        const { turnNum, turnOrder } = this.state;
-        const newTurn = turnOrder[(turnNum + 1) % turnOrder.length];
+      case 'newTurn':
+        const { turnOrder, gameState } = this.state;
+        const { turnNum } = payload;
+        const newTurn = turnOrder[turnNum % turnOrder.length];
         this.setState(
-          {
-            msgTitle: `Turno de ${newTurn}`,
-            turnNum: turnNum + 1,
-            gameState: newTurn === playerName ? 'startPhase' : 'opponentTurn',
-          },
+          { msgTitle: `Turno de ${newTurn}`, turnNum },
           this.state.checkGameFinish
         );
+        if (newTurn === playerName && gameState !== 'servingPhase') {
+          this.setState({ gameState: 'startPhase' });
+        }
         break;
       case 'sendEvent':
-        console.log(payload);
         this.state.getDefend(payload, false);
         break;
       case 'sendAttach':
@@ -202,9 +199,58 @@ export default class ConnexionGame extends React.Component {
   getOpp = (peer, name) => {
     this.setState((prevState) => {
       const opponents = _.cloneDeep(prevState.opponents);
-      opponents.push({ peer, name, data: initialOppData });
+      const oppIdx = opponents.findIndex((opp) => opp.name === name);
+      console.log(opponents, name);
+      if (oppIdx >= 0) {
+        console.log('aki', opponents[oppIdx], peer);
+        opponents[oppIdx] = { ...opponents[oppIdx], peer };
+      } else opponents.push({ peer, name, data: initialOppData });
       return { opponents };
     });
+  };
+
+  handleOpp = (peer, name) => {
+    const { webrtc, city, privateMaids, opponents, playerName } = this.state;
+    const recoveringOpp = opponents.find((opp) => opp.name === name);
+    if (!recoveringOpp) {
+      if (this.state.mainPlayer) {
+        webrtc.whisper(peer, 'cityUpdate', {
+          city,
+          privateMaids,
+        });
+      }
+    } else if (this.state.mainPlayer) {
+      const hostData = { name: playerName, data: this.state.getPlayerData() };
+      const selfData = recoveringOpp.data;
+      const otherOpps = opponents
+        .filter((opp) => opp.name !== name)
+        .map((opp) => {
+          return { name: opp.name, data: opp.data };
+        });
+      const playersData = { hostData, selfData, otherOpps };
+      const { msgTitle, message, turnNum, turnOrder } = this.state;
+      webrtc.whisper(peer, 'recoverData', {
+        playersData,
+        gameData: { msgTitle, message, turnNum, turnOrder, city, privateMaids },
+      });
+    }
+    this.getOpp(peer, name);
+    setTimeout(() => {
+      console.log('env ktal');
+      webrtc.whisper(peer, 'queTal', playerName);
+    }, 500);
+  };
+
+  getRecover = (peer, payload) => {
+    const { turnNum, turnOrder } = payload.gameData;
+    const gameState =
+      turnOrder[turnNum % turnOrder.length] === this.state.playerName
+        ? 'startPhase'
+        : 'opponentTurn';
+    const { hostData, selfData, otherOpps } = payload.playersData;
+    const opponents = [...otherOpps, { ...hostData, peer }];
+    this.state.setPlayerData(selfData);
+    this.setState({ ...payload.gameData, gameState, opponents });
   };
 
   render() {

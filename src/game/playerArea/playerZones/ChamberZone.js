@@ -5,7 +5,13 @@ import _ from 'lodash';
 import CardDisplayModal from '../../cardDisplayModal/CardDisplayModal';
 import PrivateMaidsDisplay from '../../cardDisplayModal/PrivateMaidsDisplay';
 import { checkChamberMaids } from '../../helpers/actions';
-import { getChamberMaid, getAttachment, getVP } from './helpers/dataUpdates';
+import {
+  getChamberMaid,
+  getAttachment,
+  getVP,
+  getPlayerData,
+  setPlayerData,
+} from './helpers/dataUpdates';
 
 export default class ChamberZone extends React.Component {
   static contextTypes = {
@@ -40,6 +46,8 @@ export default class ChamberZone extends React.Component {
         getCurrentMaid: this.getHealthyMaid,
         getDefend: (data, isAttachment) => this.defend(data, isAttachment),
         getResults: this.getResults,
+        getPlayerData: () => getPlayerData(this),
+        setPlayerData: (data) => setPlayerData(this, data),
       });
     }
   }

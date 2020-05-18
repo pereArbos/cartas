@@ -145,7 +145,10 @@ export function getTurnOrder(context) {
 
 export function finishTurn(context) {
   const { webrtc, turnOrder, turnNum, playerName } = context.parentState;
-  if (webrtc) webrtc.shout('passTurn', {});
+  if (webrtc) {
+    webrtc.shout('newTurn', { turnNum: turnNum + 1 });
+    setTimeout(() => webrtc.shout('newTurn', { turnNum: turnNum + 1 }), 500);
+  }
   const newTurn = turnOrder[(turnNum + 1) % turnOrder.length];
   context.updateParent(
     {

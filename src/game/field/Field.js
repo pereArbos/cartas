@@ -178,15 +178,10 @@ export default class Field extends React.Component {
   };
 
   render() {
-    const {
-      city,
-      gameState,
-      sendTo,
-      mainPlayer,
-      webrtc,
-    } = this.context.parentState;
+    const { city, gameState, sendTo, mainPlayer } = this.context.parentState;
     const picking = gameState === 'cityPick';
     const buying = gameState === 'contractPhase' || picking;
+
     return (
       <div className="Field">
         <div style={{ float: 'left' }}>
@@ -224,28 +219,6 @@ export default class Field extends React.Component {
               }}
             >
               Resultados
-            </button>
-          )}
-          {gameState === 'gameEnded' && (
-            <button
-              type="button"
-              onClick={() => {
-                this.context.updateParent({ showResultsModal: true });
-              }}
-            >
-              Resultados
-            </button>
-          )}
-          {gameState === 'opponentTurn' && (
-            <button
-              type="button"
-              onClick={() => {
-                this.context.updateParent((prevState) => {
-                  return { turnNum: prevState.turnNum + 1 };
-                });
-              }}
-            >
-              Boton Marc
             </button>
           )}
         </div>

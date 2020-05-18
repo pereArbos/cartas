@@ -1,0 +1,83 @@
+export const reminiscences1 = [
+  {
+    name: 'ScaryNight',
+    set: 3,
+    type: 'reminiscence',
+    vp: 3,
+    staffReq: () => {},
+    onAquire: () => {},
+  },
+  {
+    name: 'Picnic',
+    set: 3,
+    type: 'reminiscence',
+    vp: 3,
+    staffReq: () => {},
+    onAquire: () => {},
+  },
+  {
+    name: 'RiverCanoeing',
+    set: 3,
+    type: 'reminiscence',
+    vp: 3,
+    staffReq: () => {},
+    onAquire: () => {},
+  },
+  {
+    name: 'WatchingTheStars',
+    set: 3,
+    type: 'reminiscence',
+    vp: 3,
+    staffReq: () => {},
+    onAquire: () => {},
+  },
+  {
+    name: 'FindingAHiddenHotSpring',
+    set: 3,
+    type: 'reminiscence',
+    vp: 3,
+    staffReq: () => {},
+    onAquire: () => {},
+  },
+];
+
+export const reminiscences2 = [
+  {
+    name: 'CampFire',
+    set: 3,
+    type: 'reminiscence',
+    vp: 6,
+    staffReq: () => {},
+    onAquire: () => {},
+  },
+  {
+    name: 'ArchipelagoTour',
+    set: 3,
+    type: 'reminiscence',
+    vp: 6,
+    staffReq: () => {},
+    onAquire: () => {},
+  },
+  {
+    name: 'FireworksFestival',
+    set: 3,
+    type: 'reminiscence',
+    vp: 6,
+    staffReq: () => {},
+    onAquire: () => {},
+  },
+  {
+    name: 'TrekIntoTheAncientRuins',
+    set: 3,
+    type: 'reminiscence',
+    vp: 6,
+    staffReq: () => {},
+  },
+  {
+    name: 'UnderwaterGrottoDiscovery',
+    set: 3,
+    type: 'reminiscence',
+    vp: 10,
+    staffReq: () => {},
+  },
+];
