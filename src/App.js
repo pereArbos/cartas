@@ -1,86 +1,30 @@
-import React from 'react';
-import './App.css';
+import React from "react";
 
-import ConnexionGame from './game/ConnexionGame';
+import MatrixFiller from "./views/MatrixFiller";
+import Step1 from "./views/Step1";
+
+import "./App.css";
+
+const steps = [MatrixFiller, Step1];
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { playerName: '' };
+    this.state = { step: 0 };
   }
 
-  getGameMenu = () => {
-    return (
-      <div className="App-base mainBlock">
-        <div className="menuButton">
-          <button
-            type="button"
-            style={{ top: '20vh' }}
-            onClick={() => {
-              this.setState({ mainPlayer: true });
-            }}
-          >
-            Crear Partida
-          </button>
-          <button
-            type="button"
-            style={{ top: '60vh' }}
-            onClick={() => {
-              this.setState({ mainPlayer: false });
-            }}
-          >
-            Unirse
-          </button>
-        </div>
-      </div>
-    );
-  };
-
-  getNameMenu = () => {
-    return (
-      <div className="App-base mainBlock">
-        <div className="nameMenu">
-          <div className="title">Escribe Tu Nombre</div>
-          <input
-            type="text"
-            value={this.state.playerName}
-            onChange={(e) => {
-              this.setState({ playerName: e.target.value });
-            }}
-          />
-          <button
-            type="button"
-            onClick={() => {
-              if (this.state.playerName.length > 0)
-                this.setState({ start: true });
-            }}
-          >
-            Listos
-          </button>
-          <div className="title sub">Número de la Sala (opcional)</div>
-          <input
-            type="text"
-            className="sub"
-            value={this.state.roomNum}
-            onChange={(e) => {
-              this.setState({ roomNum: e.target.value });
-            }}
-          />
-        </div>
-      </div>
-    );
+  nextStep = (data) => {
+    this.setState((prevState) => {
+      return { ...data, step: prevState.step + 1 };
+    });
   };
 
   render() {
-    const { playerName, mainPlayer, start, roomNum } = this.state;
-    if (typeof mainPlayer === typeof undefined) return this.getGameMenu();
-    if (!start) return this.getNameMenu();
+    const StepCmp = steps[this.state.step];
     return (
-      <ConnexionGame
-        playerName={playerName}
-        mainPlayer={mainPlayer}
-        roomNum={roomNum || ''}
-      />
+      <div className="App-base">
+        <StepCmp next={this.nextStep} {...this.state} />
+      </div>
     );
   }
 }

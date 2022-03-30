@@ -1,83 +1,83 @@
 .App-base {
-  background-color: #282c34;
+  background-color: gray;
   min-height: 100vh;
   flex-direction: column;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: black;
   overflow: hidden;
 }
 
-.App-base .mainBlock {
-  display: inline-block;
-  vertical-align: top;
+.App-base .matrix {
+  margin: 10px;
+}
+
+span.selection {
+  display: none;
 }
 
 button:hover {
   cursor: pointer;
 }
 
-button:disabled {
-  cursor: not-allowed;
+.matrix .matrixRow {
 }
 
-.App-base .menuButton button {
+.matrixCell {
+  border: 1px solid black;
+  height: 90px;
+  width: 19vw;
+  max-width: 180px;
+  position: relative;
+
+  display: inline-block;
+  vertical-align: top;
+}
+
+.matrixCell > select {
   position: absolute;
-  left: 40vw;
-  width: 20vw;
-  height: 20vh;
-  font-size: 40px;
-  font-weight: bold;
-  font-family: 'Comic Sans MS', cursive, sans-serif;
-  background-color: yellow;
-  border: 5px solid palevioletred;
-  color: #282c34;
+  width: 90%;
+  height: 30%;
+  top: 30%;
+  left: 5%;
 }
 
-.App-base .nameMenu {
-  color: #282c34;
-  font-size: 40px;
-  font-weight: bold;
-  font-family: 'Comic Sans MS', cursive, sans-serif;
+.matrixCell > div {
+  height: 100%;
+  display: inline-block;
+  vertical-align: top;
 }
 
-.App-base .nameMenu input {
-  font-family: 'Comic Sans MS', cursive, sans-serif;
-  position: absolute;
-  top: 25vh;
-  height: 15vh;
-  left: 27.5vw;
-  width: 22.5vw;
-  font-size: 40px;
-  padding-left: 20px;
-  background-color: pink;
-  color: blue;
+.matrixCell > .cellNum {
+  width: 60%;
+  font-size: 150%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.cellNum > div {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.matrixCell > .cellButtons {
+  width: 40%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.cellButtons button {
+  width: 100%;
   border: none;
+  height: 50%;
+  font-size: 150%;
 }
 
-.App-base .nameMenu button {
-  font-family: 'Comic Sans MS', cursive, sans-serif;
-  position: absolute;
-  top: 25vh;
-  height: 15vh;
-  left: 55vw;
-  width: 17.5vw;
-  font-size: 40px;
-  background-color: yellow;
-  border: 5px solid palevioletred;
-}
-
-.App-base .nameMenu .title {
-  position: absolute;
-  top: 10vh;
-  left: 40vw;
-  font-size: 30px;
-  color: pink;
-}
-
-.App-base .nameMenu .title.sub {
-  top: 55vh;
-}
-
-.App-base .nameMenu input.sub {
-  top: 65vh;
+.btnNext {
+  margin-top: 2.5%;
+  margin-left: 50%;
+  width: 8vw;
+  font-size: 20px;
+  height: 5vh;
 }
